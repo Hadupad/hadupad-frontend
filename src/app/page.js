@@ -1,7 +1,11 @@
+import '../../styles/globals.css';  // Import global CSS
+import LandingLayout from "./landing/layout";
 
 
 export default function Home() {
   return (
-   <h1>hello</h1>
+   <>
+    <LandingLayout />
+   </>
   );
 }
