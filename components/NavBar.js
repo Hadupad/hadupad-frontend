@@ -1,14 +1,19 @@
 "use client"
 
 import { useState } from "react";
-import Link from "next/link"; // Import Link from next/link
+import Link from "next/link";
+import { usePathname } from "next/navigation"; // Import usePathname
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname(); // Get current route
+
+  // Check if current route is FAQ page
+  const isFAQPage = pathname === "/faqs";
 
   return (
     <header className="bg-transparent md:bg-white fixed w-full z-50">
-      <nav className="max-w-[1440px] mx-auto mt-5 px-[5%] flex items-center justify-between h-[80px] relative">
+      <nav className="shadow-lg shadow-black/50 max-w-[1440px] mx-auto px-[5%] flex items-center justify-between h-[80px] relative">
         {/* Logo */}
         <div>
           <img
@@ -26,27 +31,42 @@ export default function NavBar() {
         >
           <ul className="flex flex-col md:flex-row items-center gap-8 md:gap-[4vw] font-medium">
             <li>
-              <Link href="/" className="text-[#DC4731] font-semibold">
+              <Link 
+                href="/" 
+                className={`${pathname === "/" ? "text-[#DC4731] font-semibold" : "text-black hover:text-[#DC4731]"}`}
+              >
                 Home
               </Link>
             </li>
             <li>
-              <Link href="/properties" className="text-black hover:text-[#DC4731]">
+              <Link 
+                href="/properties" 
+                className={`${pathname === "/properties" ? "text-[#DC4731] font-semibold" : "text-black hover:text-[#DC4731]"}`}
+              >
                 Properties
               </Link>
             </li>
             <li>
-              <Link href="/about-us" className="text-black hover:text-[#DC4731]">
+              <Link 
+                href="/about-us" 
+                className={`${pathname === "/about-us" ? "text-[#DC4731] font-semibold" : "text-black hover:text-[#DC4731]"}`}
+              >
                 About Us
               </Link>
             </li>
             <li>
-              <Link href="/contact" className="text-black hover:text-[#DC4731]">
+              <Link 
+                href="/contact" 
+                className={`${pathname === "/contact" ? "text-[#DC4731] font-semibold" : "text-black hover:text-[#DC4731]"}`}
+              >
                 Contact
               </Link>
             </li>
             <li>
-              <Link href="/faqs" className="text-black hover:text-[#DC4731]">
+              <Link 
+                href="/faqs" 
+                className={`${pathname === "/faqs" ? "text-[#DC4731] font-semibold" : "text-black hover:text-[#DC4731]"}`}
+              >
                 FAQs
               </Link>
             </li>
@@ -65,11 +85,11 @@ export default function NavBar() {
           </button>
         </div>
 
-        {/* Hamburger button */}
+        {/* Hamburger button - color changes based on FAQ page */}
         <div className="md:hidden">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="text-white focus:outline-none"
+            className={`focus:outline-none ${isFAQPage ? "text-black" : "text-white"}`}
           >
             <svg
               className="w-6 h-6"
