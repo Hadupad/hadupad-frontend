@@ -1,5 +1,7 @@
-"use client";
+"use client"
+
 import { useState } from "react";
+import Link from "next/link"; // Import Link from next/link
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,11 +25,31 @@ export default function NavBar() {
           } md:flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[4vw] z-50`}
         >
           <ul className="flex flex-col md:flex-row items-center gap-8 md:gap-[4vw] font-medium">
-            <li className="text-[#DC4731] font-semibold">Home</li>
-            <li className="text-black hover:text-[#DC4731]">Properties</li>
-            <li className="text-black hover:text-[#DC4731]">About Us</li>
-            <li className="text-black hover:text-[#DC4731]">Contact</li>
-            <li className="text-black hover:text-[#DC4731]">FAQs</li>
+            <li>
+              <Link href="/" className="text-[#DC4731] font-semibold">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link href="/properties" className="text-black hover:text-[#DC4731]">
+                Properties
+              </Link>
+            </li>
+            <li>
+              <Link href="/about-us" className="text-black hover:text-[#DC4731]">
+                About Us
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="text-black hover:text-[#DC4731]">
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link href="/faqs" className="text-black hover:text-[#DC4731]">
+                FAQs
+              </Link>
+            </li>
           </ul>
         </div>
 
