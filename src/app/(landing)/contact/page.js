@@ -26,7 +26,7 @@ export default function Contact() {
 
             {/* Image - comes second on mobile */}
             <div className="w-full md:w-1/2 order-2 md:order-2 px-4 md:px-0">
-              <img
+              <image
                 src="/images/contact/heart.png"
                 width={283.63}
                 height={40}

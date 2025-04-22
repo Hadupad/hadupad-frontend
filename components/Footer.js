@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from 'next/image';
+
 import {
   FaPhoneAlt,
   FaCommentDots,
@@ -65,11 +67,14 @@ const Footer = () => {
 
           {/* Nigeria Flag */}
           <div className="flex items-center pt-20">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/7/79/Flag_of_Nigeria.svg"
-              alt="Nigeria Flag"
-              className="w-7 h-4 mr-2"
-            />
+          <Image
+  src="https://upload.wikimedia.org/wikipedia/commons/7/79/Flag_of_Nigeria.svg"
+  alt="Nigeria Flag"
+  width={28} // w-7 = 1.75rem = 28px
+  height={16} // h-4 = 1rem = 16px
+  className="w-7 h-4 mr-2"
+/>
+
             <span className="font-semibold tracking-wide">
               FEDERAL REPUBLIC OF NIGERIA (NGN)
             </span>

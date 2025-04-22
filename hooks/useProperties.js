@@ -13,7 +13,7 @@ export default function useProperties() {
         {
           id: 1,
           location: "Lekki Phase 1",
-          images: ["/img/prop1a.jpg", "/img/prop1b.jpg", "/img/prop1c.jpg"],
+          images: ["/images/properties/1.png", "/images/properties/2.png", "/images/properties/3.png"],
           beds: 3,
           baths: 2,
           price: 150000,
@@ -22,7 +22,7 @@ export default function useProperties() {
         {
           id: 2,
           location: "Jabi, Abuja",
-          images: ["/img/prop2a.jpg", "/img/prop2b.jpg", "/img/prop2c.jpg"],
+          images: ["/images/properties/1.png", "/images/properties/2.png", "/images/properties/3.png"],
           beds: 3,
           baths: 3,
           price: 50000,
@@ -31,7 +31,7 @@ export default function useProperties() {
         {
           id: 3,
           location: "Ikoyi, Lagos",
-          images: ["/img/prop3a.jpg", "/img/prop3b.jpg", "/img/prop3c.jpg"],
+          images: ["/images/properties/1.png", "/images/properties/2.png", "/images/properties/3.png"],
           beds: 4,
           baths: 4,
           price: 250000,

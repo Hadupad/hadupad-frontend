@@ -12,7 +12,7 @@ export default function WhyChoose() {
       <div className="block md:hidden space-y-6">
         {/* Card 2: Instant Payment */}
         <div className="bg-[#DC4731]/10 rounded-lg shadow flex flex-col overflow-hidden border-shadow">
-          <img
+          <image
             src="/images/about/image-2.png"
             alt="Instant Payment"
             className="w-full h-60 object-cover"
@@ -29,7 +29,7 @@ export default function WhyChoose() {
         {/* Card 1 & 4 side by side */}
         <div className="flex gap-4">
           <div className="bg-[#CB7246]/50 rounded-lg shadow flex flex-col overflow-hidden border-shadow">
-            <img
+            <image
               src="/images/about/image-1.png"
               alt="Instant Payment"
               className="w-full rounded-t-lg"
@@ -45,7 +45,7 @@ export default function WhyChoose() {
 
           {/* Card 4: User-friendly Platform */}
           <div className="bg-[#FFEED8]/50 rounded-lg shadow flex flex-col overflow-hidden border-shadow">
-            <img
+            <image
               src="/images/about/image-4.png"
               alt="Instant Payment"
               className="w-full rounded-t-lg"
@@ -63,7 +63,7 @@ export default function WhyChoose() {
         {/* Card 3: 24/7 Support */}
 
         <div className="bg-[#FCB591] rounded-lg shadow flex flex-col overflow-hidden border-shadow">
-          <img
+          <image
             src="/images/about/image-3.png"
             alt="24/7 Support"
             className="w-full h-55 object-cover rounded mb-4"
@@ -86,7 +86,7 @@ export default function WhyChoose() {
           {/* Card 1 - 33% width */}
           <div className="w-1/3">
             <div className="bg-[#CB7246]/50 rounded-lg shadow flex flex-col h-full border border-[#CB7246]/30">
-              <img
+              <image
                 src="/images/about/image-1.png"
                 alt="Instant Payment"
                 className="w-full h-48 object-cover rounded-t-lg"
@@ -103,7 +103,7 @@ export default function WhyChoose() {
           {/* Card 2 - 66% width */}
           <div className="w-2/3">
             <div className="bg-[#DC4731]/10 rounded-lg shadow flex flex-col h-full border border-[#DC4731]/20">
-              <img
+              <image
                 src="/images/about/image-2.png"
                 alt="Trusted & Secure"
                 className="w-full h-48 object-cover rounded-t-lg"
@@ -123,7 +123,7 @@ export default function WhyChoose() {
           {/* Card 3 - 66% width (longer) */}
           <div className="w-2/3">
             <div className="bg-[#FCB591]/20 rounded-lg shadow flex flex-col h-full border border-[#FCB591]/30">
-              <img
+              <image
                 src="/images/about/image-3.png"
                 alt="24/7 Support"
                 className="w-full h-48 object-cover rounded-t-lg"
@@ -140,7 +140,7 @@ export default function WhyChoose() {
           {/* Card 4 - 33% width */}
           <div className="w-1/3">
             <div className="bg-[#FFEED8] rounded-lg shadow flex flex-col h-full border border-[#FFEED8]/50">
-              <img
+              <image
                 src="/images/about/image-4.png"
                 alt="User-friendly Platform"
                 className="w-full h-48 object-cover rounded-t-lg"

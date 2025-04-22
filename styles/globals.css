@@ -1,5 +1,7 @@
 /* styles/globals.css */
 @import "tailwindcss";
+@import 'leaflet/dist/leaflet.css';
+
 
 body {
     margin: 0;
