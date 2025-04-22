@@ -41,7 +41,13 @@ export default function Search() {
       </div>
 
       {/* --- Desktop Search Box --- */}
-      <div className="hidden md:flex bg-white text-black rounded-2xl shadow-lg px-6 py-3 items-center justify-between gap-6 max-w-6xl mx-auto w-full mt-6">
+      <div
+  className="hidden md:flex bg-white text-black shadow-lg px-2 py-3 items-center justify-between gap-4 w-full md:ml-auto md:mr-4 md:max-w-5xl mt-6"
+  style={{ borderRadius: '3rem' }}
+>
+
+
+
         <div className="flex flex-col">
           <label className="block text-sm font-medium mb-1">Where</label>
           <input
@@ -84,7 +90,7 @@ export default function Search() {
           />
         </div>
 
-        <button className="bg-[#DC4731] text-white p-3 rounded-full">
+        <button className="bg-[#DC4731] text-white p-4 rounded-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="w-5 h-5"
@@ -95,7 +101,7 @@ export default function Search() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
+              strokeWidth={3}
               d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
             />
           </svg>
