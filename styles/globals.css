@@ -15,6 +15,19 @@ body {
   opacity: 1;
 }
 
+/* styles/globals.css or wherever your global styles are */
+.slick-dots li.slick-active div {
+  opacity: 1 !important;
+}
+
+
+
+/* In your global CSS */
+.slick-dots li {
+  margin: 0 !important;
+}
+
+
 .slick-dots li.slick-active button:before {
   color: #f97316; /* orange-500 */
 }
@@ -35,6 +48,9 @@ body {
 .property-slider .slick-dots li {
   margin: 0 -2px !important; /* Default is ~8px, reduce it */
 }
+
+
+
 
 
 
