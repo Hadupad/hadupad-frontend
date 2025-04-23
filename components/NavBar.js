@@ -14,7 +14,7 @@ export default function NavBar() {
 
   return (
     <header className="bg-transparent md:bg-white fixed w-full z-50">
-      <nav className="shadow-lg shadow-black/50 max-w-[1440px] mx-auto px-[5%] flex items-center justify-between h-[80px] relative">
+      <nav className="shadow-lg shadow-black/50 w-full mx-auto px-[5%] flex items-center justify-between h-[80px] relative">
         {/* Logo */}
         <div>
           <img
