@@ -1,4 +1,6 @@
 "use client";
+import Image from "next/image";  // Make sure you're importing the Image component
+
 
 import LetsTalk from "../../../../components/LetsTalk";
 import ContactForm from "../../../../components/ContactForm";
@@ -26,7 +28,7 @@ export default function Contact() {
 
             {/* Image - comes second on mobile */}
             <div className="w-full md:w-1/2 order-2 md:order-2 px-4 md:px-0">
-              <image
+              <Image
                 src="/images/contact/heart.png"
                 width={283.63}
                 height={40}

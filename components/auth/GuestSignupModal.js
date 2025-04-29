@@ -1,0 +1,212 @@
+// "use client";
+
+// import { useEffect, useRef } from "react";
+// import { X } from "lucide-react";
+
+// export default function GuestSignupModal({ onClose }) {
+//   const modalRef = useRef();
+
+//   useEffect(() => {
+//     const handleEsc = (event) => {
+//       if (event.key === "Escape") {
+//         onClose();
+//       }
+//     };
+//     window.addEventListener("keydown", handleEsc);
+//     return () => window.removeEventListener("keydown", handleEsc);
+//   }, [onClose]);
+
+//   const handleOverlayClick = (event) => {
+//     if (modalRef.current && !modalRef.current.contains(event.target)) {
+//       onClose();
+//     }
+//   };
+
+//   return (
+//     <div
+//       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+//       onClick={handleOverlayClick}
+//     >
+//       <div
+//         ref={modalRef}
+//         className="bg-white w-[90%] max-w-md rounded-xl shadow-xl p-6 relative"
+//       >
+        // {/* Close button */}
+        // <button
+        //   onClick={onClose}
+        //   className="absolute top-4 right-4 text-gray-600 hover:text-black"
+        // >
+        //   <X size={24} />
+        // </button>
+
+        // {/* Modal Content */}
+        // <h2 className="text-xl font-semibold text-center mb-4">
+        //   Welcome to Hadupad
+        // </h2>
+
+        // <form className="flex flex-col gap-4">
+        //   {/* Country/Region Select */}
+        //   <div>
+        //     <label className="text-sm mb-1 block">Country/Region</label>
+        //     <select className="w-full border rounded-lg p-2">
+        //       <option>Nigeria (+234)</option>
+        //       <option>United States (+1)</option>
+        //       <option>United Kingdom (+44)</option>
+        //     </select>
+        //   </div>
+
+        //   {/* Phone Number */}
+        //   <div>
+        //     <label className="text-sm mb-1 block">Phone number</label>
+        //     <input
+        //       type="tel"
+        //       placeholder="Enter your phone number"
+        //       className="w-full border rounded-lg p-2"
+        //     />
+        //   </div>
+
+        //   <p className="text-xs text-gray-500">
+        //     We’ll call or text you to confirm your number. Standard message and data rates apply.
+        //     <a href="#" className="text-[#DC4731] ml-1 underline">Privacy Policy</a>
+        //   </p>
+
+        //   {/* Continue Button */}
+        //   <button
+        //     type="submit"
+        //     className="bg-[#DC4731] text-white py-2 rounded-lg hover:bg-[#c03d29] transition"
+        //   >
+        //     Continue
+        //   </button>
+
+        //   {/* Divider */}
+        //   <div className="flex items-center my-2">
+        //     <hr className="flex-grow border-gray-300" />
+        //     <span className="mx-2 text-sm text-gray-400">or</span>
+        //     <hr className="flex-grow border-gray-300" />
+        //   </div>
+
+        //   {/* Social Login Buttons */}
+        //   <button className="border rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-100">
+        //     Continue with Facebook
+        //   </button>
+        //   <button className="border rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-100">
+        //     Continue with Google
+        //   </button>
+        //   <button className="border rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-100">
+        //     Continue with Apple
+        //   </button>
+        //   <button className="border rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-100">
+        //     Continue with Email
+        //   </button>
+        // </form>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+"use client";
+
+import { useEffect, useRef } from "react";
+import { X } from "lucide-react";
+
+export default function GuestSignupModal({ onClose }) {
+  const modalRef = useRef();
+
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [onClose]);
+
+  const handleOverlayClick = (event) => {
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      onClose();
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={handleOverlayClick}
+    >
+      <div
+        ref={modalRef}
+        className="bg-white w-[90%] max-w-md rounded-xl shadow-xl p-6 relative"
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-600 hover:text-black"
+        >
+          <X size={24} />
+        </button>
+
+        {/* Modal Content */}
+        <h2 className="text-xl font-semibold text-center mb-4">
+          Welcome to Hadupad
+        </h2>
+
+        <form className="flex flex-col gap-4">
+          {/* Country/Region Select */}
+          <div>
+            <label className="text-sm mb-1 block">Country/Region</label>
+            <select className="w-full border rounded-lg p-2">
+              <option>Nigeria (+234)</option>
+              <option>United States (+1)</option>
+              <option>United Kingdom (+44)</option>
+            </select>
+          </div>
+
+          {/* Phone Number */}
+          <div>
+            <label className="text-sm mb-1 block">Phone number</label>
+            <input
+              type="tel"
+              placeholder="Enter your phone number"
+              className="w-full border rounded-lg p-2"
+            />
+          </div>
+
+          <p className="text-xs text-gray-500">
+            We’ll call or text you to confirm your number. Standard message and data rates apply.
+            <a href="#" className="text-[#DC4731] ml-1 underline">Privacy Policy</a>
+          </p>
+
+          {/* Continue Button */}
+          <button
+            type="submit"
+            className="bg-[#DC4731] text-white py-2 rounded-lg hover:bg-[#c03d29] transition"
+          >
+            Continue
+          </button>
+
+          {/* Divider */}
+          <div className="flex items-center my-2">
+            <hr className="flex-grow border-gray-300" />
+            <span className="mx-2 text-sm text-gray-400">or</span>
+            <hr className="flex-grow border-gray-300" />
+          </div>
+
+          {/* Social Login Buttons */}
+          <button className="border rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-100">
+            Continue with Facebook
+          </button>
+          <button className="border rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-100">
+            Continue with Google
+          </button>
+          <button className="border rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-100">
+            Continue with Apple
+          </button>
+          <button className="border rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-100">
+            Continue with Email
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
