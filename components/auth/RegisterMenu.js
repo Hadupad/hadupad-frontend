@@ -7,7 +7,7 @@ export default function RegisterMenu({ className = "", onGuestClick }) {
     <div className={`absolute right-0 top-8 bg-white shadow-lg rounded-xl p-4 z-50 flex flex-col gap-4 ${className}`}>
       <button
         onClick={onGuestClick}
-        className="cursor-pointer text-left hover:text-[#DC4731]"
+        className="w-35 max-w-* cursor-pointer text-left hover:text-[#DC4731]"
       >
         Register as a guest
       </button>

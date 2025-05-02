@@ -1,95 +1,46 @@
-// "use client";
-
-// import { useState } from "react";
-// import GuestSignupModal from "./GuestSignupModal";
-// import PhoneVerificationModal from "./PhoneVerificationModal";
-
-// export default function AuthModalContainer() {
-//   const [modalState, setModalState] = useState<{
-//     isOpen: boolean;
-//     step: "signup" | "verify" | null;
-//     phoneNumber: string;
-//   }>({
-//     isOpen: false,
-//     step: null,
-//     phoneNumber: "",
-//   });
-
-//   const openSignup = () => {
-//     setModalState({
-//       isOpen: true,
-//       step: "signup",
-//       phoneNumber: "",
-//     });
-//   };
-
-//   const handlePhoneSubmit = (phoneNumber: string) => {
-//     setModalState(prev => ({
-//       ...prev,
-//       step: "verify",
-//       phoneNumber,
-//     }));
-//   };
-
-//   const handleClose = () => {
-//     setModalState({
-//       isOpen: false,
-//       step: null,
-//       phoneNumber: "",
-//     });
-//   };
-
-//   return (
-//     <>
-//       <button
-//         onClick={openSignup}
-//         className="bg-[#DC4731] text-white px-4 py-2 rounded-lg"
-//       >
-//         Register as Guest
-//       </button>
-
-//       {modalState.isOpen && modalState.step === "signup" && (
-//         <GuestSignupModal
-//           onClose={handleClose}
-//           onPhoneSubmit={handlePhoneSubmit}
-//         />
-//       )}
-
-//       {modalState.isOpen && modalState.step === "verify" && (
-//         <PhoneVerificationModal
-//           onClose={handleClose}
-//           phoneNumber={modalState.phoneNumber}
-//         />
-//       )}
-//     </>
-//   );
-// }
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GuestSignupModal from "./GuestSignupModal";
 import PhoneVerificationModal from "./PhoneVerificationModal";
 
-export default function AuthModalContainer() {
-  const [step, setStep] = useState("signup"); // 'signup' or 'verify'
+export default function AuthModalContainer({ isOpen, onClose }) {
+  const [step, setStep] = useState("signup");
   const [phoneNumber, setPhoneNumber] = useState("");
+
+  // Reset the flow when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      const timer = setTimeout(() => {
+        setStep("signup");
+        setPhoneNumber("");
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   const handlePhoneSubmit = (number) => {
     setPhoneNumber(number);
     setStep("verify");
   };
 
-  const handleClose = () => {
-    setStep(""); // close everything
-  };
+  if (!isOpen) return null;
 
   return (
     <>
       {step === "signup" && (
-        <GuestSignupModal onClose={handleClose} onPhoneSubmit={handlePhoneSubmit} />
+        <GuestSignupModal 
+          isOpen={true}
+          onClose={onClose}
+          onPhoneSubmit={handlePhoneSubmit}
+        />
       )}
       {step === "verify" && (
-        <PhoneVerificationModal onClose={handleClose} phoneNumber={phoneNumber} />
+        <PhoneVerificationModal 
+          isOpen={true}
+          onClose={onClose}
+          phoneNumber={phoneNumber}
+        />
       )}
     </>
   );
