@@ -1,69 +1,9 @@
-// import React from 'react';
-
-// const FinishSigninUp = () => {
-//   return (
-//     <div className="relative w-full h-screen overflow-hidden">
-//       {/* Background image with blur overlay */}
-//       <div
-//         className="absolute inset-0 bg-cover bg-center blur-sm brightness-75"
-//         style={{ backgroundImage: "url('/path-to-your-background-image.jpg')" }}
-//       />
-
-//       {/* Navigation bar */}
-//       <header className="absolute top-0 left-0 w-full flex justify-between items-center px-6 py-4 z-10">
-//         <div className="text-2xl font-bold text-white">🏠</div>
-//         <nav className="space-x-6 text-white font-medium">
-//           <a href="#">Home</a>
-//           <a href="#">Properties</a>
-//           <a href="#">About Us</a>
-//           <a href="#">Contact</a>
-//           <a href="#">FAQs</a>
-//           <button className="bg-white text-red-600 font-semibold px-4 py-1 rounded-full ml-4">
-//             Register
-//           </button>
-//         </nav>
-//       </header>
-
-//       {/* Sign up modal */}
-//       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white p-6 rounded-lg shadow-xl z-20">
-//         <h2 className="text-center font-semibold text-gray-700 mb-4">Finish signing up</h2>
-//         <form className="space-y-4">
-//           <input className="w-full border rounded p-2" placeholder="First name" />
-//           <input className="w-full border rounded p-2" placeholder="Last name" />
-//           <input className="w-full border rounded p-2" placeholder="Birthdate" type="date" />
-//           <input className="w-full border rounded p-2" placeholder="Email address" type="email" />
-//           <input className="w-full border rounded p-2" placeholder="Password" type="password" />
-//           <p className="text-xs text-gray-500">
-//             By clicking Agree and continue, I agree to the <a href="#" className="underline">Terms of Service</a> and <a href="#" className="underline">Privacy Policy</a>.
-//           </p>
-//           <button className="w-full bg-gray-300 text-white py-2 rounded cursor-not-allowed">
-//             Agree and continue
-//           </button>
-//         </form>
-//       </div>
-
-//       {/* Search bar */}
-//       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 w-[90%] max-w-4xl bg-white shadow-lg rounded-full px-4 py-3 flex flex-wrap gap-4 justify-between items-center z-10">
-//         <input className="flex-1 min-w-[120px] p-2 border rounded" placeholder="Where" />
-//         <input className="flex-1 min-w-[100px] p-2 border rounded" placeholder="Budget" />
-//         <input className="flex-1 min-w-[100px] p-2 border rounded" placeholder="Bedrooms" />
-//         <input className="flex-1 min-w-[100px] p-2 border rounded" placeholder="Guests" />
-//         <button className="bg-red-500 text-white px-4 py-2 rounded-full">
-//           🔍
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default FinishSigninUp;
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, X } from "lucide-react";
 
-const FinishSigninUp = ({ isOpen, onClose, onBack, phoneNumber, verificationCode }) => {
+const FinishSigninUp = ({ isOpen, onClose, onBack, onComplete, phoneNumber, verificationCode }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -73,6 +13,19 @@ const FinishSigninUp = ({ isOpen, onClose, onBack, phoneNumber, verificationCode
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  // Validate form whenever formData changes
+  useEffect(() => {
+    const isValid = (
+      formData.firstName.trim() !== '' &&
+      formData.lastName.trim() !== '' &&
+      formData.birthdate !== '' &&
+      formData.email.trim() !== '' &&
+      formData.password.length >= 6
+    );
+    setIsFormValid(isValid);
+  }, [formData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,6 +37,8 @@ const FinishSigninUp = ({ isOpen, onClose, onBack, phoneNumber, verificationCode
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isFormValid) return;
+    
     setIsLoading(true);
     try {
       const userData = {
@@ -92,7 +47,9 @@ const FinishSigninUp = ({ isOpen, onClose, onBack, phoneNumber, verificationCode
         verificationCode
       };
       console.log("Final submission:", userData);
-      onClose();
+      // Here you would typically send this to your backend
+      // await api.registerUser(userData);
+      onComplete(userData);
     } catch (error) {
       console.error("Registration failed:", error);
     } finally {
@@ -105,26 +62,20 @@ const FinishSigninUp = ({ isOpen, onClose, onBack, phoneNumber, verificationCode
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <div className="bg-white w-[90%] max-w-md rounded-2xl shadow-2xl p-6 relative">
-        {/* Back button (left) */}
-        <button 
-          onClick={onBack} 
-          className="absolute top-4 left-4 text-gray-600 hover:text-black"
-        >
+        <button onClick={onBack} className="absolute  left-4 text-gray-600 hover:text-black">
           <ChevronLeft size={24} />
         </button>
-        
-        {/* Close button (right) */}
-        <button 
-          onClick={onClose} 
-          className="absolute top-4 right-4 text-gray-600 hover:text-black"
-        >
+        <button onClick={onClose} className="absolute  right-4 text-gray-600 hover:text-black">
           <X size={24} />
         </button>
 
         <h2 className="text-center text-lg font-semibold mb-6">Finish signing up</h2>
 
+        <div className="-mx-8 mt-4 mb-10">
+          <hr className="border-t border-gray-100" />
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* First Name */}
           <div>
             <input 
               name="firstName"
@@ -136,7 +87,6 @@ const FinishSigninUp = ({ isOpen, onClose, onBack, phoneNumber, verificationCode
             />
           </div>
 
-          {/* Last Name */}
           <div>
             <input 
               name="lastName"
@@ -149,7 +99,6 @@ const FinishSigninUp = ({ isOpen, onClose, onBack, phoneNumber, verificationCode
             <p className="text-xs text-neutral-500 mt-1">Make sure it matches the name on your government ID.</p>
           </div>
 
-          {/* Birthdate */}
           <div>
             <input 
               name="birthdate"
@@ -160,11 +109,10 @@ const FinishSigninUp = ({ isOpen, onClose, onBack, phoneNumber, verificationCode
               required
             />
             <p className="text-xs text-neutral-500 mt-1">
-              To sign up, you need to be at least 18. Your birthday won't be shared with other people.
+              To sign up, you need to be at least 18. Your birthday won't be shared with others.
             </p>
           </div>
 
-          {/* Email */}
           <div>
             <input 
               name="email"
@@ -180,7 +128,6 @@ const FinishSigninUp = ({ isOpen, onClose, onBack, phoneNumber, verificationCode
             </p>
           </div>
 
-          {/* Password */}
           <div className="relative">
             <input 
               name="password"
@@ -188,7 +135,7 @@ const FinishSigninUp = ({ isOpen, onClose, onBack, phoneNumber, verificationCode
               onChange={handleChange}
               className="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm outline-none pr-16"
               type={showPassword ? "text" : "password"}
-              placeholder="Password"
+              placeholder="Password (min 6 characters)"
               required
               minLength={6}
             />
@@ -201,22 +148,22 @@ const FinishSigninUp = ({ isOpen, onClose, onBack, phoneNumber, verificationCode
             </button>
           </div>
 
-          {/* Terms and Policies */}
           <p className="text-xs text-gray-600 mt-2">
             By selecting Agree and continue, I agree to the{" "}
             <a href="#" className="text-[#DC4731] underline">Terms of Service</a>,{" "}
-            <a href="#" className="text-[#DC4731] underline">Payments Terms of Service</a> and{" "}
-            <a href="#" className="text-[#DC4731] underline">Nondiscrimination Policy</a> and acknowledge the{" "}
+            <a href="#" className="text-[#DC4731] underline">Payments Terms of Service</a>, and{" "}
+            <a href="#" className="text-[#DC4731] underline">Nondiscrimination Policy</a>, and acknowledge the{" "}
             <a href="#" className="text-[#DC4731] underline">Privacy Policy</a>.
           </p>
 
-          {/* Submit Button */}
           <button 
             type="submit" 
             className={`w-full py-3 mt-2 rounded-xl text-white font-semibold transition ${
-              isLoading ? "bg-[#dc4731]/70" : "bg-[#DC4731] hover:bg-[#c03d29]"
+              !isFormValid || isLoading 
+                ? "bg-gray-300 cursor-not-allowed" 
+                : "bg-[#DC4731] hover:bg-[#c03d29]"
             }`}
-            disabled={isLoading}
+            disabled={!isFormValid || isLoading}
           >
             {isLoading ? "Loading..." : "Agree and continue"}
           </button>
