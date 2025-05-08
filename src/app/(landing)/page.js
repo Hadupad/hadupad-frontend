@@ -1,21 +1,48 @@
-// import '../../../styles/globals.css';  // Import global CSS
+// // import '../../../styles/globals.css';  // Import global CSS
+// 
+// import Hero from '../../../components/Hero';
+// import FeaturedProperties from '../../../components/FeaturedProperties';
+// import ListingProperties from '../../../components/ListingProperties';
+// import TopDestinations from '../../../components/TopDestinations';
+// import AuthModalContainer from '../../../components/auth/AuthModalContainer'
 
+
+// export default function Home() {
+//   return (
+//    <>
+   
+            // <Hero />
+            // <FeaturedProperties />
+            // <ListingProperties />
+            // <TopDestinations />
+            // <AuthModalContainer />
+//    </>
+//   );
+// }
+"use client"
+import { useState } from "react";
+import AuthModalContainer from "../../../components/auth/AuthModalContainer";
 import Hero from '../../../components/Hero';
 import FeaturedProperties from '../../../components/FeaturedProperties';
 import ListingProperties from '../../../components/ListingProperties';
 import TopDestinations from '../../../components/TopDestinations';
-import AuthModalContainer from '../../../components/auth/AuthModalContainer'
-
 
 export default function Home() {
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
   return (
-   <>
-   
-            <Hero />
+    <div>
+      <Hero />
             <FeaturedProperties />
             <ListingProperties />
             <TopDestinations />
             <AuthModalContainer />
-   </>
+      <button onClick={() => setIsAuthModalOpen(true)}>Sign Up</button>
+      
+      <AuthModalContainer 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
+    </div>
   );
 }
