@@ -5,24 +5,14 @@ import GuestSignupModal from "./GuestSignupModal";
 import PhoneVerificationModal from "./PhoneVerificationModal";
 import FinishSigninUp from "./FinishSigninUp";
 import WelcomePage from "./WelcomePage";
+import useAuth from "@/hooks/useAuth";
 
 export default function AuthModalContainer({ isOpen, onClose }) {
   const [step, setStep] = useState("signup");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-    if (!isOpen) {
-      const timer = setTimeout(() => {
-        setStep("signup");
-        setPhoneNumber("");
-        setVerificationCode("");
-        setUserData(null);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
+  const [userData, setUserData] = useState(null); // Added state for userData
+  const { login } = useAuth();
 
   const handlePhoneSubmit = (number) => {
     setPhoneNumber(number);
@@ -35,7 +25,8 @@ export default function AuthModalContainer({ isOpen, onClose }) {
   };
 
   const handleSignupComplete = (data) => {
-    setUserData(data);
+    setUserData(data); // Store the user data
+    login(data); // Save to auth context
     setStep("welcome");
   };
 
@@ -48,6 +39,18 @@ export default function AuthModalContainer({ isOpen, onClose }) {
       setStep("finish");
     }
   };
+
+  useEffect(() => {
+    if (!isOpen) {
+      const timer = setTimeout(() => {
+        setStep("signup");
+        setPhoneNumber("");
+        setVerificationCode("");
+        setUserData(null);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -84,7 +87,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
           isOpen={true}
           onClose={onClose}
           onBack={handleBack}
-          userData={userData}
+          userData={userData} // Now properly passing the userData
         />
       )}
     </>

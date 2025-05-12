@@ -8,7 +8,7 @@ const WelcomePage = ({ isOpen, onClose, onBack, userData }) => {
   const router = useRouter();
 
   const handleContinue = () => {
-    router.push("/dashboard");
+    router.push("/");
     onClose();
   };
 
