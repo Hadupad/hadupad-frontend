@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
+import axios from "axios";
 
-export default function PhoneVerificationModal({ 
-  isOpen, 
-  onClose, 
+export default function PhoneVerificationModal({
+  isOpen,
+  onClose,
   onBack,
-  phoneNumber = "", 
-  onVerificationComplete 
+  phoneNumber = "",
+  onVerificationComplete,
 }) {
   const modalRef = useRef();
   const [code, setCode] = useState(["", "", "", ""]);
@@ -49,12 +50,6 @@ export default function PhoneVerificationModal({
     if (nextInput) nextInput.focus();
   };
 
-  const handleResendCode = () => {
-    setCountdown(30);
-    setCanResend(false);
-    // Add your resend code logic here
-  };
-
   const handleContinue = async () => {
     const fullCode = code.join("");
     if (fullCode.length === 4) {
@@ -72,31 +67,70 @@ export default function PhoneVerificationModal({
     }
   };
 
+  const handleResendCode = async () => {
+    if (!phoneNumber) return;
+
+    try {
+      setIsLoading(true);
+      setCountdown(30);
+      setCanResend(false);
+
+      const response = await axios.post(
+        "https://hadupadbackend.onrender.com/api/auth/register/initiate",
+        {
+          phoneNumber: phoneNumber,
+          userType: "user",
+        }
+      );
+
+      console.log("OTP resent:", response.data);
+      console.log("OTP is:" + response.data.otp);
+    } catch (error) {
+      console.error("Resend failed:", error.response?.data || error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70" onClick={handleOverlayClick}>
-      <div ref={modalRef} className="bg-white w-[90%] max-w-md rounded-xl shadow-xl p-6 relative">
-        <button onClick={onBack} className="absolute left-4 text-gray-600 hover:text-black">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+      onClick={handleOverlayClick}
+    >
+      <div
+        ref={modalRef}
+        className="bg-white w-[90%] max-w-md rounded-xl shadow-xl p-6 relative"
+      >
+        <button
+          onClick={onBack}
+          className="absolute left-4 text-gray-600 hover:text-black"
+        >
           <ChevronLeft size={24} />
         </button>
-        <button onClick={onClose} className="absolute right-4 text-gray-600 hover:text-black">
+        <button
+          onClick={onClose}
+          className="absolute right-4 text-gray-600 hover:text-black"
+        >
           <X size={24} />
         </button>
 
-        <h2 className="text-lg font-semibold text-center mb-1">We sent a code</h2>
+        <h2 className="text-lg font-semibold text-center mb-1">
+          We sent a code
+        </h2>
 
         <div className="-mx-4 mt-4 mb-10">
           <hr className="border-t border-gray-100" />
         </div>
 
-        <h2 className="text-lg font-semibold text-center mb-1">Confirm your phone number</h2>
+        <h2 className="text-lg font-semibold text-center mb-1">
+          Confirm your phone number
+        </h2>
 
         <p className="text-sm text-center mb-4 text-gray-600">
-          Enter the 4-digit code sent to <strong>{phoneNumber}</strong>
+          4-digit code sent to <strong>{phoneNumber}</strong>
         </p>
-
-      
 
         <div className="flex justify-center gap-3 mb-4">
           {code.map((digit, index) => (
@@ -124,21 +158,29 @@ export default function PhoneVerificationModal({
         >
           {isLoading ? (
             <span className="loading loading-spinner"></span>
-          ) : "Continue"}
+          ) : (
+            "Continue"
+          )}
         </button>
 
         <div className="text-center mt-4 text-sm">
-          Didn't get a text?{" "}
-          <button 
+          Didn&apos;t get a text?{" "}
+          <button
             onClick={handleResendCode}
             disabled={!canResend}
-            className={`font-medium ${canResend ? "text-[#DC4731] underline hover:text-[#b33220]" : "text-gray-400"}`}
+            className={`font-medium ${
+              canResend
+                ? "text-[#DC4731] underline hover:text-[#b33220]"
+                : "text-gray-400"
+            }`}
           >
             {canResend ? "Send again" : `Resend in ${countdown}s`}
           </button>
         </div>
         <div className="text-center mt-2 text-sm">
-          <button className="underline text-gray-600 hover:text-black">Call me instead</button>
+          <button className="underline text-gray-600 hover:text-black">
+            Call me instead
+          </button>
         </div>
       </div>
     </div>

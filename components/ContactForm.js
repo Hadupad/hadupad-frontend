@@ -13,7 +13,7 @@ export default function ContactForm() {
         <div class="text-3xl md:text-4xl font-bold">
           <h2> Have an Idea?</h2>
 
-          <h2> Let’s discuss!</h2>
+          <h2> Let&apos;s discuss!</h2>
         </div>
         <div class="text-gray-700 space-y-2">
           <p>Thank you for getting in touch!</p>

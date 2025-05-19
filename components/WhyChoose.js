@@ -1,3 +1,5 @@
+import Image from "next/image"; 
+
 export default function WhyChoose() {
   return (
     <section className="py-20 px-6 md:px-12 max-w-7xl mx-auto">

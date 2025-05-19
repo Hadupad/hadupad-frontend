@@ -4,12 +4,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { CheckCircle, ChevronLeft, X } from "lucide-react";
 
-const WelcomePage = ({ isOpen, onClose, onBack, userData }) => {
+const WelcomePage = ({ isOpen, onClose, onBack, userData, profilePhotoDialog }) => {
   const router = useRouter();
 
   const handleContinue = () => {
-    router.push("/");
-    onClose();
+    profilePhotoDialog();
   };
 
   if (!isOpen) return null;
@@ -54,7 +53,7 @@ const WelcomePage = ({ isOpen, onClose, onBack, userData }) => {
           </button>
 
           <div className="text-center mt-2 text-sm">
-          <button className="underline text-gray-600 hover:text-black">I'll do this later</button>
+          <button className="underline text-gray-600 hover:text-black">I&apos;ll do this later</button>
         </div>
         </div>
       </div>
