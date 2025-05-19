@@ -19,7 +19,6 @@ const ProfilePhotoDialog = ({ isOpen, onClose, onPhotoSelect }) => {
   const handlePhotoSubmit = () => {
     if (selectedImage) {
       onPhotoSelect(selectedImage); // send file to parent
-      onClose(); // optionally close dialog
     }
   };
   const triggerFileSelect = () => {

@@ -6,6 +6,7 @@ import PhoneVerificationModal from "./PhoneVerificationModal";
 import FinishSigninUp from "./FinishSigninUp";
 import WelcomePage from "./WelcomePage";
 import ProfilePhotoDialog from "./ProfilePhotoDialog";
+import IdentityVerification from "./IdentityVerification";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 
@@ -28,7 +29,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
         "https://hadupadbackend.onrender.com/api/auth/register/initiate",
         {
           phoneNumber: number,
-          userType: "user",
+          userType: "host",
         }
       );
       console.log("API response:", response.data);
@@ -98,11 +99,33 @@ export default function AuthModalContainer({ isOpen, onClose }) {
           },
         }
       );
-      
+      setStep("VerifyIdentity");
       console.log("Profile photo uploaded successfully");
       // Optionally update user state/UI
     } catch (error) {
       console.error("Failed to upload photo:", error);
+    }
+  };
+
+  const handleVerifyIdentity = async (identificationNumber) => {
+    const userId = localStorage.getItem("userId");
+    try {
+      const response = await axios.post(
+        `https://hadupadbackend.onrender.com/api/auth/host-verification/${userId}`,
+        {
+          identificationNumber: identificationNumber,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("verification successfully");
+        
+      } else {
+        console.warn("Verification error");
+        // Optionally show an error to the user here
+      }
+    } catch (err) {
+      console.error("Verification failed:", err);
     }
   };
 
@@ -172,6 +195,13 @@ export default function AuthModalContainer({ isOpen, onClose }) {
           isOpen={true}
           onClose={onClose}
           onPhotoSelect={handlePhotoUpload}
+        />
+      )}
+      {step === "VerifyIdentity" && (
+        <IdentityVerification
+          isOpen={true}
+          onClose={onClose}
+          NINIdentityVerification={handleVerifyIdentity}
         />
       )}
     </>
