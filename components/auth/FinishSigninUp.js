@@ -28,6 +28,7 @@ const FinishSigninUp = ({
   });
   const [isFormValid, setIsFormValid] = useState(false);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  
   // Password validation function
   const validatePassword = (password, firstName, email) => {
     const errors = {
