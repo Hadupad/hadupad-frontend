@@ -18,15 +18,14 @@ export default function AuthModalContainer({ isOpen, onClose }) {
   const [user_Id, setUserId] = useState("");
   const [user_otp, setOtp] = useState("");
   const { login } = useAuth();
-
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
   const handlePhoneSubmit = async (number) => {
     setPhoneNumber(number);
-
     if (!number) return;
 
     try {
       const response = await axios.post(
-        "https://hadupadbackend.onrender.com/api/auth/register/initiate",
+        `${API_URL}/register/initiate`,
         {
           phoneNumber: number,
           userType: "host",
@@ -58,7 +57,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
     if (!code) return;
     try {
       const response = await axios.post(
-        "https://hadupadbackend.onrender.com/api/auth/verify-otp",
+        `${API_URL}/verify-otp`,
         {
           userId: userId,
           otp: code,
@@ -91,7 +90,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
       formData.append("profilePicture", file);
       const userId = localStorage.getItem("userId");
       const response = await axios.put(
-        `https://hadupadbackend.onrender.com/api/auth/profile-picture/${userId}`,
+        `${API_URL}/profile-picture/${userId}`,
         formData,
         {
           headers: {
@@ -111,7 +110,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
     const userId = localStorage.getItem("userId");
     try {
       const response = await axios.post(
-        `https://hadupadbackend.onrender.com/api/auth/host-verification/${userId}`,
+        `${API_URL}/host-verification/${userId}`,
         {
           identificationNumber: identificationNumber,
         }

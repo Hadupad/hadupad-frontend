@@ -16,7 +16,8 @@ export default function PhoneVerificationModal({
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(30);
   const [canResend, setCanResend] = useState(false);
-
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
+  
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.key === "Escape") onClose();
@@ -50,8 +51,10 @@ export default function PhoneVerificationModal({
     if (nextInput) nextInput.focus();
   };
 
+
   const handleContinue = async () => {
     const fullCode = code.join("");
+    
     if (fullCode.length === 4) {
       setIsLoading(true);
       try {
@@ -76,7 +79,7 @@ export default function PhoneVerificationModal({
       setCanResend(false);
 
       const response = await axios.post(
-        "https://hadupadbackend.onrender.com/api/auth/register/initiate",
+        `${API_URL}/register/initiate`,
         {
           phoneNumber: phoneNumber,
           userType: "user",

@@ -27,7 +27,7 @@ const FinishSigninUp = ({
     containsNameOrEmail: false,
   });
   const [isFormValid, setIsFormValid] = useState(false);
-
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   // Password validation function
   const validatePassword = (password, firstName, email) => {
     const errors = {
@@ -86,7 +86,7 @@ const FinishSigninUp = ({
       };
       console.log("Final submission:", userData);
       const response = await axios.post(
-        "https://hadupadbackend.onrender.com/api/auth/register/complete",
+        `${API_URL}/register/complete`,
         formData
       );
       if (response.status === 200) {
@@ -243,8 +243,8 @@ const FinishSigninUp = ({
                   : "text-red-600"
               }`}
             >
-              {passwordErrors.containsNameOrEmail ? "✔" : "✘"} Can&apos;t contain
-              your name or email address
+              {passwordErrors.containsNameOrEmail ? "✔" : "✘"} Can&apos;t
+              contain your name or email address
             </li>
           </ul>
 
