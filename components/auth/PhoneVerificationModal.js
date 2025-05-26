@@ -49,14 +49,32 @@ export default function PhoneVerificationModal({
 
   const handleChange = (e, index) => {
     const value = e.target.value.replace(/\D/, "");
-    if (!value) return;
-
+    if (value === "") {
+      const newCode = [...code];
+      newCode[index] = "";
+      setCode(newCode);
+      return;
+    }
+    
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
 
     const nextInput = document.getElementById(`code-${index + 1}`);
     if (nextInput) nextInput.focus();
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace") {
+      if (code[index] === "") {
+        const prevInput = document.getElementById(`code-${index - 1}`);
+        if (prevInput) prevInput.focus();
+      } else {
+        const newCode = [...code];
+        newCode[index] = "";
+        setCode(newCode);
+      }
+    }
   };
 
 
@@ -153,6 +171,7 @@ export default function PhoneVerificationModal({
               maxLength={1}
               value={digit}
               onChange={(e) => handleChange(e, index)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
               ref={index === 0 ? firstInputRef : null}
               className="w-12 h-12 text-xl text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC4731]"
             />
