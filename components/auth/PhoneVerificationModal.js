@@ -12,11 +12,13 @@ export default function PhoneVerificationModal({
   onVerificationComplete,
 }) {
   const modalRef = useRef();
+  const firstInputRef = useRef(null);
   const [code, setCode] = useState(["", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const API_URL = process.env.NEXT_PUBLIC_API_URL
+
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.key === "Escape") onClose();
@@ -24,6 +26,13 @@ export default function PhoneVerificationModal({
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, [onClose]);
+
+  useEffect(() => {
+    if (isOpen && firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, [isOpen]);
+  
 
   useEffect(() => {
     if (countdown > 0) {
@@ -144,6 +153,7 @@ export default function PhoneVerificationModal({
               maxLength={1}
               value={digit}
               onChange={(e) => handleChange(e, index)}
+              ref={index === 0 ? firstInputRef : null}
               className="w-12 h-12 text-xl text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC4731]"
             />
           ))}
