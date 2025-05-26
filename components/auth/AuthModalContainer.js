@@ -18,19 +18,16 @@ export default function AuthModalContainer({ isOpen, onClose }) {
   const [user_Id, setUserId] = useState("");
   const [user_otp, setOtp] = useState("");
   const { login } = useAuth();
-  const API_URL = process.env.NEXT_PUBLIC_API_URL
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const handlePhoneSubmit = async (number) => {
     setPhoneNumber(number);
     if (!number) return;
 
     try {
-      const response = await axios.post(
-        `${API_URL}/register/initiate`,
-        {
-          phoneNumber: number,
-          userType: "host",
-        }
-      );
+      const response = await axios.post(`${API_URL}/register/initiate`, {
+        phoneNumber: number,
+        userType: "host",
+      });
       console.log("API response:", response.data);
       const { userId, otp } = response.data;
       setUserId(userId);
@@ -56,13 +53,10 @@ export default function AuthModalContainer({ isOpen, onClose }) {
     setVerificationCode(code);
     if (!code) return;
     try {
-      const response = await axios.post(
-        `${API_URL}/verify-otp`,
-        {
-          userId: userId,
-          otp: code,
-        }
-      );
+      const response = await axios.post(`${API_URL}/verify-otp`, {
+        userId: userId,
+        otp: code,
+      });
 
       if (response.status === 200) {
         setStep("finish");
@@ -118,10 +112,8 @@ export default function AuthModalContainer({ isOpen, onClose }) {
 
       if (response.status === 200) {
         console.log("verification successfully");
-        
       } else {
         console.warn("Verification error");
-        // Optionally show an error to the user here
       }
     } catch (err) {
       console.error("Verification failed:", err);

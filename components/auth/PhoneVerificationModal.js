@@ -17,7 +17,6 @@ export default function PhoneVerificationModal({
   const [countdown, setCountdown] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const API_URL = process.env.NEXT_PUBLIC_API_URL
-  
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.key === "Escape") onClose();
@@ -165,7 +164,6 @@ export default function PhoneVerificationModal({
             "Continue"
           )}
         </button>
-
         <div className="text-center mt-4 text-sm">
           Didn&apos;t get a text?{" "}
           <button
