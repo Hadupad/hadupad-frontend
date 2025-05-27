@@ -17,7 +17,7 @@ export default function PhoneVerificationModal({
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(30);
   const [canResend, setCanResend] = useState(false);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const handleEsc = (event) => {
@@ -32,7 +32,6 @@ export default function PhoneVerificationModal({
       firstInputRef.current.focus();
     }
   }, [isOpen]);
-  
 
   useEffect(() => {
     if (countdown > 0) {
@@ -55,7 +54,7 @@ export default function PhoneVerificationModal({
       setCode(newCode);
       return;
     }
-    
+
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
@@ -77,10 +76,9 @@ export default function PhoneVerificationModal({
     }
   };
 
-
   const handleContinue = async () => {
     const fullCode = code.join("");
-    
+
     if (fullCode.length === 4) {
       setIsLoading(true);
       try {
@@ -104,13 +102,10 @@ export default function PhoneVerificationModal({
       setCountdown(30);
       setCanResend(false);
 
-      const response = await axios.post(
-        `${API_URL}/register/initiate`,
-        {
-          phoneNumber: phoneNumber,
-          userType: "user",
-        }
-      );
+      const response = await axios.post(`${API_URL}/register/initiate`, {
+        phoneNumber: phoneNumber,
+        userType: "user",
+      });
 
       console.log("OTP resent:", response.data);
       console.log("OTP is:" + response.data.otp);

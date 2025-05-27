@@ -17,6 +17,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
   const [userData, setUserData] = useState(null); // Added state for userData
   const [user_Id, setUserId] = useState("");
   const [user_otp, setOtp] = useState("");
+  const [error, setError] = useState(null); // Add error state
   const { login } = useAuth();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const handlePhoneSubmit = async (number) => {
@@ -35,6 +36,8 @@ export default function AuthModalContainer({ isOpen, onClose }) {
       setStep("verify");
     } catch (error) {
       console.log("API error:", error.response?.data || error.message);
+      setError(error.response?.data?.error || error.message); // Set error state
+
     }
   };
 
@@ -151,6 +154,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
           isOpen={true}
           onClose={onClose}
           onPhoneSubmit={handlePhoneSubmit}
+          error={error} // Pass error to GuestSignupModal
         />
       )}
       {step === "verify" && (
