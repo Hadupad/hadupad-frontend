@@ -1,10 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import LoginModal from "./LoginModal";
 
 export default function RegisterMenu({ className = "", onGuestClick }) {
   const { user, isLoading, logout } = useAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
 
   if (isLoading) return null;
 
@@ -44,9 +48,11 @@ export default function RegisterMenu({ className = "", onGuestClick }) {
           >
             Register as a guest
           </button>
-          <Link href="/login" className="hover:text-[#DC4731]">
-            Log in
-          </Link>
+          <Link href="#" className="hover:text-[#DC4731]" onClick={() => setShowLoginModal(true)}>
+  Log in
+</Link>
+
+{showLoginModal && <LoginModal isOpen={true} onClose={() => setShowLoginModal(false)} />}
           <div className="border-t border-gray-300 my-2"></div>
           <Link href="/become-host" className="hover:text-[#DC4731]">
             Become a host
