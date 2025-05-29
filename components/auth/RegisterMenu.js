@@ -12,9 +12,7 @@ export default function RegisterMenu({ className = "", onGuestClick }) {
     <div className={`absolute right-0 top-8 bg-white shadow-lg rounded-xl p-4 z-50 flex flex-col gap-4 min-w-[200px] ${className}`}>
       {user ? (
         <>
-          <div className="font-semibold border-b pb-2">
-            Hi, {user.firstName}!
-          </div>
+        
           <Link href="/bookings" className="hover:text-[#DC4731]">
             My bookings
           </Link>
@@ -24,13 +22,13 @@ export default function RegisterMenu({ className = "", onGuestClick }) {
           <Link href="/messages" className="hover:text-[#DC4731]">
             Messages
           </Link>
+          <div className="border-t border-gray-300 my-2"></div>
           <Link href="/account" className="hover:text-[#DC4731]">
             Account
           </Link>
           <Link href="/help" className="hover:text-[#DC4731]">
             Help center
           </Link>
-          <div className="border-t border-gray-300 my-2"></div>
           <button 
             onClick={logout}
             className="text-left hover:text-[#DC4731]"
@@ -53,9 +51,9 @@ export default function RegisterMenu({ className = "", onGuestClick }) {
           <Link href="/become-host" className="hover:text-[#DC4731]">
             Become a host
           </Link>
-          <Link href="/list-property" className="hover:text-[#DC4731]">
+          {/* <Link href="/list-property" className="hover:text-[#DC4731]">
             List your property
-          </Link>
+          </Link> */}
         </>
       )}
     </div>

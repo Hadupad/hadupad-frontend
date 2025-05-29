@@ -2,12 +2,15 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import useAuth from "../hooks/useAuth";
 import { usePathname } from "next/navigation";
 import { X, Menu } from "lucide-react";
 import RegisterMenu from "./auth/RegisterMenu";
 import AuthModalContainer from "./auth/AuthModalContainer";
 
 export default function NavBar() {
+   const { user, isLoading, logout } = useAuth();
+  
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [registerMenuOpen, setRegisterMenuOpen] = useState(false);
@@ -79,7 +82,14 @@ export default function NavBar() {
             className="hidden md:flex items-center gap-2 bg-white text-[#DC4731] px-5 py-2 rounded-full shadow-lg hover:shadow-md transition-shadow"
           >
             <img src="/images/logo/li_user.png" alt="User" className="w-5 h-5" />
-            <span>Register</span>
+            {user ? (
+        <>
+{user.firstName}
+         </>
+      ) : (
+        <><span>Register</span> </>
+      )}
+            
           </button>
 
           {/* Mobile Menu Buttons */}
