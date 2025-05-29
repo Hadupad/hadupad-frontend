@@ -75,9 +75,9 @@ const FinishSigninUp = ({
     }));
 
     // Clear API errors when user starts editing
-  if (apiError) {
-    setApiError(null);
-  }
+  // if (apiError) {
+  //   setApiError(null);
+  // }
 };
 
   // const handleSubmit = async (e) => {
