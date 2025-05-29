@@ -118,12 +118,12 @@ export default function AuthModalContainer({ isOpen, onClose }) {
       );
 
       if (response.status === 200) {
-        console.log("verification successfully");
+        return response.data; // Return success
       } else {
-        console.warn("Verification error");
+        throw new Error(response.data.message || "Verification failed");
       }
     } catch (err) {
-      console.error("Verification failed:", err);
+      throw err; // Re-throw the error to be caught in the component
     }
   };
 
