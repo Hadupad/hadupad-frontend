@@ -67,6 +67,7 @@ export default function LoginModal({ isOpen, onClose }) {
         <div className="-mx-4 mt-4 mb-6">
           <hr className="border-t border-gray-100" />
         </div>
+        
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
