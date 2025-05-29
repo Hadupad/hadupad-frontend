@@ -201,52 +201,70 @@ const FinishSigninUp = ({
 
           {/* Password validation feedback */}
           <ul className="text-sm mt-2 space-y-1">
-            <li
-              className={`flex items-center gap-2 ${
-                passwordErrors.minLength ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              {passwordErrors.minLength ? "✔" : "✘"} At least 8 characters
-            </li>
-            <li
-              className={`flex items-center gap-2 ${
-                passwordErrors.hasUpperAndLower
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              {passwordErrors.hasUpperAndLower ? "✔" : "✘"} Contains uppercase
-              and lowercase letters
-            </li>
-            <li
-              className={`flex items-center gap-2 ${
-                passwordErrors.hasNumberOrSymbol
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              {passwordErrors.hasNumberOrSymbol ? "✔" : "✘"} Contains a number
-            </li>
-            <li
-              className={`flex items-center gap-2 ${
-                passwordErrors.hasSpecialChar
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              {passwordErrors.hasSpecialChar ? "✔" : "✘"} Contains a special
-              character (e.g. @)
-            </li>
-            <li
-              className={`flex items-center gap-2 ${
-                passwordErrors.containsNameOrEmail
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              {passwordErrors.containsNameOrEmail ? "✔" : "✘"} Can&apos;t
-              contain your name or email address
-            </li>
+          <li className={`flex items-center gap-2 ${passwordErrors.minLength ? "text-green-600" : "text-red-600"}`}>
+  {passwordErrors.minLength ? (
+    <svg className="w-4 h-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+    </svg>
+  ) : (
+    <svg className="w-4 h-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+    </svg>
+  )}
+  At least 8 characters
+</li>
+
+<li className={`flex items-center gap-2 ${passwordErrors.hasUpperAndLower ? "text-green-600" : "text-red-600"}`}>
+  {passwordErrors.hasUpperAndLower ? (
+    <svg className="w-4 h-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+    </svg>
+  ) : (
+    <svg className="w-4 h-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+    </svg>
+  )}
+  Contains uppercase and lowercase letters
+</li>
+
+<li className={`flex items-center gap-2 ${passwordErrors.hasNumberOrSymbol ? "text-green-600" : "text-red-600"}`}>
+  {passwordErrors.hasNumberOrSymbol ? (
+    <svg className="w-4 h-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+    </svg>
+  ) : (
+    <svg className="w-4 h-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+    </svg>
+  )}
+  Contains a number
+</li>
+
+<li className={`flex items-center gap-2 ${passwordErrors.hasSpecialChar ? "text-green-600" : "text-red-600"}`}>
+  {passwordErrors.hasSpecialChar ? (
+    <svg className="w-4 h-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+    </svg>
+  ) : (
+    <svg className="w-4 h-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+    </svg>
+  )}
+  Contains a special character (e.g. @)
+</li>
+
+<li className={`flex items-center gap-2 ${passwordErrors.containsNameOrEmail ? "text-green-600" : "text-red-600"}`}>
+  {passwordErrors.containsNameOrEmail ? (
+    <svg className="w-4 h-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+    </svg>
+  ) : (
+    <svg className="w-4 h-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+    </svg>
+  )}
+  Can't contain your name or email address
+</li>
           </ul>
 
           {/* Terms and submit button */}

@@ -10,6 +10,7 @@ export default function PhoneVerificationModal({
   onBack,
   phoneNumber = "",
   onVerificationComplete,
+  error, 
 }) {
   const modalRef = useRef();
   const firstInputRef = useRef(null);
@@ -171,7 +172,18 @@ export default function PhoneVerificationModal({
               className="w-12 h-12 text-xl text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC4731]"
             />
           ))}
+
         </div>
+          {/* Add error display right below the OTP inputs */}
+           {error && (
+          <div 
+            className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" 
+            role="alert"
+          >
+            {error}
+          </div>
+        )}
+
 
         <button
           onClick={handleContinue}

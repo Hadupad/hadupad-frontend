@@ -66,9 +66,13 @@ export default function AuthModalContainer({ isOpen, onClose }) {
       } else {
         console.warn("Verification code does not match.");
         // Optionally show an error to the user here
+
+        setError("Verification code does not match."); // Set error for non-200 responses
+
       }
     } catch (err) {
       console.error("Verification failed:", err);
+      setError(err.response?.data?.error || "Invalid verification code"); // Set error from catch
     }
   };
 
@@ -164,6 +168,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
           phoneNumber={phoneNumber}
           onVerificationComplete={handleVerificationComplete}
           onBack={handleBack}
+          error={error}
         />
       )}
       {step === "finish" && (

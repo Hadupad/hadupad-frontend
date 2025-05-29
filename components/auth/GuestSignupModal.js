@@ -79,7 +79,10 @@ export default function GuestSignupModal({ isOpen, onClose, onPhoneSubmit, error
               type="tel"
               placeholder="Enter your phone number"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => {
+                setPhone(e.target.value); 
+                if (error) onPhoneSubmit("");
+              }}
               className="w-full border rounded-lg p-2"
               required
             />
