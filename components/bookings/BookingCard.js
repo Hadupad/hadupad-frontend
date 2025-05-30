@@ -16,7 +16,7 @@ const BookingCard = ({ booking }) => {
         <div>
           <div className="flex justify-between items-start">
             <h3 className="font-semibold text-lg text-black">{title}</h3>
-            <img src={image} alt="lloperty" className="w-12 h-12 rounded-full object-cover" />
+            <img src={image} alt="Property" className="w-12 h-12 rounded-full object-cover" />
           </div>
           <p className="text-sm text-gray-600 mt-1">{location}</p>
           <p className="text-sm text-black mt-1 font-medium">₦{price} night</p>
