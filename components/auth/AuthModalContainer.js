@@ -25,7 +25,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
     if (!number) return;
 
     try {
-      const response = await axios.post(`${API_URL}/register/initiate`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register/initiate`, {
         phoneNumber: number,
         userType: "host",
       });

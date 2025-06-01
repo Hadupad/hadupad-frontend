@@ -103,7 +103,7 @@ export default function PhoneVerificationModal({
       setCountdown(30);
       setCanResend(false);
 
-      const response = await axios.post(`${API_URL}/register/initiate`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register/initiate`, {
         phoneNumber: phoneNumber,
         userType: "user",
       });
