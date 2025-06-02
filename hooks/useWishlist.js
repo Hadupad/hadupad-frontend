@@ -14,12 +14,13 @@ export default function useWishlist() {
       setProperties([
         {
           id: 1,
-          location: "Lekki Phase 1",
+          location: "Mpape Phase 1",
           images: ["/images/properties/1.png", "/images/properties/2.png", "/images/properties/3.png"],
           beds: 3,
           baths: 2,
           price: 150000,
           rating: 4.8,
+          wishlisted: true 
         },
         {
           id: 2,
@@ -29,6 +30,7 @@ export default function useWishlist() {
           baths: 3,
           price: 50000,
           rating: 4.91,
+          wishlisted: true 
         },
         {
           id: 3,
@@ -38,6 +40,7 @@ export default function useWishlist() {
           baths: 4,
           price: 250000,
           rating: 4.75,
+          wishlisted: true 
         },
         {
           id: 4,
@@ -47,6 +50,7 @@ export default function useWishlist() {
           baths: 2,
           price: 150000,
           rating: 4.8,
+          wishlisted: true 
         },
         {
           id: 5,
@@ -56,6 +60,7 @@ export default function useWishlist() {
           baths: 3,
           price: 50000,
           rating: 4.91,
+          wishlisted: true 
         },
         {
           id: 6,
@@ -65,6 +70,7 @@ export default function useWishlist() {
           baths: 4,
           price: 250000,
           rating: 4.75,
+          wishlisted: true 
         },
         {
           id: 7,
@@ -74,6 +80,7 @@ export default function useWishlist() {
           baths: 2,
           price: 150000,
           rating: 4.8,
+          wishlisted: true 
         },
         {
           id: 8,
@@ -83,17 +90,8 @@ export default function useWishlist() {
           baths: 3,
           price: 50000,
           rating: 4.91,
-        },
-        {
-          id: 9,
-          location: "Ikoyi, Lagos",
-          images: ["/images/properties/1.png", "/images/properties/2.png", "/images/properties/3.png"],
-          beds: 4,
-          baths: 4,
-          price: 250000,
-          rating: 4.75,
-        },
-        // Add more if needed
+          wishlisted: true 
+        }
       ]);
       setLoading(false);
     } else {
