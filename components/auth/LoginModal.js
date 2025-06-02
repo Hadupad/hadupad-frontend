@@ -4,6 +4,8 @@ import { useState, useRef } from "react";
 import { X } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebook, FaApple } from "react-icons/fa";
 
 export default function LoginModal({ isOpen, onClose }) {
   const [email, setEmail] = useState("");
@@ -29,7 +31,6 @@ export default function LoginModal({ isOpen, onClose }) {
     setError(null);
 
     try {
-      // await login({ email, password });
       let response = await axios.post(`${API_URL}/login`, {
         email: email,
         password: password,
@@ -69,6 +70,7 @@ export default function LoginModal({ isOpen, onClose }) {
         </div>
         
 
+        {/* Email + Password Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
@@ -122,6 +124,29 @@ export default function LoginModal({ isOpen, onClose }) {
             )}
           </button>
         </form>
+
+                {/* Divider */}
+        <div className="flex items-center my-4">
+          <hr className="flex-grow border-t border-gray-200" />
+          <span className="mx-3 text-sm text-gray-400">OR</span>
+          <hr className="flex-grow border-t border-gray-200" />
+        </div>
+
+        {/* Social Login Buttons */}
+        <div className="space-y-3 mb-4">
+          <button className="w-full flex items-center justify-center border border-gray-300 rounded-md py-2 hover:bg-gray-100 transition">
+            <FcGoogle className="mr-2 text-xl" />
+            Continue with Google
+          </button>
+          <button className="w-full flex items-center justify-center border border-gray-300 rounded-md py-2 hover:bg-gray-100 transition text-blue-600">
+            <FaFacebook className="mr-2 text-xl" />
+            Continue with Facebook
+          </button>
+          <button className="w-full flex items-center justify-center border border-gray-300 rounded-md py-2 hover:bg-gray-100 transition text-black">
+            <FaApple className="mr-2 text-xl" />
+            Continue with Apple
+          </button>
+        </div>
 
         <div className="text-center mt-4 text-sm">
           Don't have an account?{" "}
