@@ -56,7 +56,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
     setVerificationCode(code);
     if (!code) return;
     try {
-      const response = await axios.post(`${API_URL}/verify-otp`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/verify-otp`, {
         userId: userId,
         otp: code,
       });
@@ -91,7 +91,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
       formData.append("profilePicture", file);
       const userId = localStorage.getItem("userId");
       const response = await axios.put(
-        `${API_URL}/profile-picture/${userId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/profile-picture/${userId}`,
         formData,
         {
           headers: {
@@ -111,7 +111,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
     const userId = localStorage.getItem("userId");
     try {
       const response = await axios.post(
-        `${API_URL}/host-verification/${userId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/host-verification/${userId}`,
         {
           identificationNumber: identificationNumber,
         }
