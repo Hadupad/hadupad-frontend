@@ -7,13 +7,12 @@ import SubHeader from "../../../../components/messages/SubHeader";
 import { useChat } from "../../../../hooks/useChat";
 
 export default function App() {
-  const {
-    channels,
-    selectedChannel,
-    setSelectedChannel,
-    clearMessages,
-    restoreMessages,
-  } = useChat();
+ const {
+  channels,
+  selectedChannel,
+  setSelectedChannel,
+} = useChat();
+
 
   return (
     <div className="flex flex-col h-screen pt-30">
@@ -30,21 +29,7 @@ export default function App() {
         <MainBar selectedChannel={selectedChannel} />
       </div>
 
-      {/* 🔹 Floating control buttons */}
-      <div className="fixed bottom-4 right-4 space-x-2 z-50">
-        <button
-          onClick={clearMessages}
-          className="px-4 py-2 bg-red-500 text-white rounded"
-        >
-          Remove Messages
-        </button>
-        <button
-          onClick={restoreMessages}
-          className="px-4 py-2 bg-green-600 text-white rounded"
-        >
-          Bring Back Messages
-        </button>
-      </div>
+     
     </div>
   );
 }
