@@ -123,7 +123,7 @@ const ListingComponent = () => {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-8 bg-[#DC4731] hover:bg-[#B54228] text-white px-5 py-3 rounded font-medium transition-colors duration-200"
+            className="mt-8 bg-[#DC4731] hover:bg-[#B54228] text-white px-5 py-3 rounded font-medium transition-colors duration-200 cursor-pointer"
           >
             Get Started
           </button>

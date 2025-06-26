@@ -32,7 +32,7 @@ export default function CreateStep1({ onNext }) {
       <div className="mt-10 flex justify-end">
         <button
           onClick={onNext}
-          className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full text-sm font-medium"
+          className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full text-sm font-medium cursor-pointer"
         >
           Get Started
         </button>
