@@ -89,9 +89,9 @@ export default function useProperties() {
           beds: 4,
           baths: 4,
           price: 250000,
-          rating: 4.75,
+          rating: 4.075,
         },
-        // Add more if needed
+        
       ]);
       setLoading(false);
     } else {

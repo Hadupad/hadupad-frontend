@@ -32,7 +32,7 @@ const faqs = [
 ];
 
 export default function FAQ() {
-  const [openIndex, setOpenIndex] = useState(0); // First item open by default
+  const [openIndex, setOpenIndex] = useState(null); // First item open when null is 0
 
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -63,7 +63,7 @@ export default function FAQ() {
             >
               <div className="flex justify-between items-start gap-4">
                 <div>
-                  <h3 className="text-base sm:text-lg font-medium text-[#1E0E62]">
+                  <h3 className="text-base sm:text-lg font-medium">
                     {faq.question}
                   </h3>
                   {isOpen && faq.answer && (

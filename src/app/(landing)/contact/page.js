@@ -10,7 +10,7 @@ export default function Contact() {
     <div className="relative">
       {/* Hero Section */}
       <section
-        className="relative z-0 bg-cover bg-center bg-no-repeat h-[90vh] flex items-center justify-center text-white px-6 md:px-12 pt-[80px]"
+        className="relative z-0 bg-cover bg-center bg-no-repeat h-[60vh] flex items-center justify-center text-white px-6 md:px-12 pt-[80px]"
         style={{
           backgroundImage: "url('/images/hero/hero.jpg')",
         }}

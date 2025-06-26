@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { X, Facebook, Mail, Apple } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
-export default function GuestSignupModal({ isOpen, onClose, onPhoneSubmit, error }) {
+export default function GuestSignupModal({
+  isOpen,
+  onClose,
+  onPhoneSubmit,
+  error,
+}) {
   const modalRef = useRef();
   const [countryCode, setCountryCode] = useState("+234");
   const [phone, setPhone] = useState("");
@@ -50,20 +55,24 @@ export default function GuestSignupModal({ isOpen, onClose, onPhoneSubmit, error
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-600 hover:text-black"
+          className="absolute top-4 left-4 text-gray-600 hover:text-black"
         >
-          <X size={24} />
+          <X size={18} />
         </button>
 
-        <h2 className="text-xl font-semibold text-center mb-4">
-          Welcome to Hadupad
+        <h2 className="text-xl font-semibold text-center">
+          Login or signup
         </h2>
 
+          <div className="mt-4 mb-2">
+          <hr className="border-t border-gray-100" />
+        </div>
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div>
+          <div className="my-2">
             <label className="text-sm mb-1 block">Country/Region</label>
             <select
-              className="w-full border rounded-lg p-2"
+              className="w-full border rounded-lg py-2 pl-3 pr-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZXZyb24tZG93biI+PHBhdGggZD0ibTYgOSA2IDYgNi02Ii8+PC9zdmc+')] bg-no-repeat bg-[center_right_0.75rem] appearance-none"
               onChange={(e) => setCountryCode(e.target.value)}
               value={countryCode}
             >
@@ -72,7 +81,6 @@ export default function GuestSignupModal({ isOpen, onClose, onPhoneSubmit, error
               <option value="+44">United Kingdom (+44)</option>
             </select>
           </div>
-
           <div>
             <label className="text-sm mb-1 block">Phone number</label>
             <input
@@ -80,7 +88,7 @@ export default function GuestSignupModal({ isOpen, onClose, onPhoneSubmit, error
               placeholder="Enter your phone number"
               value={phone}
               onChange={(e) => {
-                setPhone(e.target.value); 
+                setPhone(e.target.value);
                 if (error) onPhoneSubmit("");
               }}
               className="w-full border rounded-lg p-2"
@@ -97,13 +105,13 @@ export default function GuestSignupModal({ isOpen, onClose, onPhoneSubmit, error
           </p>
 
           {error && (
-          <div 
-            className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" 
-            role="alert"
-          >
-            {error}
-          </div>
-        )}
+            <div
+              className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+              role="alert"
+            >
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"
@@ -167,7 +175,7 @@ export default function GuestSignupModal({ isOpen, onClose, onPhoneSubmit, error
 
           <button
             type="button"
-            className="border rounded-lg py-2 flex items-center justify-start gap-2 hover:bg-gray-100 pl-4"
+            className="border rounded-lg py-2 flex items-center justify-start gap-2 hover:bg-gray-100 pl-4 mb-4"
           >
             <Apple size={20} />
             <span className="text-center w-full">Continue with Apple</span>

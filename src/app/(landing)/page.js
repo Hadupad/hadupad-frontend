@@ -16,7 +16,7 @@ export default function Home() {
             <ListingProperties />
             <TopDestinations />
             <AuthModalContainer />
-      <button onClick={() => setIsAuthModalOpen(true)}>Sign Up</button>
+      {/* <button onClick={() => setIsAuthModalOpen(true)}>Sign Up</button> */}
       
       <AuthModalContainer 
         isOpen={isAuthModalOpen} 

@@ -6,6 +6,12 @@
       "DOM.Iterable",
       "ESNext"
     ],
+    "baseUrl": ".",
+      "paths": {
+        "@/*": [
+          "./src/*"
+        ]
+      },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -30,7 +36,7 @@
     "**/*.tsx",
     "next-env.d.ts",
     ".next/types/**/*.ts"
-, "src/app/(landing)/page.js", "src/app/(landing)/page.js"  ],
+, "src/app/(landing)/page.js", "src/app/(landing)/page.js", "src/app/(landing)/account/page.js"  ],
   "exclude": [
     "node_modules"
   ]

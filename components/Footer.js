@@ -35,10 +35,10 @@ const Footer = () => {
             <div>
               <h4 className="font-semibold mb-2">Services</h4>
               <ul className="space-y-1">
-                <li className="font-light">List Property</li>
-                <li className="font-light">Find property</li>
-                <li className="font-light">Short-Lets</li>
-                <li className="font-light">Agents</li>
+                <li className="">List Property</li>
+                <li className="">Find property</li>
+                <li className="">Short-Lets</li>
+                <li className="">Agents</li>
               </ul>
             </div>
 
@@ -46,10 +46,10 @@ const Footer = () => {
             <div>
               <h4 className="font-semibold mb-2">About</h4>
               <ul className="space-y-1">
-                <li className="font-light">About Us</li>
-                <li className="font-light">Terms & Conditions</li>
-                <li className="font-light">Privacy policy</li>
-                <li className="font-light">Cancellation Policy</li>
+                <li className="">About Us</li>
+                <li className="">Terms & Conditions</li>
+                <li className="">Privacy policy</li>
+                <li className="">Cancellation Policy</li>
               </ul>
             </div>
 
@@ -57,10 +57,10 @@ const Footer = () => {
             <div>
               <h4 className="font-semibold mb-2">Support</h4>
               <ul className="space-y-1">
-                <li className="font-light">Contact Us</li>
-                <li className="font-light">Help</li>
-                <li className="font-light">FAQs</li>
-                <li className="font-light">Refunds</li>
+                <li className="">Contact Us</li>
+                <li className="">Help</li>
+                <li className="">FAQs</li>
+                <li className="">Refunds</li>
               </ul>
             </div>
           </div>
@@ -210,7 +210,7 @@ const Footer = () => {
     {accordionOpen === label && (
       <ul className="pl-4 mt-2 space-y-1">
         {content.map((item, idx) => (
-          <li key={idx} className="font-light">
+          <li key={idx} className="">
             {item}
           </li>
         ))}

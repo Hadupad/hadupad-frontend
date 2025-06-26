@@ -109,8 +109,17 @@ const PropertyCard = ({ property }) => {
         </div>
 
         <div className="flex items-center text-sm text-gray-800 gap-4 py-1">
-          <span className="font-semibold">🛏 {property.beds} Beds</span>
-          <span className="font-semibold">🛁 {property.baths} Baths</span>
+          {/* <span className="font-semibold">🛏 {property.beds} Beds</span>
+          <span className="font-semibold">🛁 {property.baths} Baths</span> */}
+          <span className="flex items-center gap-1">
+            <Image src="images/icons/bed.png" alt="Bed" width={16} height={16} />
+            {property.beds} Beds
+          </span>
+          
+          <span className="flex items-center gap-1">
+            <Image src="images/icons/bath.png" alt="Bath" width={16} height={16} />
+            {property.baths} Baths
+          </span>
         </div>
 
         <div className="flex items-center justify-between text-sm text-black font-medium">

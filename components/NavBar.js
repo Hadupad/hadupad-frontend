@@ -50,7 +50,7 @@ export default function NavBar() {
 
   return (
     <header className="bg-white fixed w-full z-50 shadow-lg shadow-black/50">
-      <nav className="w-full mx-auto px-[5%] flex items-center justify-between h-[80px]">
+      <nav className="w-full mx-auto px-[5%] flex items-center justify-between h-[80px] z-50">
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <img className="w-10 h-10" src="/images/logo/icon.png" alt="Logo" />

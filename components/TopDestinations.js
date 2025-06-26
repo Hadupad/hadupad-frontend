@@ -35,14 +35,15 @@ export default function FeaturedProperties() {
         </div>
 
         {/* Right-aligned explore link */}
+       
         <div className="text-right">
-          <a
-            className="text-2xl font-medium text-black flex items-center justify-end gap-2"
-            href="#"
-          >
-            Explore All <span>→</span>
-          </a>
-        </div>
+  <a
+    className=" font-medium text-black flex items-center justify-end gap-2"
+    href=""
+  >
+    Explore All <span>→</span>
+  </a>
+</div>
       </div>
 
       {isMobile ? (
@@ -109,8 +110,8 @@ function PropertyCard({ property }) {
                 src={img}
                 alt={`Image ${index + 1} of ${property.location}`}
                 width={400}
-                height={378}
-                className="w-[400px] h-[378px] object-cover rounded-2xl focus:outline-none"
+                height={300}
+                className="w-[400px] h-[300px] object-cover rounded-2xl focus:outline-none"
               />
             </div>
           ))}

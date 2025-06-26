@@ -16,7 +16,6 @@ export default function RegisterMenu({ className = "", onGuestClick }) {
     <div className={`absolute right-0 top-8 bg-white shadow-lg rounded-xl p-4 z-50 flex flex-col gap-4 min-w-[200px] ${className}`}>
       {user ? (
         <>
-        
           <Link href="/bookings" className="hover:text-[#DC4731]">
             My bookings
           </Link>

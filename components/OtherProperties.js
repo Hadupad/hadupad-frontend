@@ -13,7 +13,7 @@ export default function OtherProperties() {
       beds: 2,
       baths: 1,
       price: "$120",
-      rating: 4.8,
+      rating: 4.82,
       images: [
         "/images/hero/hero.jpg",
         "/images/properties/1.png",
@@ -122,12 +122,25 @@ function PropertyCard({ property }) {
           {property.location}
         </p>
         <div className="flex items-center text-xs text-gray-500 my-1 gap-2">
-          <span>🛏 {property.beds} Beds</span>
-          <span>🛁 {property.baths} Baths</span>
+          {/* <span>🛏 {property.beds} Beds</span>
+          <span>🛁 {property.baths} Baths</span> */}
+
+          import Image from "next/image";
+
+<span className="flex items-center gap-1">
+  <Image src="images/icons/bed.png" alt="Bed" width={16} height={16} />
+  {property.beds} Beds
+</span>
+
+<span className="flex items-center gap-1">
+  <Image src="images/icons/bath.png" alt="Bath" width={16} height={16} />
+  {property.baths} Baths
+</span>
+
         </div>
         <div className="flex items-center justify-between mt-1">
           <p className="font-semibold text-black">
-            {property.price} <span className="text-sm font-normal">night</span>
+             #{property.price.toLocaleString()}<span className="text-sm font-normal text-[#222222]">/night</span>
           </p>
           <span className="flex items-center gap-1 text-sm">
             <svg className="w-4 h-4 fill-black text-white" viewBox="0 0 24 24">

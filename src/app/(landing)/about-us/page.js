@@ -5,6 +5,13 @@ import WhyChoose from "../../../../components/WhyChoose";
 import GoalsAndMission from "../../../../components/GoalsAndMission";
 
 export default function AboutUs() {
+  const scrollToWhyChoose = () => {
+    const whyChooseSection = document.getElementById("why-choose-us");
+    if (whyChooseSection) {
+      whyChooseSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="relative">
       {/* Hero Section */}
@@ -26,21 +33,21 @@ export default function AboutUs() {
             with superb experiences while trying to buy, rent, sell or book a
             shortlet apartment in Nigeria from anywhere in the world.
           </p>
-          <button className="bg-[#DC4731] hover:bg-[#B54228] text-white px-4 py-2 rounded mt-4">
+          <button 
+            onClick={scrollToWhyChoose}
+            className="bg-[#DC4731] hover:bg-[#B54228] text-white px-4 py-2 rounded mt-4 transition-colors duration-200"
+          >
             Learn More
           </button>
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-     <WhyChoose />
+      {/* Why Choose Us Section with ID */}
+      <div id="why-choose-us">
+        <WhyChoose />
+      </div>
 
-
-     <GoalsAndMission />
-
-
-
-
+      <GoalsAndMission />
     </div>
   );
 }

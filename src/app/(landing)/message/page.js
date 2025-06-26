@@ -2,7 +2,7 @@
 
 import React from "react";
 import Sidebar from "../../../../components/messages/Sidebar";
-import MainBar from "../../../../components/messages/MainBar";
+import MainBar from "../../../../components/messages/Mainbar";
 import SubHeader from "../../../../components/messages/SubHeader";
 import { useChat } from "../../../../hooks/useChat";
 
