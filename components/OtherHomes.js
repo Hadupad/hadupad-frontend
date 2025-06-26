@@ -9,6 +9,7 @@ import Slider from "react-slick";
 import { useMediaQuery } from "react-responsive";
 import Image from "next/image";
 
+
 export default function OtherHomes() {
   const { properties, loading } = useOtherProperties();
   const isMobile = useMediaQuery({ maxWidth: 768 });
