@@ -102,6 +102,7 @@ export default function Description() {
             )}
           </div>
           <Calendar
+          locale="en-US"
             mode="range"
             selected={date}
             onSelect={setDate}

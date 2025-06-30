@@ -19,8 +19,8 @@ import Description from "./step2/Description";
 
 import CreateStep3 from "./CreateStep3";
 import BookingSetting from "./step3/BookingSetting";
-import PriceSetting from "./step3/PriceSetting";
-import PriceSettingDiscounts from "./step3/PriceSettingDiscounts";
+import PriceSetting from "./step3/PriceSettings";
+import PriceSettingDiscounts from "./step3/PriceSettingsDiscounts";
 import Review from "./step3/Review";
 
 import { useRouter } from "next/navigation";

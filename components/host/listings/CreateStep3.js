@@ -23,7 +23,7 @@ export default function CreateStep3({ onNext, onBack }) {
         </div>
       </div>
 
-      <hr className="mt-20 mb-8 border-gray-300" />
+      {/* <hr className="mt-20 mb-8 border-gray-300" />
 
       <div className="mt-10 flex justify-between">
       
@@ -35,6 +35,21 @@ export default function CreateStep3({ onNext, onBack }) {
 </p>
 
         <button   onClick={onNext} className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full text-sm font-medium"
+        >
+          Next
+        </button>
+      </div> */}
+       <div className="fixed bottom-0 left-56 w-[calc(100%-14rem)] border-t border-gray-300 px-6 py-4 flex justify-between items-center z-50 shadow">
+        <button
+          
+          className="text-black underline text-sm font-semibold hover:text-gray-700"
+        >
+          Back
+        </button>
+
+        <button
+          onClick={onNext}
+          className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded text-sm font-semibold"
         >
           Next
         </button>

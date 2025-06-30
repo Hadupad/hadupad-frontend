@@ -59,7 +59,7 @@ export default function Sidebar() {
       </div>
 
       {/* Logout at Bottom */}
-      <div className="pt-6 border-t mt-6">
+      <div className="pt-6 mt-6">
         <Link href={logoutItem.href}>
           <div className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-100 transition">
             <LogoutIcon className="w-5 h-5 text-orange-500" />

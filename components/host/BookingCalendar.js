@@ -24,6 +24,7 @@ export default function BookingCalendar() {
   <div className="rounded-xl bg-white p-3 w-full max-w-sm">
     <h2 className="text-lg font-bold mb-3 text-center">Booking Timeline</h2>
     <Calendar
+    locale="en-US"
       onChange={setDateRange}
       value={dateRange}
       selectRange={true}
