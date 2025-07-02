@@ -2,7 +2,7 @@
 
 export default function ContactForm() {
   return (
-    <section className="px-20 py-50 max-w-7xl mx-auto grid md:grid-cols-2 gap-20   z-10">
+    <section className="px-4 py-50 max-w-7xl mx-auto grid md:grid-cols-2 gap-20   z-10">
       <h1
         className="absolute text-[120px] lg:text-[180px] font-bold text-white -left-7 top-2/3 z-0 pointer-events-none select-none
              [text-shadow:_-1px_-1px_0_rgba(128,128,128,0.1),_1px_-1px_0_rgba(128,128,128,0.1),_-1px_1px_0_rgba(128,128,128,0.1),_1px_1px_0_rgba(128,128,128,0.1)]"

@@ -12,7 +12,7 @@ export default function OtherProperties() {
       location: "Modern Apartment, Lagos",
       beds: 2,
       baths: 1,
-      price: "$120",
+      price: "120",
       rating: 4.82,
       images: [
         "/images/hero/hero.jpg",
@@ -25,7 +25,7 @@ export default function OtherProperties() {
       location: "Beach House, Accra",
       beds: 3,
       baths: 2,
-      price: "$200",
+      price: "200",
       rating: 4.9,
       images: [
         "/images/properties/2.png",
@@ -38,7 +38,7 @@ export default function OtherProperties() {
       location: "Luxury Villa, Nairobi",
       beds: 4,
       baths: 3,
-      price: "$350",
+      price: "350",
       rating: 5.0,
       images: [
         "/images/properties/3.png",
@@ -51,7 +51,7 @@ export default function OtherProperties() {
       location: "Cozy Cabin, Cape Town",
       beds: 1,
       baths: 1,
-      price: "$90",
+      price: "90",
       rating: 4.7,
       images: [
         "/images/properties/4.png",

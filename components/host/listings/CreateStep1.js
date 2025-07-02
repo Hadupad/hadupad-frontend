@@ -39,7 +39,7 @@ export default function CreateStep1({ onNext }) {
       <div className="fixed bottom-0 left-56 w-[calc(100%-14rem)] border-t border-gray-300 px-6 py-4 flex justify-end items-center z-50 shadow">
   <button
     onClick={onNext}
-    className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded text-sm font-semibold"
+    className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded text-sm font-semibold cursor-pointer"
   >
     Next
   </button>

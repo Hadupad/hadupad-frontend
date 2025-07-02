@@ -10,12 +10,13 @@ export default function Contact() {
     <div className="relative">
       {/* Hero Section */}
       <section
-        className="relative z-0 bg-cover bg-center bg-no-repeat h-[60vh] flex items-center justify-center text-white px-6 md:px-12 pt-[80px]"
+        className="relative z-0 bg-cover bg-center bg-no-repeat h-[70vh] flex items-center justify-center text-white px-6 md:px-12 pt-[80px]"
         style={{
           backgroundImage: "url('/images/hero/hero.jpg')",
         }}
       >
         <div className="absolute inset-0 bg-black/70 z-10"></div>
+
 
         <div className="container mx-auto py-8 relative z-20 px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
