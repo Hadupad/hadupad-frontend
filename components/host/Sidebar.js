@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { IoIosWarning } from "react-icons/io";
+
 
 import {
   LayoutDashboard,
@@ -18,7 +20,9 @@ const topMenuItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/host" },
   { label: "Listings (10)", icon: Home, href: "/host/listings" },
   { label: "Bookings", icon: CalendarDays, href: "/host/bookings" },
-  { label: "Caution Fee", icon: Percent, href: "/host/caution-fee" },
+  // { label: "Caution Fee", icon: Percent, href: "/host/caution-fee" },
+  { label: "Caution Fee", icon: IoIosWarning, href: "/host/caution-fee" },
+
   { label: "Wallet", icon: Wallet, href: "/host/wallet" },
   { label: "Discounts", icon: Percent, href: "/host/discounts" },
   { label: "Messages", icon: MessageCircle, href: "/host/messages" },
