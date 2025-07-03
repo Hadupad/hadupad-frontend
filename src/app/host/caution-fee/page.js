@@ -1,13 +1,23 @@
-// app/hello/page.js
-export default function HelloPage() {
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import Sidebar from "../../../../components/host/Sidebar";
+import Navbar from "../../../../components/host/Navbar";
+import SubHeader from "../../../../components/host/caution-fee/SubHeader";
+import Claims from "../../../../components/host/caution-fee/Claims";
+
+export default function CautionFee() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-blue-600 mb-4">Hello World!</h1>
-        <p className="text-lg text-gray-600">
-          Welcome to your simple Next.js page
-        </p>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <Sidebar />
+
+      <main className="ml-56 p-6 pt-30 space-y-6">
+        <SubHeader />
+        <Claims />
+       
+      </main>
     </div>
   );
 }

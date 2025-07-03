@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function Navbar() {
   return (
-    <nav className="w-full fixed flex justify-between items-center p-4 bg-white border-b">
+    <nav className="w-full fixed flex justify-between items-center p-4 bg-white border-b z-100">
       {/* Left: Logo */}
       <Link href="/host" className="flex items-center">
         <Image

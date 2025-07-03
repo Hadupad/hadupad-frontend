@@ -43,7 +43,7 @@ export default function Sidebar() {
             <Link href={item.href} key={index}>
               <div
                 className={`flex items-center gap-3 py-4 rounded-lg cursor-pointer transition ${
-                  isActive ? "bg-red-600 text-white" : "hover:bg-gray-100"
+                  isActive ? "bg-[#DC4731] text-white" : "hover:bg-gray-100"
                 }`}
               >
                 <Icon
