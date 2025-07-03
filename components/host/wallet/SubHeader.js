@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { IoIosAdd } from "react-icons/io";
 import WalletModal from "./WalletModal";
 
 export default function HostHeader() {
@@ -33,7 +32,7 @@ export default function HostHeader() {
           </div>
         </div>
 
-        {/* ✅ Fixed Claim Button */}
+       
         <div className="group relative flex items-center">
           <button
             onClick={() => setIsOpen(true)}

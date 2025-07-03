@@ -82,14 +82,14 @@ const ProfilePhotoDialog = ({ isOpen, onClose, onPhotoSelect }) => {
           {selectedImage ? (
             <button
               onClick={handlePhotoSubmit}
-              className="w-full py-3 rounded-xl text-white font-semibold bg-[#DC4731] hover:bg-[#c03d29] transition mb-3"
+              className="w-full py-3 rounded-xl cursor-pointer text-white font-semibold bg-[#DC4731] hover:bg-[#c03d29] transition mb-3"
             >
               Done
             </button>
           ) : (
             <button
               onClick={triggerFileSelect}
-              className="w-full py-3 rounded-xl text-white font-semibold bg-[#DC4731] hover:bg-[#c03d29] transition mb-3"
+              className="w-full py-3 rounded-xl text-white cursor-pointer font-semibold bg-[#DC4731] hover:bg-[#c03d29] transition mb-3"
             >
               Upload a photo
             </button>
@@ -97,12 +97,12 @@ const ProfilePhotoDialog = ({ isOpen, onClose, onPhotoSelect }) => {
 
           <button
             onClick={triggerFileSelect}
-            className="w-full py-3 rounded-xl border border-gray-300 font-semibold text-sm mb-2"
+            className="w-full py-3 rounded-xl cursor-pointer border border-gray-300 font-semibold text-sm mb-2"
           >
             {selectedImage ? "Change photo" : "Use Facebook photo"}
           </button>
 
-          <button className="underline text-gray-600 hover:text-black text-sm">
+          <button className="underline cursor-pointer text-gray-600 hover:text-black text-sm">
             I&apos;ll do this later
           </button>
         </div>

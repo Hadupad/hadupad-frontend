@@ -5,6 +5,7 @@ import Image from "next/image";
 import Sidebar from "../../../../components/host/Sidebar";
 import Navbar from "../../../../components/host/Navbar";
 import SubHeader from "../../../../components/host/wallet/SubHeader";
+import WalletPageContent from "../../../../components/host/wallet/WalletPageContent";
 
 export default function Page() {
   return (
@@ -14,6 +15,7 @@ export default function Page() {
 
       <main className="ml-56 p-6 pt-30 space-y-6">
         <SubHeader />
+        <WalletPageContent />
         
        
       </main>
