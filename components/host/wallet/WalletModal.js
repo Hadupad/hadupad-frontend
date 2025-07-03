@@ -43,7 +43,7 @@ export default function ClaimModal({ isOpen, onClose }) {
             resetState();
             onClose();
           }}
-          className="absolute top-4 right-4 text-gray-600 hover:text-black cursor-pointe"
+          className="absolute top-4 right-4 text-gray-600 hover:text-black cursor-pointer"
         >
           <IoMdClose size={20} />
         </button>
