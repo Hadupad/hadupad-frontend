@@ -51,7 +51,7 @@ export default function BookingCalendar() {
           mode="range"
           selected={range}
           onSelect={setRange}
-          numberOfMonths={2}
+          numberOfMonths={3}
           pagedNavigation
           fromMonth={new Date()}
           toYear={new Date().getFullYear() + 2}
