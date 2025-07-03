@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 const topMenuItems = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "/host/dashboard" },
+  { label: "Dashboard", icon: LayoutDashboard, href: "/host" },
   { label: "Listings (10)", icon: Home, href: "/host/listings" },
   { label: "Bookings", icon: CalendarDays, href: "/host/bookings" },
   { label: "Caution Fee", icon: Percent, href: "/host/caution-fee" },
