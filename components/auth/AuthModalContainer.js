@@ -18,11 +18,13 @@ export default function AuthModalContainer({ isOpen, onClose }) {
   const [user_Id, setUserId] = useState("");
   const [user_otp, setOtp] = useState("");
   const [error, setError] = useState(null); // Add error state
+  const clearError = () => setError(null);
   const { login } = useAuth();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const handlePhoneSubmit = async (number) => {
     setPhoneNumber(number);
     if (!number) return;
+  setError(null); 
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register/initiate`, {
@@ -158,7 +160,9 @@ export default function AuthModalContainer({ isOpen, onClose }) {
           isOpen={true}
           onClose={onClose}
           onPhoneSubmit={handlePhoneSubmit}
-          error={error} // Pass error to GuestSignupModal
+          error={error} 
+            clearError={clearError}
+
         />
       )}
       {step === "verify" && (

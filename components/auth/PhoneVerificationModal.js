@@ -188,7 +188,7 @@ export default function PhoneVerificationModal({
         <button
           onClick={handleContinue}
           disabled={code.some((c) => c === "") || isLoading}
-          className={`w-full py-2 rounded-lg text-white flex justify-center ${
+          className={`w-full py-2 rounded-lg text-white flex justify-center cursor-pointer ${
             code.every((c) => c !== "") && !isLoading
               ? "bg-[#DC4731] hover:bg-[#c03d29]"
               : "bg-gray-300 cursor-not-allowed"

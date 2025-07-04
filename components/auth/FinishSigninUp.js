@@ -153,22 +153,52 @@ const FinishSigninUp = ({
           ]
         );
       }
-    } catch (error) {
-      console.error("Registration failed:", error);
-      if (error.response?.data?.errors) {
-        setApiErrors(error.response.data.errors);
-      } else {
-        setApiErrors([
-          {
-            message:
-              error.response?.data?.message ||
-              "An error occurred during registration. Please try again.",
-          },
-        ]);
-      }
-    } finally {
-      setIsLoading(false);
-    }
+    } 
+    // catch (error) {
+    //   console.error("Registration failed:", error);
+    //   if (error.response?.data?.errors) {
+    //     setApiErrors(error.response.data.errors);
+    //   } else {
+    //     setApiErrors([
+    //       {
+    //         message:
+    //           error.response?.data?.message ||
+    //           "An error occurred during registration. Please try again.",
+    //       },
+    //     ]);
+    //   }
+    // } finally {
+    //   setIsLoading(false);
+    // }
+
+    catch (error) {
+  console.error("Registration failed:", error);
+
+  const resData = error.response?.data;
+
+  if (resData?.errors && typeof resData.errors === "object") {
+    const formattedErrors = Object.entries(resData.errors).map(([field, messages]) => ({
+      field,
+      message: Array.isArray(messages) ? messages[0] : messages,
+    }));
+    setApiErrors(formattedErrors);
+  }
+  else if (resData?.message || resData?.error) {
+    setApiErrors([
+      {
+        message: resData.message || resData.error,
+      },
+    ]);
+  }
+  else {
+    setApiErrors([
+      {
+        message: "An unknown error occurred. Please try again.",
+      },
+    ]);
+  }
+}
+
   };
 
   if (!isOpen) return null;
@@ -176,12 +206,12 @@ const FinishSigninUp = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <div className="bg-white w-[90%] max-w-md rounded-2xl shadow-2xl p-6 relative">
-        <button
+        {/* <button
           onClick={onBack}
           className="absolute left-4 text-gray-600 hover:text-black"
         >
           <ChevronLeft size={24} />
-        </button>
+        </button> */}
         <button
           onClick={onClose}
           className="absolute right-4 text-gray-600 hover:text-black"
@@ -193,7 +223,7 @@ const FinishSigninUp = ({
           Finish signing up
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} autoComplete="off" className="space-y-4">
           <div>
             <input
               name="firstName"

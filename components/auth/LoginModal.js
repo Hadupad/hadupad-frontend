@@ -26,27 +26,34 @@ export default function LoginModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+  e.preventDefault();
+  setIsLoading(true);
+  setError(null);
 
-    try {
-      let response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/profile-picture/${userId}`/login, {
-        email: email,
-        password: password,
-      });
-      onClose();
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        setError("Invalid email or password.");
-      } else {
-        setError(err.message || "Login failed");
-        console.log(err)
-      }
-    } finally {
-      setIsLoading(false);
+  try {
+    const response = await axios.post(`${API_URL}/login`, {
+      email,
+      password,
+    });
+
+    console.log("Login successful:", response.data);
+
+    // OPTIONAL: Handle token or user data if provided
+    // Example: login(response.data.token);
+    
+    onClose();
+  } catch (err) {
+    if (err.response && err.response.status === 401) {
+      setError("Invalid email or password.");
+    } else {
+      setError(err.message || "Login failed.");
+      console.error(err);
     }
-  };
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <div

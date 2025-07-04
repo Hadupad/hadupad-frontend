@@ -63,9 +63,7 @@ export default function RegisterMenu({ className = "", onGuestClick }) {
           <Link href="/become-host" className="hover:text-[#DC4731]">
             Become a host
           </Link>
-          {/* <Link href="/list-property" className="hover:text-[#DC4731]">
-            List your property
-          </Link> */}
+         
         </>
       )}
     </div>

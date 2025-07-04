@@ -9,6 +9,7 @@ export default function GuestSignupModal({
   onClose,
   onPhoneSubmit,
   error,
+  clearError,
 }) {
   const modalRef = useRef();
   const [countryCode, setCountryCode] = useState("+234");
@@ -89,7 +90,9 @@ export default function GuestSignupModal({
               value={phone}
               onChange={(e) => {
                 setPhone(e.target.value);
-                if (error) onPhoneSubmit("");
+                if (error && typeof clearError === "function") {
+      clearError(); // ✅ Clear the error when typing new input
+    }
               }}
               className="w-full border rounded-lg p-2"
               required
@@ -122,7 +125,7 @@ export default function GuestSignupModal({
               <div role="status">
                 <svg
                   aria-hidden="true"
-                  className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-red-600"
+                  className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-[#DC4731]"
                   viewBox="0 0 100 101"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"

@@ -9,8 +9,8 @@ import RegisterMenu from "./auth/RegisterMenu";
 import AuthModalContainer from "./auth/AuthModalContainer";
 
 export default function NavBar() {
-   const { user, isLoading, logout } = useAuth();
-  
+  const { user, isLoading, logout } = useAuth();
+
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [registerMenuOpen, setRegisterMenuOpen] = useState(false);
@@ -26,7 +26,10 @@ export default function NavBar() {
   // Close register menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
-      if (registerMenuRef.current && !registerMenuRef.current.contains(event.target)) {
+      if (
+        registerMenuRef.current &&
+        !registerMenuRef.current.contains(event.target)
+      ) {
         setRegisterMenuOpen(false);
       }
     }
@@ -54,7 +57,9 @@ export default function NavBar() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <img className="w-10 h-10" src="/images/logo/icon.png" alt="Logo" />
-          <span className="ml-2 font-bold text-xl hidden sm:block">Hadupad</span>
+          <span className="ml-2 font-bold text-xl hidden sm:block">
+            Hadupad
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -81,15 +86,18 @@ export default function NavBar() {
             onClick={() => setRegisterMenuOpen(!registerMenuOpen)}
             className="hidden md:flex items-center gap-2 bg-white text-[#DC4731] px-5 py-2 rounded-full shadow-lg hover:shadow-md transition-shadow"
           >
-            <img src="/images/logo/li_user.png" alt="User" className="w-5 h-5" />
+            <img
+              src="/images/logo/li_user.png"
+              alt="User"
+              className="w-5 h-5"
+            />
             {user ? (
-        <>
-{user.firstName}
-         </>
-      ) : (
-        <><span>Register</span> </>
-      )}
-            
+              <>{user.firstName}</>
+            ) : (
+              <>
+                <span>Register</span>{" "}
+              </>
+            )}
           </button>
 
           {/* Mobile Menu Buttons */}
@@ -99,7 +107,11 @@ export default function NavBar() {
               className="flex items-center justify-center bg-white text-[#DC4731] p-2 rounded-full shadow-md hover:shadow-lg transition-shadow"
               aria-label="User menu"
             >
-              <img src="/images/logo/li_user.png" alt="User" className="w-6 h-6" />
+              <img
+                src="/images/logo/li_user.png"
+                alt="User"
+                className="w-6 h-6"
+              />
             </button>
 
             <button
@@ -157,7 +169,7 @@ export default function NavBar() {
         )}
 
         {/* Auth Modals */}
-        <AuthModalContainer 
+        <AuthModalContainer
           isOpen={authModalOpen}
           onClose={() => setAuthModalOpen(false)}
         />
