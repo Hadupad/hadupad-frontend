@@ -53,8 +53,8 @@ const IdentityVerification = ({ isOpen, onClose, NINIdentityVerification }) => {
         {isSuccess ? (
           <div className="text-center">
             <CheckCircle2 className="mx-auto h-16 w-16 text-green-500 mb-4" />
-            <h2 className="text-xl font-bold mb-2">Verification Successful!</h2>
-            <p className="text-gray-600">Your identity has been verified.</p>
+            <h2 className="text-xl font-bold mb-2">Host Registration Successful!</h2>
+            <p className="text-gray-600">Your identity has been submitted for verification.</p>
           </div>
         ) : (
           <>

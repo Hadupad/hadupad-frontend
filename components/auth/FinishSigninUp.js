@@ -57,7 +57,6 @@ const FinishSigninUp = ({
     );
     setPasswordErrors(errors);
 
-    // Form is valid only if all password checks pass and other required fields are filled
     const isValid =
       formData.firstName.trim() !== "" &&
       formData.lastName.trim() !== "" &&
@@ -68,33 +67,45 @@ const FinishSigninUp = ({
     setIsFormValid(isValid);
   }, [formData]);
 
-  //   const handleChange = (e) => {
-  //     const { name, value } = e.target;
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       [name]: value,
-  //     }));
+ 
+
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+
+  //   if (name === "password" && !passwordTouched && value.length > 0) {
+  //     setPasswordTouched(true);
+  //   }
+
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
   // };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+  const { name, value } = e.target;
 
-    if (name === "password" && !passwordTouched && value.length > 0) {
-      setPasswordTouched(true);
-    }
+  // Clear errors on any input change
+  setApiErrors([]);
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  if (name === "password" && !passwordTouched && value.length > 0) {
+    setPasswordTouched(true);
+  }
+
+  setFormData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
+
+
 
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
   //   if (!isFormValid) return;
 
   //   setIsLoading(true);
-  //   setApiError(null); // Clear previous errors
+  //   setApiErrors([]); // Clear previous errors
 
   //   try {
   //     const userData = {
@@ -102,116 +113,160 @@ const FinishSigninUp = ({
   //       phoneNumber,
   //       verificationCode,
   //     };
-  //     console.log("Final submission:", userData);
   //     const response = await axios.post(
   //       `${API_URL}/register/complete`,
-  //       formData
+  //       userData
   //     );
+
   //     if (response.status === 200) {
-  //       console.log("Registration complete");
   //       onComplete(userData);
   //     } else {
-  //     setApiError(response.data?.error || "Registration failed. Please try again.");
-  //   }
-  //   } catch (error) {
-  //     console.error("Registration failed:", error);
-  //     setApiError(
-  //       error.response?.data?.error ||
-  //       error.response?.data?.message ||
-  //       "An error occurred during registration. Please try again."
-  //     );
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  //       // Handle non-200 responses that might still contain errors
+  //       setApiErrors(
+  //         response.data?.errors || [
+  //           { message: "Registration failed. Please try again." },
+  //         ]
+  //       );
+  //     }
+  //   } 
+    
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!isFormValid) return;
+//     catch (error) {
+//   console.error("Registration failed:", error);
 
-    setIsLoading(true);
-    setApiErrors([]); // Clear previous errors
+//   const resData = error.response?.data;
 
-    try {
-      const userData = {
-        ...formData,
-        phoneNumber,
-        verificationCode,
-      };
-      const response = await axios.post(
-        `${API_URL}/register/complete`,
-        formData
+//   if (resData?.errors && typeof resData.errors === "object") {
+//     const formattedErrors = Object.entries(resData.errors).map(([field, messages]) => ({
+//       field,
+//       message: Array.isArray(messages) ? messages[0] : messages,
+//     }));
+//     setApiErrors(formattedErrors);
+//   }
+//   else if (resData?.message || resData?.error) {
+//     setApiErrors([
+//       {
+//         message: resData.message || resData.error,
+//       },
+//     ]);
+//   }
+//   else {
+//     setApiErrors([
+//       {
+//         message: "An unknown error occurred. Please try again.",
+//       },
+//     ]);
+//   }
+// }
+
+// catch (error) {
+//   console.error("Registration failed:", error);
+
+//   const resData = error.response?.data;
+
+//   if (resData?.errors) {
+//     // Handle validation errors (extract just the messages)
+//     const formattedErrors = Object.entries(resData.errors).flatMap(
+//       ([field, messages]) => 
+//         Array.isArray(messages) 
+//           ? messages.map(message => ({ field, message }))
+//           : [{ field, message: messages }]
+//     );
+//     setApiErrors(formattedErrors);
+//   } 
+//   else if (resData?.message) {
+//     // Handle generic error messages
+//     setApiErrors([{ message: resData.message }]);
+//   } 
+//   else {
+//     // Fallback for unknown errors
+//     setApiErrors([{ message: "An unknown error occurred. Please try again." }]);
+//   }
+// }
+
+
+// catch (error) {
+//   console.error("Registration failed:", error);
+
+//   const resData = error.response?.data;
+
+//   if (resData?.errors && typeof resData.errors === "object") {
+//     const formattedErrors = Object.entries(resData.errors).flatMap(
+//       ([field, messages]) =>
+//         Array.isArray(messages)
+//           ? messages.map((message) => ({ field, message }))
+//           : [{ field, message: messages }]
+//     );
+//     setApiErrors(formattedErrors);
+//   } else if (resData?.message) {
+//     setApiErrors([{ message: resData.message }]);
+//   } else {
+//     setApiErrors([{ message: "An unknown error occurred. Please try again." }]);
+//   }
+// }
+
+//   };
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!isFormValid) return;
+
+  setIsLoading(true);
+  setApiErrors([]); // Clear previous errors
+
+  try {
+    const userData = {
+      ...formData,
+      phoneNumber,
+      verificationCode,
+    };
+    const response = await axios.post(
+      `${API_URL}/register/complete`,
+      userData
+    );
+
+    if (response.status === 200) {
+      onComplete(userData);
+    } else {
+      setApiErrors(
+        response.data?.errors || [
+          { message: "Registration failed. Please try again." },
+        ]
       );
+    }
+  } catch (error) {
+    console.error("Registration failed:", error);
 
-      if (response.status === 200) {
-        onComplete(userData);
-      } else {
-        // Handle non-200 responses that might still contain errors
-        setApiErrors(
-          response.data?.errors || [
-            { message: "Registration failed. Please try again." },
-          ]
-        );
-      }
-    } 
-    // catch (error) {
-    //   console.error("Registration failed:", error);
-    //   if (error.response?.data?.errors) {
-    //     setApiErrors(error.response.data.errors);
-    //   } else {
-    //     setApiErrors([
-    //       {
-    //         message:
-    //           error.response?.data?.message ||
-    //           "An error occurred during registration. Please try again.",
-    //       },
-    //     ]);
-    //   }
-    // } finally {
-    //   setIsLoading(false);
-    // }
+    const resData = error.response?.data;
 
-    catch (error) {
-  console.error("Registration failed:", error);
-
-  const resData = error.response?.data;
-
-  if (resData?.errors && typeof resData.errors === "object") {
-    const formattedErrors = Object.entries(resData.errors).map(([field, messages]) => ({
-      field,
-      message: Array.isArray(messages) ? messages[0] : messages,
-    }));
-    setApiErrors(formattedErrors);
+    if (resData?.errors && typeof resData.errors === "object") {
+      const formattedErrors = Object.entries(resData.errors).flatMap(
+        ([field, messages]) =>
+          Array.isArray(messages)
+            ? messages.map((message) => ({ field, message }))
+            : [{ field, message: messages }]
+      );
+      setApiErrors(formattedErrors);
+    } else if (resData?.message) {
+      setApiErrors([{ message: resData.message }]);
+    } else {
+      setApiErrors([{ message: "An unknown error occurred. Please try again." }]);
+    }
+  } finally {
+    setIsLoading(false);
   }
-  else if (resData?.message || resData?.error) {
-    setApiErrors([
-      {
-        message: resData.message || resData.error,
-      },
-    ]);
-  }
-  else {
-    setApiErrors([
-      {
-        message: "An unknown error occurred. Please try again.",
-      },
-    ]);
-  }
-}
+};
 
-  };
+
+
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <div className="bg-white w-[90%] max-w-md rounded-2xl shadow-2xl p-6 relative">
-        {/* <button
-          onClick={onBack}
-          className="absolute left-4 text-gray-600 hover:text-black"
-        >
-          <ChevronLeft size={24} />
-        </button> */}
+      
         <button
           onClick={onClose}
           className="absolute right-4 text-gray-600 hover:text-black"

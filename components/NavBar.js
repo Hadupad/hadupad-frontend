@@ -2,15 +2,18 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import useAuth from "../hooks/useAuth";
+// import useAuth from "../hooks/useAuth";
+import useHadupadAuth from "../src/context/AuthContext";
 import { usePathname } from "next/navigation";
 import { X, Menu } from "lucide-react";
 import RegisterMenu from "./auth/RegisterMenu";
 import AuthModalContainer from "./auth/AuthModalContainer";
 
 export default function NavBar() {
-  const { user, isLoading, logout } = useAuth();
+  // const { user, isLoading, logout } = useAuth();
 const [userType, setUserType] = useState("user");
+const { user, isLoading, logout } = useHadupadAuth();
+
 
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -60,6 +63,8 @@ const [userType, setUserType] = useState("user");
     { href: "/contact", label: "Contact" },
     { href: "/faqs", label: "FAQs" },
   ];
+
+  console.log("User inside UI:", user);
 
   return (
     <header className="bg-white fixed w-full z-50 shadow-lg shadow-black/50">

@@ -8,7 +8,9 @@ import WelcomePage from "./WelcomePage";
 import ProfilePhotoDialog from "./ProfilePhotoDialog";
 import IdentityVerification from "./IdentityVerification";
 import useAuth from "../../hooks/useAuth";
+import useHadupadAuth  from "../../src/context/AuthContext";
 import axios from "axios";
+
 
 export default function AuthModalContainer({ isOpen, onClose, userType }) {
 
@@ -20,7 +22,8 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
   const [user_otp, setOtp] = useState("");
   const [error, setError] = useState(null); // Add error state
   const clearError = () => setError(null);
-  const { login } = useAuth();
+  // const { login } = useAuth();
+  const { user, login, logout, isLoading } = useHadupadAuth();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const handlePhoneSubmit = async (number) => {
     setPhoneNumber(number);
@@ -190,7 +193,7 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
           isOpen={true}
           onClose={onClose}
           onBack={handleBack}
-          userData={userData} // Now properly passing the userData
+          // userData={userData} // Now properly passing the userData
           profilePhotoDialog={handlePhotoUploadPage}
         />
       )}

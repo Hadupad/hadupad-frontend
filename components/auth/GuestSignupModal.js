@@ -145,6 +145,7 @@ export default function GuestSignupModal({
               "Continue"
             )}
           </button>
+          
 
           <div className="flex items-center my-2">
             <hr className="flex-grow border-gray-300" />
