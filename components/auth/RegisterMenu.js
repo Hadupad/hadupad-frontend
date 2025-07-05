@@ -5,7 +5,8 @@ import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import LoginModal from "./LoginModal";
 
-export default function RegisterMenu({ className = "", onGuestClick }) {
+export default function RegisterMenu({ className = "", onGuestClick, onBecomeHostClick }) {
+
   const { user, isLoading, logout } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -60,7 +61,18 @@ export default function RegisterMenu({ className = "", onGuestClick }) {
             />
           )}
           <div className="border-t border-gray-300 my-2"></div>
-          <Link href="/become-host" className="hover:text-[#DC4731]">
+          {/* <Link href="/become-host" className="hover:text-[#DC4731]">
+            Become a host
+          </Link> */}
+
+          <Link
+            href="#"
+            className="hover:text-[#DC4731]"
+            onClick={(e) => {
+              e.preventDefault();
+              if (onBecomeHostClick) onBecomeHostClick();
+            }}
+          >
             Become a host
           </Link>
          

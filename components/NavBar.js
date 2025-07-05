@@ -10,6 +10,7 @@ import AuthModalContainer from "./auth/AuthModalContainer";
 
 export default function NavBar() {
   const { user, isLoading, logout } = useAuth();
+const [userType, setUserType] = useState("user");
 
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -39,7 +40,16 @@ export default function NavBar() {
   }, []);
 
   const handleGuestClick = () => {
+    // setRegisterMenuOpen(false);
+    // setAuthModalOpen(true);
     setRegisterMenuOpen(false);
+                  setUserType("user");
+                  setAuthModalOpen(true);
+  };
+
+  const handleBecomeHostClick = () => {
+    setRegisterMenuOpen(false);
+    setUserType("host");
     setAuthModalOpen(true);
   };
 
@@ -126,7 +136,11 @@ export default function NavBar() {
           {/* Register Dropdown */}
           {registerMenuOpen && (
             <div className="absolute top-full right-0 z-50 mt-2">
-              <RegisterMenu onGuestClick={handleGuestClick} />
+              {/* <RegisterMenu onGuestClick={handleGuestClick} /> */}
+              <RegisterMenu
+                onGuestClick = { handleGuestClick }
+                onBecomeHostClick={handleBecomeHostClick}
+              />
             </div>
           )}
         </div>
@@ -169,9 +183,15 @@ export default function NavBar() {
         )}
 
         {/* Auth Modals */}
+        {/* <AuthModalContainer
+          isOpen={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+        /> */}
+
         <AuthModalContainer
           isOpen={authModalOpen}
           onClose={() => setAuthModalOpen(false)}
+          userType={userType}
         />
       </nav>
     </header>

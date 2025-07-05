@@ -10,7 +10,8 @@ import IdentityVerification from "./IdentityVerification";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 
-export default function AuthModalContainer({ isOpen, onClose }) {
+export default function AuthModalContainer({ isOpen, onClose, userType }) {
+
   const [step, setStep] = useState("signup");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
@@ -67,20 +68,19 @@ export default function AuthModalContainer({ isOpen, onClose }) {
         setStep("finish");
       } else {
         console.warn("Verification code does not match.");
-        // Optionally show an error to the user here
 
-        setError("Verification code does not match."); // Set error for non-200 responses
+        setError("Verification code does not match.");
 
       }
     } catch (err) {
       console.error("Verification failed:", err);
-      setError(err.response?.data?.error || "Invalid verification code"); // Set error from catch
+      setError(err.response?.data?.error || "Invalid verification code");
     }
   };
 
   const handleSignupComplete = (data) => {
-    setUserData(data); // Store the user data
-    login(data); // Save to auth context
+    setUserData(data); 
+    login(data); 
     setStep("welcome");
   };
 
@@ -125,7 +125,7 @@ export default function AuthModalContainer({ isOpen, onClose }) {
         throw new Error(response.data.message || "Verification failed");
       }
     } catch (err) {
-      throw err; // Re-throw the error to be caught in the component
+      throw err; 
     }
   };
 
@@ -201,7 +201,14 @@ export default function AuthModalContainer({ isOpen, onClose }) {
           onPhotoSelect={handlePhotoUpload}
         />
       )}
-      {step === "VerifyIdentity" && (
+      {/* {step === "VerifyIdentity" && (
+        <IdentityVerification
+          isOpen={true}
+          onClose={onClose}
+          NINIdentityVerification={handleVerifyIdentity}
+        />
+      )} */}
+      {step === "VerifyIdentity" && userType === "host" && (
         <IdentityVerification
           isOpen={true}
           onClose={onClose}
