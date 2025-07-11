@@ -176,6 +176,7 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
           onVerificationComplete={handleVerificationComplete}
           onBack={handleBack}
           error={error}
+          devOtp={user_otp} 
         />
       )}
       {step === "finish" && (

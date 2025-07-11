@@ -10,7 +10,8 @@ export default function PhoneVerificationModal({
   onBack,
   phoneNumber = "",
   onVerificationComplete,
-  error, 
+  error,
+  devOtp 
 }) {
   const modalRef = useRef();
   const firstInputRef = useRef(null);
@@ -103,10 +104,13 @@ export default function PhoneVerificationModal({
       setCountdown(30);
       setCanResend(false);
 
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register/initiate`, {
-        phoneNumber: phoneNumber,
-        userType: "user",
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/register/initiate`,
+        {
+          phoneNumber: phoneNumber,
+          userType: "user",
+        }
+      );
 
       console.log("OTP resent:", response.data);
       console.log("OTP is:" + response.data.otp);
@@ -172,18 +176,16 @@ export default function PhoneVerificationModal({
               className="w-12 h-12 text-xl text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC4731]"
             />
           ))}
-
         </div>
-          {/* Add error display right below the OTP inputs */}
-           {error && (
-          <div 
-            className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" 
+        {/* Add error display right below the OTP inputs */}
+        {error && (
+          <div
+            className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
             role="alert"
           >
             {error}
           </div>
         )}
-
 
         <button
           onClick={handleContinue}
@@ -200,6 +202,15 @@ export default function PhoneVerificationModal({
             "Continue"
           )}
         </button>
+
+        {process.env.NODE_ENV === "development" && devOtp && (
+          <div
+            style={{ marginTop: "10px", color: "green", fontWeight: "bold" }}
+          >
+            Dev OTP: {devOtp}
+          </div>
+        )}
+
         <div className="text-center mt-4 text-sm">
           Didn&apos;t get a text?{" "}
           <button
