@@ -61,9 +61,7 @@ export default function RegisterMenu({ className = "", onGuestClick, onBecomeHos
             />
           )}
           <div className="border-t border-gray-300 my-2"></div>
-          {/* <Link href="/become-host" className="hover:text-[#DC4731]">
-            Become a host
-          </Link> */}
+         
 
           <Link
             href="#"

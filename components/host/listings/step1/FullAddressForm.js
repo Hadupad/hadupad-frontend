@@ -19,43 +19,7 @@ export default function FullAddressForm({ onNext, onBack, handleSaveExit }) {
         Your address is only shared after reservations have been made
       </p>
 
-      {/* <select className="w-full border rounded-md px-4 py-3 text-sm text-gray-700">
-        <option value="">Country/Region</option>
-        <option>Nigeria</option>
-        <option>Ghana</option>
-        <option>Kenya</option>
-        
-      </select>
-
-      <input
-        type="text"
-        placeholder="Street address"
-        className="w-full border rounded-md px-4 py-3 text-sm"
-      />
       
-
-      <input
-        type="text"
-        placeholder="Apt or suite number"
-        className="w-full border rounded-md px-4 py-3 text-sm"
-      />
-      <input
-        type="text"
-        placeholder="City"
-        className="w-full border rounded-md px-4 py-3 text-sm"
-      />
-      <div className="flex gap-2">
-        <input
-          type="text"
-          placeholder="State"
-          className="w-1/2 border rounded-md px-4 py-3 text-sm"
-        />
-        <input
-          type="text"
-          placeholder="Zip code"
-          className="w-1/2 border rounded-md px-4 py-3 text-sm"
-        />
-      </div> */}
 
 <div className="w-full max-w-xl space-y-4">
 

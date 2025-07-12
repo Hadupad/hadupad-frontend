@@ -48,18 +48,7 @@ export default function MapWithAddress({ onNext, onBack, handleSaveExit }) {
         </div>
       </div>
 
-      {/* <div className="flex items-center justify-between border-t pt-4">
-        <div>
-          <p className="text-sm font-semibold">An entire place</p>
-          <p className="text-xs text-gray-500">
-            Guests have the entire place to themselves
-          </p>
-        </div>
-        <label className="inline-flex items-center cursor-pointer">
-          <input type="checkbox" className="sr-only peer" />
-          <div className="w-10 h-6 bg-gray-300 rounded-full peer peer-checked:bg-black relative after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
-        </label>
-      </div> */}
+     
 
         <BottomNav onBack={onBack} onNext={onNext} nextLabel="Continue" />
     </div>
