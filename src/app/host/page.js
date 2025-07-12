@@ -23,16 +23,7 @@ export default function DashboardPage() {
         </p>
 
         <OverviewCards />
-        {/* <div className="grid md:grid-cols-2 gap-6">
-          
-          <div className="space-y-6">
-            <BookingControls />
-            <RecentPayments />
-          </div>
-
-          
-          <BookingCalendar />
-        </div> */}
+       
         <div className="grid md:grid-cols-3 gap-6">
   {/* Left Side: 1/3 width */}
   <div className="col-span-1 space-y-6">
