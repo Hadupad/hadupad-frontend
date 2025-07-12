@@ -176,23 +176,12 @@ const { user, isLoading, logout } = useHadupadAuth();
               </Link>
             ))}
 
-            {/* <div className="w-full max-w-xs mt-8 pt-8 border-t border-gray-200">
-              <button
-                onClick={handleGuestClick}
-                className="w-full bg-[#DC4731] text-white py-3 rounded-lg font-medium hover:bg-[#c03d29] transition-colors"
-              >
-                Continue as Guest
-              </button>
-            </div> */}
+            
           </div>
         )}
 
         {/* Auth Modals */}
-        {/* <AuthModalContainer
-          isOpen={authModalOpen}
-          onClose={() => setAuthModalOpen(false)}
-        /> */}
-
+      
         <AuthModalContainer
           isOpen={authModalOpen}
           onClose={() => setAuthModalOpen(false)}

@@ -65,13 +65,7 @@ export default function Search() {
         <div className="flex flex-col w-44">
           <label className="font-medium text-left">Budget</label>
           <div className="relative">
-            {/* <select className="outline-none text-sm w-full text-gray-700 pr-8 appearance-none bg-transparent py-1">
-        <option className="text-gray-400">None</option>
-        <option>#50,000 - #100,000</option>
-        <option>#100,000 - #200,000</option>
-        <option>#200,000 - #400,000</option>
-        <option>#400,000 - #800,000</option>
-      </select> */}
+           
             <select
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
@@ -113,13 +107,7 @@ export default function Search() {
         <div className="flex flex-col w-44">
           <label className="font-medium text-left">Bedrooms</label>
           <div className="relative">
-            {/* <select className="outline-none text-sm w-full text-gray-700 pr-8 appearance-none bg-transparent py-1">
-        <option className="text-gray-400">Unselected</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select> */}
+          
             <select
               value={bedrooms}
               onChange={(e) => setBedrooms(e.target.value)}
@@ -161,13 +149,7 @@ export default function Search() {
         <div className="flex flex-col w-44">
           <label className="font-medium text-left">Who</label>
           <div className="relative">
-            {/* <select className="outline-none text-sm w-full text-gray-700 pr-8 appearance-none bg-transparent py-1">
-        <option className="text-gray-400">Add guests</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select> */}
+       
             <select
               value={guests}
               onChange={(e) => setGuests(e.target.value)}
