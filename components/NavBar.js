@@ -2,32 +2,25 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-// import useAuth from "../hooks/useAuth";
-import useHadupadAuth from "../src/context/AuthContext";
 import { usePathname } from "next/navigation";
 import { X, Menu } from "lucide-react";
 import RegisterMenu from "./auth/RegisterMenu";
 import AuthModalContainer from "./auth/AuthModalContainer";
 
 export default function NavBar() {
-  // const { user, isLoading, logout } = useAuth();
-const [userType, setUserType] = useState("user");
-const { user, isLoading, logout } = useHadupadAuth();
-
-
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [registerMenuOpen, setRegisterMenuOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [userType, setUserType] = useState("user");
+
   const registerMenuRef = useRef(null);
 
-  // Close menus when route changes
   useEffect(() => {
     setMobileMenuOpen(false);
     setRegisterMenuOpen(false);
   }, [pathname]);
 
-  // Close register menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -43,11 +36,9 @@ const { user, isLoading, logout } = useHadupadAuth();
   }, []);
 
   const handleGuestClick = () => {
-    // setRegisterMenuOpen(false);
-    // setAuthModalOpen(true);
     setRegisterMenuOpen(false);
-                  setUserType("user");
-                  setAuthModalOpen(true);
+    setUserType("user");
+    setAuthModalOpen(true);
   };
 
   const handleBecomeHostClick = () => {
@@ -63,8 +54,6 @@ const { user, isLoading, logout } = useHadupadAuth();
     { href: "/contact", label: "Contact" },
     { href: "/faqs", label: "FAQs" },
   ];
-
-  console.log("User inside UI:", user);
 
   return (
     <header className="bg-white fixed w-full z-50 shadow-lg shadow-black/50">
@@ -106,16 +95,10 @@ const { user, isLoading, logout } = useHadupadAuth();
               alt="User"
               className="w-5 h-5"
             />
-            {user ? (
-              <>{user.firstName}</>
-            ) : (
-              <>
-                <span>Register</span>{" "}
-              </>
-            )}
+            <span>Register</span>
           </button>
 
-          {/* Mobile Menu Buttons */}
+          {/* Mobile Buttons */}
           <div className="md:hidden flex items-center gap-4">
             <button
               onClick={() => setRegisterMenuOpen(!registerMenuOpen)}
@@ -141,9 +124,8 @@ const { user, isLoading, logout } = useHadupadAuth();
           {/* Register Dropdown */}
           {registerMenuOpen && (
             <div className="absolute top-full right-0 z-50 mt-2">
-              {/* <RegisterMenu onGuestClick={handleGuestClick} /> */}
               <RegisterMenu
-                onGuestClick = { handleGuestClick }
+                onGuestClick={handleGuestClick}
                 onBecomeHostClick={handleBecomeHostClick}
               />
             </div>
@@ -175,13 +157,10 @@ const { user, isLoading, logout } = useHadupadAuth();
                 {label}
               </Link>
             ))}
-
-            
           </div>
         )}
 
-        {/* Auth Modals */}
-      
+        {/* Auth Modal */}
         <AuthModalContainer
           isOpen={authModalOpen}
           onClose={() => setAuthModalOpen(false)}

@@ -1,6 +1,5 @@
 // src/app/layout.js
 import '../../styles/globals.css';
-import ClientProviders from '../components/ClientProviders';
 
 export const metadata = {
   title: 'Next.js',
@@ -21,9 +20,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body style={{ fontFamily: "'Josefin Sans', sans-serif" }}>
-        <ClientProviders>
-          {children}
-        </ClientProviders>
+        {children}
       </body>
     </html>
   );
