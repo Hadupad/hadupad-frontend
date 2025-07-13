@@ -3,12 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { X, Facebook, Mail, Apple } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
-import useGoogleScript from "../../hooks/useGoogleScript"; // ✅ Adjust path if needed
 
 export default function GuestSignupModal({
   isOpen,
   onClose,
-  onPhoneSubmit,
+  onPhoneSubmit, // will be ignored
   error,
   clearError,
 }) {
@@ -16,9 +15,6 @@ export default function GuestSignupModal({
   const [countryCode, setCountryCode] = useState("+234");
   const [phone, setPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const googleLoaded = useGoogleScript(); // ✅ Hook to check if Google API is loaded\
-  const [appleLoaded, setAppleLoaded] = useState(false);
-
 
   useEffect(() => {
     const handleEsc = (event) => {
@@ -28,95 +24,30 @@ export default function GuestSignupModal({
     return () => window.removeEventListener("keydown", handleEsc);
   }, [onClose]);
 
-  useEffect(() => {
-  if (typeof window !== "undefined" && !document.getElementById("apple-signin")) {
-    const script = document.createElement("script");
-    script.src = "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js";
-    script.id = "apple-signin";
-    script.onload = () => {
-      setAppleLoaded(true);
-    };
-    script.onerror = () => {
-      console.error("❌ Failed to load Apple Sign-In SDK");
-    };
-    document.body.appendChild(script);
-  } else if (window.AppleID) {
-    setAppleLoaded(true); // In case it's already loaded
-  }
-}, []);
-
-
   const handleOverlayClick = (event) => {
     if (modalRef.current && !modalRef.current.contains(event.target)) onClose();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!phone.trim() || typeof onPhoneSubmit !== "function") return;
+    if (!phone.trim()) return;
 
     setIsLoading(true);
     try {
       const formattedNumber = `${countryCode}${phone}`;
-      await onPhoneSubmit(formattedNumber);
+      // Fake delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (error) {
-      console.error("Submission error:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleSignIn = () => {
-    if (!googleLoaded || typeof window.google === "undefined") {
-      console.error("Google API not loaded yet");
-      return;
-    }
-
-    const client = window.google.accounts.oauth2.initTokenClient({
-client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-      scope: "openid email profile",
-      callback: (tokenResponse) => {
-        console.log("✅ Google Token Response:", tokenResponse);
-
-        fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-          headers: {
-            Authorization: `Bearer ${tokenResponse.access_token}`,
-          },
-        })
-          .then((res) => res.json())
-          .then((userInfo) => {
-            console.log("✅ Google User Info:", userInfo);
-            // ✅ Send userInfo to your backend here if needed
-          })
-          .catch((err) => console.error("❌ Failed to fetch user info", err));
-      },
-    });
-
-    client.requestAccessToken();
   };
 
   const handleAppleSignIn = () => {
-  if (!appleLoaded || typeof window.AppleID === "undefined") {
-    console.error("Apple SDK not loaded");
-    return;
-  }
-
-  window.AppleID.auth.init({
-    clientId: "YOUR_APPLE_CLIENT_ID",
-    scope: "name email",
-    redirectURI: "https://yourdomain.com/callback", // Must match your Apple config
-    usePopup: true,
-  });
-
-  window.AppleID.auth
-    .signIn()
-    .then((response) => {
-      console.log("✅ Apple Sign-In Response:", response);
-    })
-    .catch((error) => {
-      console.error("❌ Apple Sign-In Failed:", error);
-    });
-};
-
+  };
 
   if (!isOpen) return null;
 
@@ -174,8 +105,7 @@ client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
           </div>
 
           <p className="text-xs text-gray-500">
-            We&apos;ll call or text you to confirm your number. Standard message
-            and data rates apply.
+            We&apos;ll call or text you to confirm your number.
             <a href="#" className="text-[#DC4731] ml-1 underline">
               Privacy Policy
             </a>
@@ -210,7 +140,6 @@ client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
 
           <button
             type="button"
-            // onClick={handleEmailLogin}
             className="border rounded-lg py-2 flex items-center justify-start gap-2 hover:bg-gray-100 pl-4"
           >
             <Mail size={20} className="text-gray-600" />
@@ -219,7 +148,6 @@ client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
 
           <button
             type="button"
-            // onClick={handleFacebookLogin}
             className="border rounded-lg py-2 flex items-center justify-start gap-2 hover:bg-gray-100 pl-4"
           >
             <Facebook size={20} className="text-blue-600" />

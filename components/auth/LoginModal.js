@@ -2,8 +2,6 @@
 
 import { useState, useRef } from "react";
 import { X, CheckCircle2 } from "lucide-react";
-import useAuth from "../../hooks/useAuth";
-import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaApple } from "react-icons/fa";
 
@@ -14,10 +12,8 @@ export default function LoginModal({ isOpen, onClose }) {
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const { login } = useAuth();
 
   const modalRef = useRef();
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const handleOverlayClick = (e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -25,41 +21,25 @@ export default function LoginModal({ isOpen, onClose }) {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    try {
-      const response = await axios.post(`${API_URL}/login`, {
-        email,
-        password,
-      });
-
-      console.log("Login successful:", response.data);
-
-      // Store token or call login() method
-      localStorage.setItem("accessToken", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
-      login(response.data.accessToken); // optional: sets global auth state
-
-      setIsSuccess(true);
-
-      // Auto-close modal after 2 seconds
-      setTimeout(() => {
-        onClose();
-        setIsSuccess(false);
-      }, 2000);
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        setError("Invalid email or password.");
+    // Fake login success for static display
+    setTimeout(() => {
+      if (email && password) {
+        setIsSuccess(true);
+        setIsLoading(false);
+        setTimeout(() => {
+          onClose();
+          setIsSuccess(false);
+        }, 2000);
       } else {
-        setError(err.message || "Login failed.");
-        console.error(err);
+        setError("Please enter both email and password.");
+        setIsLoading(false);
       }
-    } finally {
-      setIsLoading(false);
-    }
+    }, 1000);
   };
 
   if (!isOpen) return null;
@@ -137,11 +117,7 @@ export default function LoginModal({ isOpen, onClose }) {
                     : "bg-[#DC4731] hover:bg-[#c03d29]"
                 }`}
               >
-                {isLoading ? (
-                  <span className="loading loading-spinner">Logging in...</span>
-                ) : (
-                  "Log in"
-                )}
+                {isLoading ? "Logging in..." : "Log in"}
               </button>
             </form>
 

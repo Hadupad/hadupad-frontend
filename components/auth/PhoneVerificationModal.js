@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
-import axios from "axios";
 
 export default function PhoneVerificationModal({
   isOpen,
@@ -11,7 +10,7 @@ export default function PhoneVerificationModal({
   phoneNumber = "",
   onVerificationComplete,
   error,
-  devOtp 
+  devOtp,
 }) {
   const modalRef = useRef();
   const firstInputRef = useRef(null);
@@ -19,7 +18,6 @@ export default function PhoneVerificationModal({
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(30);
   const [canResend, setCanResend] = useState(false);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const handleEsc = (event) => {
@@ -50,19 +48,13 @@ export default function PhoneVerificationModal({
 
   const handleChange = (e, index) => {
     const value = e.target.value.replace(/\D/, "");
-    if (value === "") {
-      const newCode = [...code];
-      newCode[index] = "";
-      setCode(newCode);
-      return;
-    }
-
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
-
-    const nextInput = document.getElementById(`code-${index + 1}`);
-    if (nextInput) nextInput.focus();
+    if (value !== "" && index < 3) {
+      const nextInput = document.getElementById(`code-${index + 1}`);
+      if (nextInput) nextInput.focus();
+    }
   };
 
   const handleKeyDown = (e, index) => {
@@ -80,45 +72,21 @@ export default function PhoneVerificationModal({
 
   const handleContinue = async () => {
     const fullCode = code.join("");
-
     if (fullCode.length === 4) {
       setIsLoading(true);
-      try {
-        console.log("Verifying code:", fullCode);
-        if (typeof onVerificationComplete === "function") {
-          await onVerificationComplete(fullCode);
-        }
-      } catch (error) {
-        console.error("Verification failed:", error);
-      } finally {
+      setTimeout(() => {
         setIsLoading(false);
-      }
+        if (typeof onVerificationComplete === "function") {
+          onVerificationComplete(fullCode); // still calls the mock handler
+        }
+      }, 1000);
     }
   };
 
-  const handleResendCode = async () => {
-    if (!phoneNumber) return;
-
-    try {
-      setIsLoading(true);
-      setCountdown(30);
-      setCanResend(false);
-
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/register/initiate`,
-        {
-          phoneNumber: phoneNumber,
-          userType: "user",
-        }
-      );
-
-      console.log("OTP resent:", response.data);
-      console.log("OTP is:" + response.data.otp);
-    } catch (error) {
-      console.error("Resend failed:", error.response?.data || error.message);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleResendCode = () => {
+    setCountdown(30);
+    setCanResend(false);
+    alert("OTP resent! (Static)");
   };
 
   if (!isOpen) return null;
@@ -177,12 +145,9 @@ export default function PhoneVerificationModal({
             />
           ))}
         </div>
-        {/* Add error display right below the OTP inputs */}
+
         {error && (
-          <div
-            className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
-            role="alert"
-          >
+          <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50">
             {error}
           </div>
         )}
@@ -190,23 +155,17 @@ export default function PhoneVerificationModal({
         <button
           onClick={handleContinue}
           disabled={code.some((c) => c === "") || isLoading}
-          className={`w-full py-2 rounded-lg text-white flex justify-center cursor-pointer ${
+          className={`w-full py-2 rounded-lg text-white flex justify-center ${
             code.every((c) => c !== "") && !isLoading
               ? "bg-[#DC4731] hover:bg-[#c03d29]"
               : "bg-gray-300 cursor-not-allowed"
           }`}
         >
-          {isLoading ? (
-            <span className="loading loading-spinner"></span>
-          ) : (
-            "Continue"
-          )}
+          {isLoading ? "Verifying..." : "Continue"}
         </button>
 
-        {process.env.NODE_ENV === "development" && devOtp && (
-          <div
-            style={{ marginTop: "10px", color: "green", fontWeight: "bold" }}
-          >
+        {devOtp && (
+          <div className="mt-3 text-center text-green-700 font-semibold">
             Dev OTP: {devOtp}
           </div>
         )}
@@ -225,6 +184,7 @@ export default function PhoneVerificationModal({
             {canResend ? "Send again" : `Resend in ${countdown}s`}
           </button>
         </div>
+
         <div className="text-center mt-2 text-sm">
           <button className="underline text-gray-600 hover:text-black">
             Call me instead

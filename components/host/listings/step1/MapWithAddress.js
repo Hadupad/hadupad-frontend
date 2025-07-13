@@ -1,4 +1,3 @@
-// components/MapWithAddress.js
 'use client';
 
 import { MapPin } from "lucide-react";
@@ -40,17 +39,13 @@ export default function MapWithAddress({ onNext, onBack, handleSaveExit }) {
               placeholder="Ahmadu bellow way, AMAC, 900722, Federal Capital Territory"
               className="w-full outline-none bg-transparent text-sm placeholder-gray-500"
             />
-        
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
           <div className="bg-rose-500 p-2 rounded-full text-white shadow-lg">
             <Home />
           </div>
         </div>
       </div>
-
-     
-
-        <BottomNav onBack={onBack} onNext={onNext} nextLabel="Continue" />
+   <BottomNav onBack={onBack} onNext={onNext} nextLabel="Continue" />
     </div>
     </>
   );
