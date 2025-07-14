@@ -1,20 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { initiateRegistration } from "@/redux/slices/initiateUserSlice";
 import { X, Facebook, Mail, Apple } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
 export default function GuestSignupModal({
   isOpen,
   onClose,
-  onPhoneSubmit, // will be ignored
-  error,
-  clearError,
+  userType
 }) {
   const modalRef = useRef();
   const [countryCode, setCountryCode] = useState("+234");
   const [phone, setPhone] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+
+
+  const dispatch = useDispatch();
+  const { loading, error, user } = useSelector((state) => state.initiate);
 
   useEffect(() => {
     const handleEsc = (event) => {
@@ -25,28 +28,35 @@ export default function GuestSignupModal({
   }, [onClose]);
 
   const handleOverlayClick = (event) => {
-    if (modalRef.current && !modalRef.current.contains(event.target)) onClose();
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      onClose();
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!phone.trim()) return;
-
-    setIsLoading(true);
-    try {
-      const formattedNumber = `${countryCode}${phone}`;
-      // Fake delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
-    }
+  
+    const formattedNumber = `${countryCode}${phone}`;
+  
+    dispatch(initiateRegistration({ phoneNumber: formattedNumber, userType }))
+      .unwrap()
+      .then((res) => {
+        console.log("Registration success:", res);
+        // onClose();
+      })
+      .catch((err) => {
+        console.error("Registration failed:", err);
+      });
   };
+  
 
   const handleGoogleSignIn = () => {
+    // Handle Google Sign-In here
   };
 
   const handleAppleSignIn = () => {
+    // Handle Apple Sign-In here
   };
 
   if (!isOpen) return null;
@@ -67,7 +77,7 @@ export default function GuestSignupModal({
           <X size={18} />
         </button>
 
-        <h2 className="text-xl font-semibold text-center">Login or signup</h2>
+        <h2 className="text-xl font-semibold text-center">Login or Signup</h2>
 
         <div className="mt-4 mb-2">
           <hr className="border-t border-gray-100" />
@@ -93,12 +103,7 @@ export default function GuestSignupModal({
               type="tel"
               placeholder="Enter your phone number"
               value={phone}
-              onChange={(e) => {
-                setPhone(e.target.value);
-                if (error && typeof clearError === "function") {
-                  clearError();
-                }
-              }}
+              onChange={(e) => setPhone(e.target.value)}
               className="w-full border rounded-lg p-2"
               required
             />
@@ -123,9 +128,9 @@ export default function GuestSignupModal({
           <button
             type="submit"
             className="bg-[#DC4731] text-white py-2 rounded-lg hover:bg-[#c03d29] transition flex justify-center"
-            disabled={isLoading}
+            disabled={loading}
           >
-            {isLoading ? (
+            {loading ? (
               <span className="animate-pulse">Loading...</span>
             ) : (
               "Continue"

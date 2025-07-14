@@ -19,6 +19,8 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
   const [error, setError] = useState(null);
   const clearError = () => setError(null);
 
+  console.log("Auth User Type", userType);
+
 
   const handlePhoneSubmit = async (number) => {
     setPhoneNumber(number);
@@ -96,6 +98,7 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
           onPhoneSubmit={handlePhoneSubmit}
           error={error}
           clearError={clearError}
+          userType={userType} 
         />
       )}
       {step === "verify" && (
