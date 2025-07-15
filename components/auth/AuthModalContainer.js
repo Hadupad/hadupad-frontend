@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import GuestSignupModal from "./GuestSignupModal";
-import PhoneVerificationModal from "./PhoneVerificationModal";
+import GuestSignupModal from "./SignupCard";
+import PhoneVerificationCard from "./PhoneVerificationCard";
 import FinishSigninUp from "./FinishSigninUp";
 import WelcomePage from "./WelcomePage";
 import ProfilePhotoDialog from "./ProfilePhotoDialog";
@@ -18,6 +18,8 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
   const [user_otp, setOtp] = useState("");
   const [error, setError] = useState(null);
   const clearError = () => setError(null);
+
+  console.log("Auth User Type", userType);
 
 
   const handlePhoneSubmit = async (number) => {
@@ -96,10 +98,11 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
           onPhoneSubmit={handlePhoneSubmit}
           error={error}
           clearError={clearError}
+          userType={userType} 
         />
       )}
       {step === "verify" && (
-        <PhoneVerificationModal
+        <PhoneVerificationCard
           isOpen={true}
           onClose={onClose}
           phoneNumber={phoneNumber}

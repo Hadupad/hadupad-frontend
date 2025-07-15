@@ -1,80 +1,49 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { X, Facebook, Mail, Apple } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Facebook, Mail, Apple, ChevronLeft } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
-export default function GuestSignupModal({
-  isOpen,
-  onClose,
-  onPhoneSubmit, // will be ignored
-  error,
-  clearError,
-}) {
-  const modalRef = useRef();
+export default function SignupCard({ onSuccess }) {
+  const router = useRouter();
   const [countryCode, setCountryCode] = useState("+234");
   const [phone, setPhone] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const handleEsc = (event) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, [onClose]);
-
-  const handleOverlayClick = (event) => {
-    if (modalRef.current && !modalRef.current.contains(event.target)) onClose();
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!phone.trim()) return;
 
-    setIsLoading(true);
-    try {
-      const formattedNumber = `${countryCode}${phone}`;
-      // Fake delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    setLoading(true);
 
-  const handleGoogleSignIn = () => {
+    setTimeout(() => {
+      setLoading(false);
+      const fullPhone = `${countryCode}${phone}`;
+      onSuccess?.(fullPhone);
+    }, 1000); // mock API delay
   };
-
-  const handleAppleSignIn = () => {
-  };
-
-  if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
-      onClick={handleOverlayClick}
-    >
-      <div
-        ref={modalRef}
-        className="bg-white w-[90%] max-w-md rounded-xl shadow-xl p-6 relative"
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-4 left-4 text-gray-600 hover:text-black"
-        >
-          <X size={18} />
-        </button>
-
-        <h2 className="text-xl font-semibold text-center">Login or signup</h2>
-
-        <div className="mt-4 mb-2">
-          <hr className="border-t border-gray-100" />
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-6 relative">
+        <div className="flex items-center mb-4 mt-2">
+          <button
+            onClick={() => router.back()}
+            aria-label="Go back"
+            className="text-gray-600 hover:text-black focus:outline-none focus:ring-2 focus:ring-[#DC4731] rounded cursor-pointer"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <h2 className="text-xl font-semibold text-center flex-grow">
+            Signup
+          </h2>
         </div>
 
+        <hr className="border-t border-gray-100 -mx-4 mt-4 mb-10" />
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="my-2">
+          <div>
             <label className="text-sm mb-1 block">Country/Region</label>
             <select
               className="w-full border rounded-lg py-2 pl-3 pr-10 appearance-none"
@@ -93,12 +62,7 @@ export default function GuestSignupModal({
               type="tel"
               placeholder="Enter your phone number"
               value={phone}
-              onChange={(e) => {
-                setPhone(e.target.value);
-                if (error && typeof clearError === "function") {
-                  clearError();
-                }
-              }}
+              onChange={(e) => setPhone(e.target.value)}
               className="w-full border rounded-lg p-2"
               required
             />
@@ -111,21 +75,12 @@ export default function GuestSignupModal({
             </a>
           </p>
 
-          {error && (
-            <div
-              className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50"
-              role="alert"
-            >
-              {error}
-            </div>
-          )}
-
           <button
             type="submit"
             className="bg-[#DC4731] text-white py-2 rounded-lg hover:bg-[#c03d29] transition flex justify-center"
-            disabled={isLoading}
+            disabled={loading}
           >
-            {isLoading ? (
+            {loading ? (
               <span className="animate-pulse">Loading...</span>
             ) : (
               "Continue"
@@ -156,7 +111,6 @@ export default function GuestSignupModal({
 
           <button
             type="button"
-            onClick={handleGoogleSignIn}
             className="border rounded-lg py-2 flex items-center justify-start gap-2 hover:bg-gray-100 pl-4"
           >
             <FcGoogle size={20} />
@@ -165,8 +119,7 @@ export default function GuestSignupModal({
 
           <button
             type="button"
-            onClick={handleAppleSignIn}
-            className="border rounded-lg py-2 flex items-center justify-start gap-2 hover:bg-gray-100 pl-4 mb-4"
+            className="border rounded-lg py-2 flex items-center justify-start gap-2 hover:bg-gray-100 pl-4"
           >
             <Apple size={20} />
             <span className="text-center w-full">Continue with Apple</span>

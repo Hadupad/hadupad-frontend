@@ -2,11 +2,16 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import useAuth from "../../hooks/useAuth";
 import LoginModal from "./LoginModal";
 
-export default function RegisterMenu({ className = "", onGuestClick, onBecomeHostClick }) {
-
+export default function RegisterMenu({
+  className = "",
+  onGuestClick,
+  onBecomeHostClick,
+}) {
+  const router = useRouter();
   const { user, isLoading, logout } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -41,11 +46,12 @@ export default function RegisterMenu({ className = "", onGuestClick, onBecomeHos
       ) : (
         <>
           <button
-            onClick={onGuestClick}
-            className="w-35 cursor-pointer text-left hover:text-[#DC4731]"
+            className="text-left hover:text-[#DC4731]"
+            onClick={() => router.push("/register")}
           >
             Register as a guest
           </button>
+
           <Link
             href="#"
             className="hover:text-[#DC4731]"
@@ -60,20 +66,15 @@ export default function RegisterMenu({ className = "", onGuestClick, onBecomeHos
               onClose={() => setShowLoginModal(false)}
             />
           )}
-          <div className="border-t border-gray-300 my-2"></div>
-         
 
-          <Link
-            href="#"
-            className="hover:text-[#DC4731]"
-            onClick={(e) => {
-              e.preventDefault();
-              if (onBecomeHostClick) onBecomeHostClick();
-            }}
+          <div className="border-t border-gray-300 my-2"></div>
+
+          <button
+            className="text-left hover:text-[#DC4731]"
+            onClick={() => router.push("/register")}
           >
             Become a host
-          </Link>
-         
+          </button>
         </>
       )}
     </div>

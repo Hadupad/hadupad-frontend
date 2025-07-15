@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
 
-export default function PhoneVerificationModal({
+export default function PhoneVerificationCard({
   isOpen,
   onClose,
   onBack,
