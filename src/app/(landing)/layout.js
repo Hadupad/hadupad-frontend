@@ -1,10 +1,18 @@
-import NavBar from '../../../components/NavBar';
-import Footer from '../../../components/Footer';
+"use client";
+
+import { usePathname } from "next/navigation";
+import NavBar from "../../../components/NavBar";
+import Footer from "../../../components/Footer";
 
 export default function LandingLayout({ children }) {
+  const pathname = usePathname();
+
+  const hideNavbarRoutes = ["/register", "/login"];
+  const shouldHideNavbar = hideNavbarRoutes.includes(pathname);
+
   return (
     <>
-      <NavBar />
+      {!shouldHideNavbar && <NavBar />}
       <main>{children}</main>
       <Footer />
     </>

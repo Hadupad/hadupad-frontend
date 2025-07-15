@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import GuestSignupModal from "./GuestSignupModal";
-import PhoneVerificationModal from "./PhoneVerificationModal";
+import GuestSignupModal from "./SignupCard";
+import PhoneVerificationCard from "./PhoneVerificationCard";
 import FinishSigninUp from "./FinishSigninUp";
 import WelcomePage from "./WelcomePage";
 import ProfilePhotoDialog from "./ProfilePhotoDialog";
@@ -102,7 +102,7 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
         />
       )}
       {step === "verify" && (
-        <PhoneVerificationModal
+        <PhoneVerificationCard
           isOpen={true}
           onClose={onClose}
           phoneNumber={phoneNumber}
