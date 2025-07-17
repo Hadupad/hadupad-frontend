@@ -47,7 +47,7 @@ export default function RegisterMenu({
         <>
           <button
             className="text-left hover:text-[#DC4731]"
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/register/guest")}
           >
             Register as a guest
           </button>
@@ -71,7 +71,7 @@ export default function RegisterMenu({
 
           <button
             className="text-left hover:text-[#DC4731]"
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/register/host")}
           >
             Become a host
           </button>
