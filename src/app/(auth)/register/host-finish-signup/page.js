@@ -83,30 +83,28 @@ const FinishSignupPage = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!isFormValid) return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!isFormValid) return;
 
-    setIsLoading(true);
-    try {
-      // In a real app, you would call your API here
-      const userData = {
-        ...formData,
-        // Add phone and verification code from query params
-      };
+  setIsLoading(true);
+  try {
+    const userData = {
+      ...formData,
+      // Add phone and verification code 
+    };
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Redirect to dashboard after successful signup
-      router.push("/dashboard");
-    } catch (err) {
-      setApiErrors([
-        { message: "An unknown error occurred. Please try again." },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    // ✅ Redirect to guest profile creation
+    router.push("/register/host-create-profile");
+  } catch (err) {
+    setApiErrors([{ message: "An unknown error occurred. Please try again." }]);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">

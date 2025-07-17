@@ -89,16 +89,15 @@ const FinishSignupPage = () => {
 
     setIsLoading(true);
     try {
-      // In a real app, you would call your API here
       const userData = {
         ...formData,
-        // Add phone and verification code from query params
+        // Add phone and verification code 
       };
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Redirect to dashboard after successful signup
-      router.push("/dashboard");
+      // ✅ Redirect to guest profile creation
+      router.push("/register/guest-create-profile");
     } catch (err) {
       setApiErrors([
         { message: "An unknown error occurred. Please try again." },
@@ -107,6 +106,7 @@ const FinishSignupPage = () => {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">

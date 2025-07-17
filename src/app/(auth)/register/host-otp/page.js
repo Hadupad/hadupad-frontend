@@ -52,17 +52,18 @@ export default function OtpVerificationPage() {
     }
   };
 
-  const handleContinue = async () => {
-    const fullCode = code.join("");
-    if (fullCode.length === 4) {
-      setIsLoading(true);
-      // Simulate API call
-      setTimeout(() => {
-        setIsLoading(false);
-        router.push("/dashboard"); // Redirect after verification
-      }, 1000);
-    }
-  };
+ const handleContinue = async () => {
+   const fullCode = code.join("");
+   if (fullCode.length === 4) {
+     setIsLoading(true);
+     // Simulate API call
+     setTimeout(() => {
+       setIsLoading(false);
+       router.push("/host/host-finish-signup"); // Redirect here
+     }, 1000);
+   }
+ };
+
 
   const handleResendCode = () => {
     setCountdown(30);

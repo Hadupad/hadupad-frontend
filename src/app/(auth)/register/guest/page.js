@@ -11,18 +11,20 @@ export default function SignupCard({ onSuccess }) {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!phone.trim()) return;
+ const handleSubmit = async (e) => {
+   e.preventDefault();
+   if (!phone.trim()) return;
 
-    setLoading(true);
+   setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-      const fullPhone = `${countryCode}${phone}`;
-      onSuccess?.(fullPhone);
-    }, 1000); // mock API delay
-  };
+   setTimeout(() => {
+     setLoading(false);
+     const fullPhone = `${countryCode}${phone}`;
+     onSuccess?.(fullPhone);
+     router.push("/register/guest-otp"); // Navigate after success
+   }, 1000); // mock API delay
+ };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
