@@ -59,7 +59,7 @@ export default function OtpVerificationPage() {
      // Simulate API call
      setTimeout(() => {
        setIsLoading(false);
-       router.push("/host/host-finish-signup"); // Redirect here
+       router.push("/register/host-signup"); // Redirect here
      }, 1000);
    }
  };

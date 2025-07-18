@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from "react";
 import GuestSignupModal from "./SignupCard";
-import PhoneVerificationCard from "./PhoneVerificationCard";
 import FinishSigninUp from "./FinishSigninUp";
 import WelcomePage from "./WelcomePage";
-import ProfilePhotoDialog from "./ProfilePhotoDialog";
 import IdentityVerification from "./IdentityVerification";
 // import useAuth from "../../hooks/useAuth";
 
@@ -101,17 +99,7 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
           userType={userType} 
         />
       )}
-      {step === "verify" && (
-        <PhoneVerificationCard
-          isOpen={true}
-          onClose={onClose}
-          phoneNumber={phoneNumber}
-          onVerificationComplete={handleVerificationComplete}
-          onBack={handleBack}
-          error={error}
-          devOtp={user_otp}
-        />
-      )}
+    
       {step === "finish" && (
         <FinishSigninUp
           isOpen={true}
@@ -122,21 +110,7 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
           verificationCode={verificationCode}
         />
       )}
-      {step === "welcome" && (
-        <WelcomePage
-          isOpen={true}
-          onClose={onClose}
-          onBack={handleBack}
-          profilePhotoDialog={handlePhotoUploadPage}
-        />
-      )}
-      {step === "photoUpload" && (
-        <ProfilePhotoDialog
-          isOpen={true}
-          onClose={onClose}
-          onPhotoSelect={handlePhotoUpload}
-        />
-      )}
+      
       {step === "VerifyIdentity" && userType === "host" && (
         <IdentityVerification
           isOpen={true}

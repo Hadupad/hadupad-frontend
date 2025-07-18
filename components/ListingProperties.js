@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import GalleryGrid from "./GalleryGrid";
-import GuestSignupModal from "./auth/SignupCard"; // Import your modal component
 import { X, Facebook, Mail, Apple } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
@@ -135,16 +134,6 @@ const ListingComponent = () => {
         </div>
       </div>
 
-      {/* Guest Signup Modal */}
-      <GuestSignupModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setError("");
-        }}
-        onPhoneSubmit={handlePhoneSubmit}
-        error={error}
-      />
     </div>
   );
 };

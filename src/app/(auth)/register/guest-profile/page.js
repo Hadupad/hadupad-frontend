@@ -1,10 +1,13 @@
 "use client";
 
 import { X, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation"; // ✅ Import for navigation
 
 const ProfilePhotoCard = ({ onComplete, onBack }) => {
+  const router = useRouter();
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -26,7 +29,7 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
       setIsSuccess(true);
       setTimeout(() => {
         if (onComplete) onComplete(selectedImage);
-      }, 1500);
+      }, 1000);
     } catch (error) {
       console.error("Upload failed:", error);
     } finally {
@@ -38,8 +41,18 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
     setIsSuccess(true);
     setTimeout(() => {
       if (onComplete) onComplete(null);
-    }, 1500);
+    }, 1000);
   };
+
+  // ✅ Redirect after success (2 seconds)
+  useEffect(() => {
+    if (isSuccess) {
+      const timer = setTimeout(() => {
+        router.push("/"); // ✅ Redirect to homepage
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess, router]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-neutral-100 px-4">
@@ -55,7 +68,7 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
           <div className="text-center py-10">
             <CheckCircle2 className="mx-auto h-16 w-16 text-green-500 mb-4" />
             <h2 className="text-xl font-bold mb-2">Registration Successful!</h2>
-            <p className="text-gray-600">Your account is ready. Welcome!</p>
+            <p className="text-gray-600">Redirecting you to the homepage...</p>
           </div>
         ) : (
           <>

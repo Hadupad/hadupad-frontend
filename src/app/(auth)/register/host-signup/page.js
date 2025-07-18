@@ -97,7 +97,7 @@ const handleSubmit = async (e) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // ✅ Redirect to guest profile creation
-    router.push("/register/host-create-profile");
+    router.push("/register/host-profile");
   } catch (err) {
     setApiErrors([{ message: "An unknown error occurred. Please try again." }]);
   } finally {
