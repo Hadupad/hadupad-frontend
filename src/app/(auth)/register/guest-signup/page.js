@@ -97,7 +97,7 @@ const FinishSignupPage = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // ✅ Redirect to guest profile creation
-      router.push("/register/guest-create-profile");
+      router.push("/register/guest-profile");
     } catch (err) {
       setApiErrors([
         { message: "An unknown error occurred. Please try again." },

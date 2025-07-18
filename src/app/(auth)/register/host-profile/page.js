@@ -27,7 +27,7 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
       if (onComplete) onComplete(selectedImage);
 
       // Redirect after successful photo upload
-      router.push("/register/host-nin-verification"); // Navigate to host verification
+      router.push("/register/host-verification"); // Navigate to host verification
     } catch (error) {
       console.error("Upload failed:", error);
     } finally {
@@ -39,7 +39,7 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
     if (onComplete) onComplete(null);
 
     // Redirect to host verification even if skipped
-    router.push("/register/host-nin-verification"); // Navigate to host verification
+    router.push("/register/host-verification"); // Navigate to host verification
   };
 
   return (

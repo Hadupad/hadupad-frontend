@@ -21,7 +21,7 @@ const handleSubmit = async (e) => {
     setLoading(false);
     const fullPhone = `${countryCode}${phone}`;
     onSuccess?.(fullPhone);
-    router.push("/host/guest-otp"); // Navigate after success
+    router.push("/register/host-otp"); // Navigate after success
   }, 1000); // mock API delay
 };
 
