@@ -1,19 +1,75 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { X, CheckCircle2 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaApple } from "react-icons/fa";
+import { login, resetLoginState } from "@/redux/slices/loginSlice";
+import { toast, ToastContainer, Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginModal({ isOpen, onClose }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-
+  const dispatch = useDispatch();
+  const { loading, error, user } = useSelector((state) => state.login);
   const modalRef = useRef();
+
+  // Reset login state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      dispatch(resetLoginState());
+      setEmail("");
+      setPassword("");
+    }
+  }, [isOpen, dispatch]);
+
+  // Handle error toast when error changes
+  useEffect(() => {
+    if (error) {
+      toast.error(
+        error === 'Failed to login: Invalid email or password' ? (
+          <div>
+            Invalid email or password. Please{' '}
+            <a href="/signup" className="text-[#DC4731] underline hover:text-[#c03d29]">
+              sign up
+            </a>{' '}
+            if you don't have an account.
+          </div>
+        ) : (
+          error || 'An error occurred during login.'
+        ),
+        {
+          position: 'top-right',
+          autoClose: 4000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          className: 'bg-red-500 text-white rounded-lg shadow-lg p-4 font-semibold',
+          bodyClassName: 'flex items-center',
+        }
+      );
+    }
+  }, [error]);
+
+  // Handle success toast when user is set
+  useEffect(() => {
+    if (user) {
+      toast.success('Login successful! Redirecting...', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        className: 'bg-green-500 text-white rounded-lg shadow-lg p-4 font-semibold',
+        bodyClassName: 'flex items-center',
+      });
+    }
+  }, [user]);
 
   const handleOverlayClick = (e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -21,25 +77,60 @@ export default function LoginModal({ isOpen, onClose }) {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      return 'Email is required';
+    }
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address';
+    }
+    return '';
+  };
 
-    // Fake login success for static display
-    setTimeout(() => {
-      if (email && password) {
-        setIsSuccess(true);
-        setIsLoading(false);
-        setTimeout(() => {
-          onClose();
-          setIsSuccess(false);
-        }, 2000);
-      } else {
-        setError("Please enter both email and password.");
-        setIsLoading(false);
-      }
-    }, 1000);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const emailError = validateEmail(email);
+    if (emailError) {
+      toast.error(emailError, {
+        position: 'top-right',
+        autoClose: 4000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        className: 'bg-red-500 text-white rounded-lg shadow-lg p-4 font-semibold',
+        bodyClassName: 'flex items-center',
+      });
+      return;
+    }
+
+    if (!password.trim()) {
+      toast.error('Password is required', {
+        position: 'top-right',
+        autoClose: 4000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        className: 'bg-red-500 text-white rounded-lg shadow-lg p-4 font-semibold',
+        bodyClassName: 'flex items-center',
+      });
+      return;
+    }
+
+    const credentials = { email, password };
+    try {
+      await dispatch(login(credentials)).unwrap();
+      setTimeout(() => {
+        onClose();
+        setEmail("");
+        setPassword("");
+      }, 3000); // Match toast autoClose duration
+    } catch (err) {
+      // Error is handled by Redux state and toast
+    }
   };
 
   if (!isOpen) return null;
@@ -49,6 +140,18 @@ export default function LoginModal({ isOpen, onClose }) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
       onClick={handleOverlayClick}
     >
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+        transition={Slide}
+      />
       <div
         ref={modalRef}
         className="bg-white w-[90%] max-w-md rounded-xl shadow-xl p-6 relative"
@@ -60,7 +163,7 @@ export default function LoginModal({ isOpen, onClose }) {
           <X size={24} />
         </button>
 
-        {isSuccess ? (
+        {user ? (
           <div className="text-center py-10">
             <CheckCircle2 className="mx-auto h-16 w-16 text-green-500 mb-4" />
             <h2 className="text-xl font-bold mb-2">Login Successful!</h2>
@@ -102,22 +205,16 @@ export default function LoginModal({ isOpen, onClose }) {
                 </button>
               </div>
 
-              {error && (
-                <div className="p-3 text-sm text-red-800 rounded-lg bg-red-50">
-                  {error}
-                </div>
-              )}
-
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={loading}
                 className={`w-full py-2 rounded-lg text-white flex justify-center ${
-                  isLoading
+                  loading
                     ? "bg-gray-300 cursor-not-allowed"
                     : "bg-[#DC4731] hover:bg-[#c03d29]"
                 }`}
               >
-                {isLoading ? "Logging in..." : "Log in"}
+                {loading ? "Logging in..." : "Log in"}
               </button>
             </form>
 

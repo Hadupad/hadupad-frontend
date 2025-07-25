@@ -1,26 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { userLogin } from '../../services/apis/loginApi';
+import { guestUserSignup } from '../../services/apis/guestSignupApi';
 
-export const login = createAsyncThunk(
-  'auth/login',
+export const guestSignup = createAsyncThunk(
+  'auth/guestSignup',
   async (data, thunkAPI) => {
     try {
-      return await userLogin(data);
+      return await guestUserSignup(data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
-const loginSlice = createSlice({
-  name: 'login',
+const guestSignupSlice = createSlice({
+  name: 'guestSignup',
   initialState: {
     user: null,
     loading: false,
     error: null,
   },
   reducers: {
-    resetLoginState: (state) => {
+    resetGuestSignupState: (state) => {
       state.user = null;
       state.loading = false;
       state.error = null;
@@ -28,20 +28,20 @@ const loginSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(login.pending, (state) => {
+      .addCase(guestSignup.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action) => {
+      .addCase(guestSignup.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(guestSignup.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-export const { resetLoginState } = loginSlice.actions;
-export default loginSlice.reducer;
+export const { resetGuestSignupState } = guestSignupSlice.actions;
+export default guestSignupSlice.reducer;

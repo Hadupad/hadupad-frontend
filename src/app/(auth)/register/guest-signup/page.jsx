@@ -243,7 +243,7 @@ const FinishSignupPage = () => {
 
   const handleModalClose = () => {
     setShowSuccessModal(false);
-    router.push("/register/host-profile");
+    router.push("/register/guest-profile");
   };
 
   const getFriendlyErrorMessage = (error) => {
