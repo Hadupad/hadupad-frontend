@@ -53,7 +53,7 @@ export default function RegisterMenu({
           </button>
 
           <Link
-            href="#"
+            href="login"
             className="hover:text-[#DC4731]"
             onClick={() => setShowLoginModal(true)}
           >
