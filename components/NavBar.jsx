@@ -1,24 +1,30 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { X, Menu } from 'lucide-react';
+import { X, Menu, LogOut } from 'lucide-react';
 import RegisterMenu from './auth/RegisterMenu';
 import AuthModalContainer from './auth/AuthModalContainer';
+import LogoutModal from './LogoutModal';
+import LoadingIndicator from './LoadingIndicator';
 import { getUserProfile } from '@/redux/slices/profileSlice';
+import { resetLoginState } from '@/redux/slices/loginSlice';
+import { persistor } from '@/redux/store';
 
 export default function NavBar() {
   const pathname = usePathname();
   const dispatch = useDispatch();
   const { user, loading } = useSelector((state) => state.profile);
+  const { user: loginUser } = useSelector((state) => state.login);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [registerMenuOpen, setRegisterMenuOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [userType, setUserType] = useState('user');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const registerMenuRef = useRef(null);
 
   // Check login status and fetch user profile
@@ -28,7 +34,7 @@ export default function NavBar() {
     if (token) {
       dispatch(getUserProfile());
     }
-  }, [dispatch]);
+  }, [dispatch, loginUser]);
 
   // Close menus on pathname change
   useEffect(() => {
@@ -60,6 +66,18 @@ export default function NavBar() {
     setRegisterMenuOpen(false);
     setUserType('host');
     setAuthModalOpen(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggingOut(true);
+    setTimeout(() => {
+      localStorage.clear();
+      dispatch(resetLoginState());
+      persistor.purge(); // Clear persist:root from localStorage
+      setIsLoggedIn(false);
+      setLogoutModalOpen(false);
+      setIsLoggingOut(false);
+    }, 800); // Match LoadingIndicator animation duration
   };
 
   const navLinks = [
@@ -102,19 +120,25 @@ export default function NavBar() {
         <div className="relative" ref={registerMenuRef}>
           {isLoggedIn && user && !loading ? (
             // Logged-in user profile
-            <Link
-              href="/host"
-              className="hidden md:flex items-center gap-2 bg-white text-gray-700 px-5 py-2 rounded-full shadow-lg hover:shadow-md transition-shadow"
-            >
-              <img
-                src={user?.profilePicture || 'No Profile'}
-                alt="User Profile"
-                className="w-5 h-5 rounded-full object-cover"
-              />
-              <span className="text-sm font-semibold">
-                {user.firstName || 'User'} {user.lastName || ''}
-              </span>
-            </Link>
+            <div className="hidden md:flex items-center gap-2 bg-white px-5 py-2 rounded-full shadow-lg hover:shadow-md transition-shadow">
+              <Link href="/host" className="flex items-center gap-2">
+                <img
+                  src={user?.profilePicture || '/images/logo/li_user.png'}
+                  alt=""
+                  className="w-5 h-5 rounded-full object-cover"
+                />
+                <span className="text-sm font-semibold">
+                  {user.firstName || 'User'} {user.lastName || ''}
+                </span>
+              </Link>
+              <button
+                onClick={() => setLogoutModalOpen(true)}
+                className="ml-2 text-gray-700 hover:text-[#DC4731] transition-colors"
+                aria-label="Logout"
+              >
+                <LogOut size={20} />
+              </button>
+            </div>
           ) : (
             // Register button for non-logged-in users
             <button
@@ -133,17 +157,26 @@ export default function NavBar() {
           {/* Mobile Buttons */}
           <div className="md:hidden flex items-center gap-4">
             {isLoggedIn && user && !loading ? (
-              <Link
-                href="/host"
-                className="flex items-center justify-center bg-white text-gray-700 p-2 rounded-full shadow-md hover:shadow-lg transition-shadow"
-                aria-label="User profile"
-              >
-                <img
-                    src={user?.profilePicture || 'No Profile'}
-                  alt="User Profile"
-                  className="w-6 h-6 rounded-full object-cover"
-                />
-              </Link>
+              <div className="flex items-center gap-2 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow">
+                <Link
+                  href="/host"
+                  className="flex items-center justify-center"
+                  aria-label="User profile"
+                >
+                  <img
+                    src={user?.profilePicture || '/images/logo/li_user.png'}
+                    alt=""
+                    className="w-6 h-6 rounded-full object-cover"
+                  />
+                </Link>
+                <button
+                  onClick={() => setLogoutModalOpen(true)}
+                  className="text-gray-700 hover:text-[#DC4731] transition-colors"
+                  aria-label="Logout"
+                >
+                  <LogOut size={20} />
+                </button>
+              </div>
             ) : (
               <button
                 onClick={() => setRegisterMenuOpen(!registerMenuOpen)}
@@ -212,6 +245,16 @@ export default function NavBar() {
           onClose={() => setAuthModalOpen(false)}
           userType={userType}
         />
+
+        {/* Logout Confirmation Modal */}
+        <LogoutModal
+          isOpen={logoutModalOpen}
+          onClose={() => setLogoutModalOpen(false)}
+          onConfirm={handleLogout}
+        />
+
+        {/* Loading Indicator */}
+        {isLoggingOut && <LoadingIndicator />}
       </nav>
     </header>
   );

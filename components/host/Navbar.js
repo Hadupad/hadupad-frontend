@@ -36,7 +36,7 @@ export default function Navbar() {
       <div className="flex items-center gap-2">
         <Image
           src={user?.profilePicture}
-          alt="User"
+          alt=""
           width={32}
           height={32}
           className="rounded-full object-cover"

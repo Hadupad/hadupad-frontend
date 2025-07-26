@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,13 +6,16 @@ import { X, CheckCircle2 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaApple } from "react-icons/fa";
 import { login, resetLoginState } from "@/redux/slices/loginSlice";
+import { getUserProfile } from '@/redux/slices/profileSlice';
 import { toast, ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LoadingIndicator from './../LoadingIndicator';
 
 export default function LoginModal({ isOpen, onClose }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const dispatch = useDispatch();
   const { loading, error, user } = useSelector((state) => state.login);
   const modalRef = useRef();
@@ -23,12 +26,14 @@ export default function LoginModal({ isOpen, onClose }) {
       dispatch(resetLoginState());
       setEmail("");
       setPassword("");
+      setIsLoggingIn(false);
     }
   }, [isOpen, dispatch]);
 
-  // Handle error toast when error changes
+  // Handle error notifications
   useEffect(() => {
     if (error) {
+      setIsLoggingIn(false);
       toast.error(
         error === 'Failed to login: Invalid email or password' ? (
           <div>
@@ -55,21 +60,28 @@ export default function LoginModal({ isOpen, onClose }) {
     }
   }, [error]);
 
-  // Handle success toast when user is set
+  // Handle success notification and refetch user profile
   useEffect(() => {
-    if (user) {
-      toast.success('Login successful! Redirecting...', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: false,
-        className: 'bg-green-500 text-white rounded-lg shadow-lg p-4 font-semibold',
-        bodyClassName: 'flex items-center',
-      });
+    if (user && isLoggingIn) {
+      dispatch(getUserProfile()); // Refetch user profile
+      setTimeout(() => {
+        setIsLoggingIn(false);
+        toast.success('Login successful! Redirecting...', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          className: 'bg-green-500 text-white rounded-lg shadow-lg p-4 font-semibold',
+          bodyClassName: 'flex items-center',
+        });
+        onClose();
+        setEmail("");
+        setPassword("");
+      }, 800); // Match LoadingIndicator animation duration
     }
-  }, [user]);
+  }, [user, isLoggingIn, dispatch, onClose]);
 
   const handleOverlayClick = (e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -120,16 +132,12 @@ export default function LoginModal({ isOpen, onClose }) {
       return;
     }
 
+    setIsLoggingIn(true);
     const credentials = { email, password };
     try {
       await dispatch(login(credentials)).unwrap();
-      setTimeout(() => {
-        onClose();
-        setEmail("");
-        setPassword("");
-      }, 3000); // Match toast autoClose duration
     } catch (err) {
-      // Error is handled by Redux state and toast
+      setIsLoggingIn(false);
     }
   };
 
@@ -163,7 +171,7 @@ export default function LoginModal({ isOpen, onClose }) {
           <X size={24} />
         </button>
 
-        {user ? (
+        {user && !isLoggingIn ? (
           <div className="text-center py-10">
             <CheckCircle2 className="mx-auto h-16 w-16 text-green-500 mb-4" />
             <h2 className="text-xl font-bold mb-2">Login Successful!</h2>
@@ -207,14 +215,14 @@ export default function LoginModal({ isOpen, onClose }) {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || isLoggingIn}
                 className={`w-full py-2 rounded-lg text-white flex justify-center ${
-                  loading
+                  loading || isLoggingIn
                     ? "bg-gray-300 cursor-not-allowed"
                     : "bg-[#DC4731] hover:bg-[#c03d29]"
                 }`}
               >
-                {loading ? "Logging in..." : "Log in"}
+                {loading || isLoggingIn ? "Logging in..." : "Log in"}
               </button>
             </form>
 
@@ -247,6 +255,7 @@ export default function LoginModal({ isOpen, onClose }) {
             </div>
           </>
         )}
+        {isLoggingIn && <LoadingIndicator />}
       </div>
     </div>
   );
