@@ -2,8 +2,23 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getUserProfile } from "@/redux/slices/profileSlice";
+import LoadingIndicator from "components/LoadingIndicator";
 
 export default function Navbar() {
+
+  const dispatch = useDispatch();
+  const { user, loading, error } = useSelector((state) => state.profile);
+
+  useEffect(() => {
+    dispatch(getUserProfile);
+  }, [dispatch])
+
+  if (loading) return <LoadingIndicator /> ;
+  if (error) return <div>Error {error}</div>
+
   return (
     <nav className="w-full fixed flex justify-between items-center p-4 bg-white border-b z-100">
       {/* Left: Logo */}
@@ -20,15 +35,15 @@ export default function Navbar() {
       {/* Right: User profile */}
       <div className="flex items-center gap-2">
         <Image
-          src="/user-avatar.jpg"
-          alt="User"
+          src={user?.profilePicture}
+          alt=""
           width={32}
           height={32}
           className="rounded-full object-cover"
         />
         <div>
-          <p className="text-sm font-semibold">Faith Oyeniyi</p>
-          <p className="text-xs text-green-500">Host</p>
+          <p className="text-sm font-semibold">{user?.firstName || "Unknown First Name"} {user?.lastName || "Unknown Last Name"}</p>
+          <p className="text-xs text-green-500">{user?.userType || "Unknown"}</p>
         </div>
       </div>
     </nav>

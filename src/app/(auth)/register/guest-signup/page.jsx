@@ -178,7 +178,7 @@ const FinishSignupPage = () => {
       }
       return;
     }
-  
+
     try {
       const userData = {
         userId: initiateUser.userId,
@@ -188,59 +188,27 @@ const FinishSignupPage = () => {
         password: formData.password,
         birthdate: formData.birthdate,
       };
-  
+
       console.log('Submitting userData:', userData);
       const result = await dispatch(guestSignup(userData)).unwrap();
       console.log('Guest Signup Result:', JSON.stringify(result, null, 2));
-  
+
       const userId = result?.user?.id || user?.id || initiateUser.userId;
-  
+      
       if (userId) {
-        // Check if userId already exists in localStorage
-        const existingUserId = localStorage.getItem('userId');
-        if (existingUserId && existingUserId === userId) {
-          console.log('UserId already exists in localStorage:', userId);
-          toast.info('User ID already saved.', {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: false,
-            className: 'bg-blue-500 text-white rounded-lg shadow-lg p-4 font-semibold',
-            bodyClassName: 'flex items-center',
-          });
-        } else if (existingUserId && existingUserId !== userId) {
-          console.warn('Different userId found in localStorage:', {
-            existing: existingUserId,
-            new: userId,
-          });
-          toast.warn('A different user ID was found. Updating to new ID.', {
-            position: 'top-right',
-            autoClose: 4000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: false,
-            className: 'bg-yellow-500 text-white rounded-lg shadow-lg p-4 font-semibold',
-            bodyClassName: 'flex items-center',
-          });
-          localStorage.setItem('userId', userId);
-        } else {
-          localStorage.setItem('userId', userId);
-          console.log('Saved userId to localStorage:', userId);
-          toast.success('User ID saved successfully!', {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: false,
-            className: 'bg-green-500 text-white rounded-lg shadow-lg p-4 font-semibold',
-            bodyClassName: 'flex items-center',
-          });
-        }
+        localStorage.setItem('userId', userId);
+        console.log('Saved userId to localStorage:', userId);
         console.log('Retrieved userId from localStorage:', localStorage.getItem('userId'));
+        toast.success('User ID saved successfully!', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          className: 'bg-green-500 text-white rounded-lg shadow-lg p-4 font-semibold',
+          bodyClassName: 'flex items-center',
+        });
       } else {
         console.error('No userId found in result or Redux state:', {
           result: JSON.stringify(result, null, 2),
@@ -275,7 +243,7 @@ const FinishSignupPage = () => {
 
   const handleModalClose = () => {
     setShowSuccessModal(false);
-    router.push("/register/host-profile");
+    router.push("/register/guest-profile");
   };
 
   const getFriendlyErrorMessage = (error) => {

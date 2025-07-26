@@ -1,6 +1,5 @@
-// src/redux/slices/initiateSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { InitiateUser } from '../../services/apis/initiateRegiaterApi';
+import { InitiateUser } from '../../services/apis/initiateRegisterApi';
 
 export const initiateRegistration = createAsyncThunk(
   'auth/initiate',
@@ -20,7 +19,13 @@ const initiateSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    resetInitiateState: (state) => {
+      state.user = null;
+      state.loading = false;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(initiateRegistration.pending, (state) => {
@@ -29,7 +34,7 @@ const initiateSlice = createSlice({
       })
       .addCase(initiateRegistration.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = { userId: action.payload.userId, ...action.payload };
       })
       .addCase(initiateRegistration.rejected, (state, action) => {
         state.loading = false;
@@ -38,4 +43,5 @@ const initiateSlice = createSlice({
   },
 });
 
+export const { resetInitiateState } = initiateSlice.actions;
 export default initiateSlice.reducer;
