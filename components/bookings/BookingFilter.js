@@ -16,7 +16,7 @@ const BookingFilter = ({ filter, setFilter, search, setSearch }) => {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`text-sm font-medium ${
+              className={`text-sm font-medium cursor-pointer ${
                 filter === f ? 'text-red-600 underline' : 'text-gray-500'
               }`}
             >
