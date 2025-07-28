@@ -39,7 +39,7 @@ export default function DynamicDialog({ open, onClose, type, user }) {
         return (
           <input
             type="text"
-            defaultValue={`${user.firstName} ${user.lastName}`}
+            defaultValue="Faith Oyineye"
             className="border p-2 w-full"
           />
         );
@@ -47,7 +47,7 @@ export default function DynamicDialog({ open, onClose, type, user }) {
         return (
           <input
             type="email"
-            defaultValue={user.email}
+            defaultValue="faith@gmail.com"
             className="border p-2 w-full"
           />
         );
@@ -55,7 +55,7 @@ export default function DynamicDialog({ open, onClose, type, user }) {
         return (
           <input
             type="tel"
-            defaultValue={user.phoneNumber}
+            defaultValue="09099009900"
             className="border p-2 w-full"
           />
         );

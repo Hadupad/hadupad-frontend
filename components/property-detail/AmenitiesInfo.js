@@ -2,7 +2,7 @@ import {
   Leaf,
   Wifi,
   Snowflake,
-  refrigerator,
+  Refrigerator,
   Utensils,
   Bone,
   Flame,
@@ -16,7 +16,7 @@ export default function AmenitiesInfo() {
   { icon: <Wifi size={20} />, label: "Wifi" },
   { icon: <Flame size={20} />, label: "Free washer - in building" }, // Placeholder
   { icon: <Snowflake size={20} />, label: "Central air conditioning" },
-  { icon: <refrigerator size={20} />, label: "Refrigerator" },
+  { icon: <Refrigerator size={20} />, label: "Refrigerator" },
   { icon: <Utensils size={20} />, label: "Kitchen" },
   { icon: <Bone size={20} />, label: "Pets allowed" },
   { icon: <Flame size={20} />, label: "Dryer" },
