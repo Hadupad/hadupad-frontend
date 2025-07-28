@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const tabs = [
-  { name: 'Personal information', href: '/account/personal-info' },
-  { name: 'Login & Security', href: '/account/login-security' },
-  { name: 'Payments', href: '/account/payments' },
+  { name: 'Personal information', href: '/guest/account/personal-info' },
+  { name: 'Login & Security', href: '/guest/account/login-security' },
+  { name: 'Payments', href: '/guest/account/payments' },
 ];
 
 export default function AccountTabNav() {

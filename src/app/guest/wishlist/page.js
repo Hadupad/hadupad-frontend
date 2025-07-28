@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
@@ -125,9 +126,11 @@ const PropertyCard = ({ property }) => {
             ₦{property.price.toLocaleString()}
             <span className="font-normal text-gray-500"> / night</span>
           </p>
-          <button className="text-xs bg-black text-white px-3 py-1 rounded-full">
-            View
-          </button>
+          <Link href="/property-details">
+            <button className="text-xs bg-black text-white px-3 py-1 rounded-full cursor-pointer">
+              View
+            </button>
+          </Link>
         </div>
       </div>
     </div>
