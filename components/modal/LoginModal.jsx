@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from "react";
+import OtpVerificationModal from './OtpVerificationModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { X, CheckCircle2 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
@@ -16,11 +17,11 @@ export default function LoginModal({ isOpen, onClose }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
   const dispatch = useDispatch();
   const { loading, error, user } = useSelector((state) => state.login);
   const modalRef = useRef();
 
-  // Reset login state when modal opens
   useEffect(() => {
     if (isOpen) {
       dispatch(resetLoginState());
@@ -30,7 +31,6 @@ export default function LoginModal({ isOpen, onClose }) {
     }
   }, [isOpen, dispatch]);
 
-  // Handle error notifications
   useEffect(() => {
     if (error) {
       setIsLoggingIn(false);
@@ -60,10 +60,9 @@ export default function LoginModal({ isOpen, onClose }) {
     }
   }, [error]);
 
-  // Handle success notification and refetch user profile
   useEffect(() => {
     if (user && isLoggingIn) {
-      dispatch(getUserProfile()); // Refetch user profile
+      dispatch(getUserProfile());
       setTimeout(() => {
         setIsLoggingIn(false);
         toast.success('Login successful! Redirecting...', {
@@ -79,7 +78,7 @@ export default function LoginModal({ isOpen, onClose }) {
         onClose();
         setEmail("");
         setPassword("");
-      }, 800); // Match LoadingIndicator animation duration
+      }, 800);
     }
   }, [user, isLoggingIn, dispatch, onClose]);
 
@@ -133,15 +132,49 @@ export default function LoginModal({ isOpen, onClose }) {
     }
 
     setIsLoggingIn(true);
-    const credentials = { email, password };
-    try {
-      await dispatch(login(credentials)).unwrap();
-    } catch (err) {
+
+    setTimeout(() => {
       setIsLoggingIn(false);
-    }
+
+
+      const simulatedUser = {
+        id: '123',
+        email: email,
+        userType: 'guest',
+        phoneNumber: '+1234567890',
+      };
+
+      if (simulatedUser.userType === 'host') {
+
+        setShowOtpModal(true);
+      } else {
+
+        toast.success('Login successful! Redirecting...');
+        onClose();
+      }
+    }, 1000);
   };
 
   if (!isOpen) return null;
+
+  if (showOtpModal) {
+    return (
+      <OtpVerificationModal
+        isOpen={true}
+        onClose={() => {
+          setShowOtpModal(false);
+          onClose();
+        }}
+        onBack={() => setShowOtpModal(false)}
+        onVerificationComplete={(code) => {
+          toast.success('Host verified successfully!');
+          setShowOtpModal(false);
+          onClose();
+        }}
+        phoneNumber="your phone number"
+      />
+    );
+  }
 
   return (
     <div
@@ -162,29 +195,27 @@ export default function LoginModal({ isOpen, onClose }) {
       />
       <div
         ref={modalRef}
-        className="bg-white w-[90%] max-w-md rounded-xl shadow-xl p-6 relative"
+        className="bg-white w-full h-full sm:h-auto sm:rounded-xl sm:shadow-lg sm:max-w-md sm:m-4 flex flex-col"
       >
-        <button
-          onClick={onClose}
-          className="absolute right-4 text-gray-600 hover:text-black"
-        >
-          <X size={24} />
-        </button>
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b sm:border-none">
+            <h2 className="text-lg font-semibold text-center flex-grow">Log in</h2>
+            <button
+                onClick={onClose}
+                className="text-gray-600 hover:text-black p-2 -mr-2"
+            >
+                <X size={24} />
+            </button>
+        </div>
 
         {user && !isLoggingIn ? (
-          <div className="text-center py-10">
+          <div className="text-center py-10 px-6">
             <CheckCircle2 className="mx-auto h-16 w-16 text-green-500 mb-4" />
             <h2 className="text-xl font-bold mb-2">Login Successful!</h2>
             <p className="text-gray-600">Redirecting you shortly...</p>
           </div>
         ) : (
-          <>
-            <h2 className="text-lg font-semibold text-center mb-1">Log in</h2>
-
-            <div className="-mx-4 mt-4 mb-6">
-              <hr className="border-t border-gray-100" />
-            </div>
-
+          <div className="p-6 flex-grow overflow-y-auto">
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="email"
@@ -233,17 +264,20 @@ export default function LoginModal({ isOpen, onClose }) {
             </div>
 
             <div className="space-y-3 mb-4">
-              <button className="w-full flex items-center justify-center border border-gray-300 rounded-md py-2 hover:bg-gray-100 transition">
-                <FcGoogle className="mr-2 text-xl" />
-                Continue with Google
+              {/* Google Button */}
+              <button className="w-full flex items-center border border-gray-300 rounded-lg p-3 hover:bg-gray-100 transition">
+                <FcGoogle className="text-2xl" />
+                <span className="flex-1 text-center font-medium">Continue with Google</span>
               </button>
-              <button className="w-full flex items-center justify-center border border-gray-300 rounded-md py-2 hover:bg-gray-100 transition text-blue-600">
-                <FaFacebook className="mr-2 text-xl" />
-                Continue with Facebook
+              {/* Facebook Button */}
+              <button className="w-full flex items-center border border-gray-300 rounded-lg p-3 hover:bg-gray-100 transition text-blue-600">
+                <FaFacebook className="text-2xl" />
+                <span className="flex-1 text-center font-medium">Continue with Facebook</span>
               </button>
-              <button className="w-full flex items-center justify-center border border-gray-300 rounded-md py-2 hover:bg-gray-100 transition text-black">
-                <FaApple className="mr-2 text-xl" />
-                Continue with Apple
+              {/* Apple Button */}
+              <button className="w-full flex items-center border border-gray-300 rounded-lg p-3 hover:bg-gray-100 transition text-black">
+                <FaApple className="text-2xl" />
+                <span className="flex-1 text-center font-medium">Continue with Apple</span>
               </button>
             </div>
 
@@ -253,7 +287,7 @@ export default function LoginModal({ isOpen, onClose }) {
                 Sign up
               </button>
             </div>
-          </>
+          </div>
         )}
         {isLoggingIn && <LoadingIndicator />}
       </div>
