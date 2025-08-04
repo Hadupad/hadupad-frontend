@@ -9,11 +9,11 @@ const Login = () => {
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!email.trim()) return;
+    // e.preventDefault();
+    // if (!email.trim()) return;
 
-    // Directly navigate to the OTP page
-    router.push("/login-otp");
+    // // Directly navigate to the OTP page
+    // router.push("/login-otp");
   };
 
   return (

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
 
-export default function OtpVerification({
+export default function OtpVerificationModal({
   isOpen,
   onClose,
   onBack,
@@ -77,7 +77,7 @@ export default function OtpVerification({
       setTimeout(() => {
         setIsLoading(false);
         if (typeof onVerificationComplete === "function") {
-          onVerificationComplete(fullCode); // ✅ switch to FinishSigninUp
+          onVerificationComplete(fullCode);
         }
       }, 1000);
     }

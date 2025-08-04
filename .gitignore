@@ -35,6 +35,9 @@ yarn-error.log*
 .env.local
 # vercel
 .vercel
+.cursor
+
+userinput.py
 
 # typescript
 *.tsbuildinfo
