@@ -17,6 +17,7 @@ export default function RegisterMenu({ className = "" }) {
     setShowRegisterModal(true);
   };
 
+
   if (isLoading) return null;
 
   return (
