@@ -10,7 +10,7 @@ export default function RegisterMenu({ className = "" }) {
   const { user, isLoading, logout } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [userType, setUserType] = useState('guest');
+  const [userType, setUserType] = useState('');
 
   const handleRegisterClick = (type) => {
     setUserType(type);
@@ -51,7 +51,7 @@ export default function RegisterMenu({ className = "" }) {
           <>
             <button
               className="text-left font-bold hover:text-[#DC4731] cursor-pointer"
-              onClick={() => handleRegisterClick('guest')}
+              onClick={() => handleRegisterClick('user')}
             >
             Register as a guest
             </button>

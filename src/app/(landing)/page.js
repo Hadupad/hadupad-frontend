@@ -7,11 +7,7 @@ import ListingProperties from '../../../components/ListingProperties';
 import TopDestinations from '../../../components/TopDestinations';
 
 export default function Home() {
-
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-    const [userType, setUserType] = useState("guest"); // Default to guest
-
-
   return (
     <div>
       <Hero />

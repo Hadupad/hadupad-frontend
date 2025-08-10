@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { X, Menu, LogOut } from 'lucide-react';
 import RegisterMenu from './auth/RegisterMenu.jsx';
@@ -15,6 +15,7 @@ import { persistor } from '@/redux/store';
 
 export default function NavBar() {
   const pathname = usePathname();
+  const router = useRouter();
   const dispatch = useDispatch();
   const { user, loading } = useSelector((state) => state.profile);
   const { user: loginUser } = useSelector((state) => state.login);
@@ -27,14 +28,23 @@ export default function NavBar() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const registerMenuRef = useRef(null);
 
-  // Check login status and fetch user profile
+  // Check login status, fetch user profile, and handle redirect
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     setIsLoggedIn(!!token);
     if (token) {
-      dispatch(getUserProfile());
+      dispatch(getUserProfile()).then((response) => {
+        if (response.meta.requestStatus === 'fulfilled') {
+          const userType = response.payload.user?.userType;
+          if (userType === 'user' && pathname !== '/guest') {
+            router.push('/guest'); // Redirect to /guest for user
+          } else if (userType === 'host' && pathname !== '/host') {
+            router.push('/host'); // Redirect to /host for host
+          }
+        }
+      });
     }
-  }, [dispatch, loginUser]);
+  }, [dispatch, loginUser, router, pathname]);
 
   // Close menus on pathname change
   useEffect(() => {
@@ -121,7 +131,7 @@ export default function NavBar() {
           {isLoggedIn && user && !loading ? (
             // Logged-in user profile
             <div className="hidden md:flex items-center gap-2 bg-white px-5 py-2 rounded-full shadow-lg hover:shadow-md transition-shadow">
-              <Link href="/host" className="flex items-center gap-2">
+              <Link href={user.userType === 'host' ? '/host' : '/guest'} className="flex items-center gap-2">
                 <img
                   src={user?.profilePicture || '/images/logo/li_user.png'}
                   alt=""
@@ -159,7 +169,7 @@ export default function NavBar() {
             {isLoggedIn && user && !loading ? (
               <div className="flex items-center gap-2 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow">
                 <Link
-                  href="/host"
+                  href={user.userType === 'host' ? '/host' : '/guest'}
                   className="flex items-center justify-center"
                   aria-label="User profile"
                 >
