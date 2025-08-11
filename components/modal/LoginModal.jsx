@@ -1,21 +1,25 @@
 'use client';
 import { useState, useRef, useEffect } from "react";
-import OtpVerificationModal from './OtpVerificationModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { X, CheckCircle2 } from "lucide-react";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook, FaApple } from "react-icons/fa";
-import { login, resetLoginState } from "@/redux/slices/loginSlice";
-import { getUserProfile } from '@/redux/slices/profileSlice';
 import { toast, ToastContainer, Slide } from 'react-toastify';
+import { X, CheckCircle2 } from 'lucide-react';
+import { FcGoogle } from 'react-icons/fc';
+import { FaFacebook, FaApple } from 'react-icons/fa';
+import { login, resetLoginState } from '@/redux/slices/loginSlice';
+import { getUserProfile } from '@/redux/slices/profileSlice';
+import OtpVerificationModal from './OtpVerificationModal';
+import ForgotPasswordForm from '../auth/ForgotPasswordForm';
+import ResetPasswordForm from '../auth/ResetPasswordForm';
+import LoadingIndicator from '../LoadingIndicator';
 import 'react-toastify/dist/ReactToastify.css';
-import LoadingIndicator from './../LoadingIndicator';
 
 export default function LoginModal({ isOpen, onClose }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [currentView, setCurrentView] = useState('login'); // 'login', 'forgot-password', 'reset-password'
+  const [resetEmail, setResetEmail] = useState('');
   const dispatch = useDispatch();
   const { loading, error, user } = useSelector((state) => state.login);
   const modalRef = useRef();
@@ -25,6 +29,8 @@ export default function LoginModal({ isOpen, onClose }) {
       dispatch(resetLoginState());
       setEmail("");
       setPassword("");
+      setCurrentView('login');
+      setResetEmail('');
     }
   }, [isOpen, dispatch]);
 
@@ -155,10 +161,13 @@ export default function LoginModal({ isOpen, onClose }) {
       />
       <div
         ref={modalRef}
-        className="bg-white w-full h-full sm:h-auto sm:rounded-xl sm:shadow-lg sm:max-w-md sm:m-4 flex flex-col"
+        className="bg-white w-full h-full sm:h-auto sm:max-h-[90vh] sm:rounded-xl sm:shadow-lg sm:max-w-md sm:m-4 flex flex-col overflow-y-auto"
       >
         <div className="flex items-center justify-between p-4 border-b sm:border-none">
-          <h2 className="text-lg font-semibold text-center flex-grow">Log in</h2>
+          <h2 className="text-lg font-semibold text-center flex-grow">
+            {currentView === 'forgot-password' ? 'Forgot Password' : 
+             currentView === 'reset-password' ? 'Reset Password' : 'Log in'}
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-600 hover:text-black p-2 -mr-2"
@@ -173,6 +182,23 @@ export default function LoginModal({ isOpen, onClose }) {
             <h2 className="text-xl font-bold mb-2">Login Successful!</h2>
             <p className="text-gray-600">Redirecting you shortly...</p>
           </div>
+        ) : currentView === 'forgot-password' ? (
+          <ForgotPasswordForm
+            onBack={() => setCurrentView('login')}
+            onContinue={(email) => {
+              setResetEmail(email);
+              setCurrentView('reset-password');
+            }}
+          />
+        ) : currentView === 'reset-password' ? (
+          <ResetPasswordForm
+            onBack={() => setCurrentView('forgot-password')}
+            onComplete={() => {
+              setCurrentView('login');
+              toast.success('Password reset successfully! You can now log in with your new password.');
+            }}
+            resetToken="dummy-token" // In real implementation, this would come from URL params
+          />
         ) : (
           <div className="p-6 flex-grow overflow-y-auto">
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -211,6 +237,14 @@ export default function LoginModal({ isOpen, onClose }) {
                 {loading ? <LoadingIndicator /> : "Log in"}
               </button>
             </form>
+            <div className="text-center mt-4">
+              <button
+                className="text-sm text-[#DC4731] hover:text-[#b33220] underline"
+                onClick={() => setCurrentView('forgot-password')}
+              >
+                Forgot Password?
+              </button>
+            </div>
             <div className="flex items-center my-4">
               <hr className="flex-grow border-t border-gray-200" />
               <span className="mx-3 text-sm text-gray-400">OR</span>

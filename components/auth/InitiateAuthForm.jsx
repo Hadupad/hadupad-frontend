@@ -47,12 +47,8 @@ export default function InitiateAuthForm({ onContinue, userType }) {
       const result = await dispatch(
         initiateRegistration({ phoneNumber, userType })
       ).unwrap();
-      console.log('InitiateAuthForm result:', result); // Debug log
-      if (!result.userId) {
-        console.error('InitiateAuthForm: No userId in response', result);
-        throw new Error('User ID not received from server.');
-      }
-      const toastId = toast.success('OTP sent successfully!', {
+      
+      toast.success('OTP sent successfully!', {
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
@@ -62,19 +58,11 @@ export default function InitiateAuthForm({ onContinue, userType }) {
         theme: 'colored',
         className: 'rounded-xl animate__animated animate__slideInRight',
         style: { animationDuration: '0.3s' },
-        onOpen: () => {
-          setTimeout(() => {
-            toast.update(toastId, {
-              className: 'rounded-xl animate__animated animate__slideInDown',
-              style: { animationDuration: '0.5s' },
-            });
-          }, 300);
-        },
       });
       onContinue(phoneNumber, result.userId);
     } catch (err) {
-      console.error('InitiateAuthForm error:', err); // Debug log
-      toast.error(err.message || 'Failed to initiate registration. Please try again.', {
+      const errorMessage = err.message || 'Failed to initiate registration. Please try again.';
+      toast.error(errorMessage, {
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
