@@ -27,12 +27,26 @@ export default function LoginModal({ isOpen, onClose }) {
   useEffect(() => {
     if (isOpen) {
       dispatch(resetLoginState());
+      // Prevent background scrolling when modal is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Restore background scrolling when modal is closed
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup function to restore scrolling if component unmounts
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, dispatch]);
+
+  useEffect(() => {
+    if (isOpen) {
       setEmail("");
-      setPassword("");
       setCurrentView('login');
       setResetEmail('');
     }
-  }, [isOpen, dispatch]);
+  }, [isOpen]);
 
   useEffect(() => {
     if (error) {
@@ -161,7 +175,7 @@ export default function LoginModal({ isOpen, onClose }) {
       />
       <div
         ref={modalRef}
-        className="bg-white w-full h-full sm:h-auto sm:max-h-[90vh] sm:rounded-xl sm:shadow-lg sm:max-w-md sm:m-4 flex flex-col overflow-y-auto"
+        className="bg-white w-full h-full sm:h-auto sm:max-h-[90vh] sm:rounded-xl sm:shadow-lg sm:max-w-md sm:m-4 flex flex-col overflow-y-auto scrollbar-hide"
       >
         <div className="flex items-center justify-between p-4 border-b sm:border-none">
           <h2 className="text-lg font-semibold text-center flex-grow">
