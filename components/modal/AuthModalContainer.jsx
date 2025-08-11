@@ -163,7 +163,10 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
   };
 
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
       const timer = setTimeout(() => {
         setStep("initiate");
         setUserData({});
@@ -171,13 +174,16 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
       }, 300);
       return () => clearTimeout(timer);
     }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="relative bg-white w-full h-full sm:h-auto sm:max-h-[90vh] sm:w-full sm:max-w-md sm:rounded-lg sm:shadow-xl overflow-y-auto">
+      <div className="relative bg-white w-full h-full sm:h-auto sm:max-h-[90vh] sm:w-full sm:max-w-md sm:rounded-lg sm:shadow-xl overflow-y-auto scrollbar-hide">
         <div className="sticky top-0 bg-white z-10 sm:hidden p-4 border-b flex items-center">
           <button onClick={handleBack} className="text-gray-600 hover:text-black">
             <ChevronLeft size={24} />
