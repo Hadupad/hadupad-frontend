@@ -27,14 +27,10 @@ export default function LoginModal({ isOpen, onClose }) {
   useEffect(() => {
     if (isOpen) {
       dispatch(resetLoginState());
-      // Prevent background scrolling when modal is open
       document.body.style.overflow = 'hidden';
     } else {
-      // Restore background scrolling when modal is closed
       document.body.style.overflow = 'unset';
     }
-    
-    // Cleanup function to restore scrolling if component unmounts
     return () => {
       document.body.style.overflow = 'unset';
     };

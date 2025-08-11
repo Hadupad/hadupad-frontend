@@ -164,10 +164,8 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
 
   useEffect(() => {
     if (isOpen) {
-      // Prevent background scrolling when modal is open
       document.body.style.overflow = 'hidden';
     } else {
-      // Restore background scrolling when modal is closed
       document.body.style.overflow = 'unset';
       const timer = setTimeout(() => {
         setStep("initiate");
@@ -176,8 +174,6 @@ export default function AuthModalContainer({ isOpen, onClose, userType }) {
       }, 300);
       return () => clearTimeout(timer);
     }
-    
-    // Cleanup function to restore scrolling if component unmounts
     return () => {
       document.body.style.overflow = 'unset';
     };
