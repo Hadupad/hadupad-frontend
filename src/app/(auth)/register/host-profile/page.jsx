@@ -23,12 +23,21 @@ const getUserIdFromPersistRoot = () => {
   }
 };
 
-const ProfilePhotoCard = ({ onComplete, onBack }) => {
+const ProfilePhotoCard = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { loading, error, user } = useSelector((state) => state.profilePhoto);
   // Only get userId from persist:root
   const userId = getUserIdFromPersistRoot();
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  const handleComplete = (result) => {
+    // Handle completion logic here if needed
+    console.log('Profile photo upload completed:', result);
+  };
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
@@ -123,7 +132,7 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
       });
       setIsSuccess(true);
       setTimeout(() => {
-        if (onComplete) onComplete(result);
+        handleComplete(result);
         router.push('/register/host-verification');
       }, 2000);
     } catch (err) {
@@ -147,7 +156,7 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
     });
     setIsSuccess(true);
     setTimeout(() => {
-      if (onComplete) onComplete(null);
+      handleComplete(null);
       router.push('/');
     }, 2000);
   };
@@ -168,7 +177,7 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
       />
       <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-6 relative">
         <button
-          onClick={onBack}
+          onClick={handleBack}
           className="absolute left-4 text-gray-600 hover:text-black focus:outline-none focus:ring-2 focus:ring-[#DC4731] rounded cursor-pointer"
         >
           <X size={24} />
