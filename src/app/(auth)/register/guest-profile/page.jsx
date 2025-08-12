@@ -23,7 +23,7 @@ const getUserIdFromPersistRoot = () => {
   }
 };
 
-const ProfilePhotoCard = ({ onComplete, onBack }) => {
+const ProfilePhotoCard = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { loading, error, user } = useSelector((state) => state.profilePhoto);
@@ -31,6 +31,15 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
   const reduxUserId = useSelector((state) => state.guestSignup?.user?.id || state.initiate?.user?.id);
   const localStorageUserId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
   const userId = reduxUserId || localStorageUserId || getUserIdFromPersistRoot();
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  const handleComplete = (result) => {
+    // Handle completion logic here if needed
+    console.log('Profile photo upload completed:', result);
+  };
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
@@ -129,7 +138,7 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
         localStorage.removeItem('userId');
       }
       setTimeout(() => {
-        if (onComplete) onComplete(result);
+        handleComplete(result);
         router.push('/');
       }, 2000);
     } catch (err) {
@@ -157,7 +166,7 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
       localStorage.removeItem('userId');
     }
     setTimeout(() => {
-      if (onComplete) onComplete(null);
+      handleComplete(null);
       router.push('/');
     }, 2000);
   };
@@ -178,7 +187,7 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
       />
       <div className='bg-white w-full max-w-md rounded-xl shadow-lg p-6 relative'>
         <button
-          onClick={onBack}
+          onClick={handleBack}
           className='absolute left-4 text-gray-600 hover:text-black focus:outline-none focus:ring-2 focus:ring-[#DC4731] rounded cursor-pointer'
         >
           <X size={24} />

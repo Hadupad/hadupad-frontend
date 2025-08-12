@@ -22,14 +22,18 @@ const getUserIdFromPersistRoot = () => {
   }
 };
 
-const IdentityVerification = ({ onBack, userId: propUserId }) => {
+const IdentityVerification = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { loading, error, success } = useSelector((state) => state.hostVerification);
   // Fallback to Redux state, localStorage, or persist:root for userId
   const reduxUserId = useSelector((state) => state.guestSignup?.user?.id || state.initiate?.user?.id);
   const localStorageUserId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
-  const userId = propUserId || reduxUserId || localStorageUserId || getUserIdFromPersistRoot();
+  const userId = reduxUserId || localStorageUserId || getUserIdFromPersistRoot();
+
+  const handleBack = () => {
+    router.back();
+  };
 
   const [nin, setNin] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
@@ -132,7 +136,7 @@ const IdentityVerification = ({ onBack, userId: propUserId }) => {
       />
       <div className='w-full max-w-md bg-white p-8 rounded-2xl shadow-md relative'>
         <button
-          onClick={onBack}
+          onClick={handleBack}
           className='absolute left-4 top-4 text-gray-600 hover:text-black focus:outline-none focus:ring-2 focus:ring-[#DC4731] rounded cursor-pointer'
         >
           <X size={24} />
