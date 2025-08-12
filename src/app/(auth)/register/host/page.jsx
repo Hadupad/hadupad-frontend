@@ -9,7 +9,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { toast, ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function SignupCard({ onSuccess }) {
+function SignupCard({ onSuccess }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.initiate);

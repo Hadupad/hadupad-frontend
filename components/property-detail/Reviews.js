@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import Image from "next/image";
 
 const summaryRatings = [
   { label: "Cleanliness", value: 5.0 },
@@ -83,9 +84,11 @@ export default function Reviews() {
         {reviews.map((review, idx) => (
           <div key={idx} className="">
             <div className="flex items-center gap-4 mb-1">
-              <img
+              <Image
                 src={review.avatar}
                 alt={review.name}
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-full object-cover border"
               />
               <div>
