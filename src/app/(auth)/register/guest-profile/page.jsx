@@ -23,14 +23,14 @@ const getUserIdFromPersistRoot = () => {
   }
 };
 
-const ProfilePhotoCard = ({ onComplete, onBack, userId: propUserId }) => {
+const ProfilePhotoCard = ({ onComplete, onBack }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { loading, error, user } = useSelector((state) => state.profilePhoto);
   // Fallback to Redux state, localStorage, or persist:root for userId
   const reduxUserId = useSelector((state) => state.guestSignup?.user?.id || state.initiate?.user?.id);
   const localStorageUserId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
-  const userId = propUserId || reduxUserId || localStorageUserId || getUserIdFromPersistRoot();
+  const userId = reduxUserId || localStorageUserId || getUserIdFromPersistRoot();
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
@@ -268,4 +268,20 @@ const ProfilePhotoCard = ({ onComplete, onBack, userId: propUserId }) => {
   );
 };
 
-export default ProfilePhotoCard;
+const GuestProfilePage = () => {
+  const router = useRouter();
+
+  const handleComplete = () => {
+    // The ProfilePhotoCard component already handles redirection
+    // so we can leave this empty or add logging.
+    console.log('Profile photo step completed.');
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  return <ProfilePhotoCard onComplete={handleComplete} onBack={handleBack} />;
+};
+
+export default GuestProfilePage;
