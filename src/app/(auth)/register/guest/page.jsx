@@ -9,7 +9,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { toast, ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function SignupCard({ onSuccess }) {
+function SignupCard({ onSuccess }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.initiate);
@@ -249,3 +249,17 @@ export default function SignupCard({ onSuccess }) {
     </div>
   );
 }
+
+const GuestSignupPage = () => {
+  const router = useRouter();
+
+  const handleSuccess = (phone) => {
+    console.log(`Registration initiated for phone: ${phone}. Redirecting...`);
+    // The SignupCard component already handles the redirection,
+    // so this function can be used for any additional logic if needed.
+  };
+
+  return <SignupCard onSuccess={handleSuccess} />;
+};
+
+export default GuestSignupPage;
