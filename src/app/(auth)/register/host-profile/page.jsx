@@ -263,4 +263,20 @@ const ProfilePhotoCard = ({ onComplete, onBack }) => {
   );
 };
 
-export default ProfilePhotoCard;
+// Wrapper page component to comply with Next.js page constraints (no required props on default export)
+const HostProfilePage = () => {
+  const router = useRouter();
+
+  const handleComplete = (result) => {
+    // You can add any post-completion side-effects here if needed
+    console.log('Profile photo flow completed', result);
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  return <ProfilePhotoCard onComplete={handleComplete} onBack={handleBack} />;
+};
+
+export default HostProfilePage;
