@@ -74,17 +74,10 @@ export default function ForgotPasswordForm({ onBack, onContinue }) {
 
   return (
     <div className="p-6 flex-grow overflow-y-auto">
-      <div className="flex items-center mb-6">
-        <button
-          onClick={onBack}
-          className="text-gray-600 hover:text-black p-2 -ml-2"
-        >
-          <ArrowLeft size={20} />
-        </button>
-        <h2 className="text-lg font-semibold ml-2">Forgot Password</h2>
-      </div>
+
 
       <div className="mb-6">
+
         <p className="text-gray-600 text-sm">
           Enter your email address and we'll send you a link to reset your password.
         </p>
