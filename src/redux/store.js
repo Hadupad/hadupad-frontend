@@ -9,6 +9,8 @@ import guestSignupReducer from './slices/guestSignupSlice';
 import profilePhotoReducer from './slices/profilePhotoSlice';
 import hostVerificationReducer from './slices/hostVerificationSlice';
 import profileReducer from './slices/profileSlice';
+import forgotPasswordReducer from './slices/forgotPasswordSlice';
+import resetPasswordReducer from './slices/resetPasswordSlice';
 
 const rootReducer = combineReducers({
   login: loginReducer,
@@ -19,6 +21,8 @@ const rootReducer = combineReducers({
   profilePhoto: profilePhotoReducer,
   hostVerification: hostVerificationReducer,
   profile: profileReducer,
+  forgotPassword: forgotPasswordReducer,
+  resetPassword: resetPasswordReducer 
 });
 
 const persistConfig = {
