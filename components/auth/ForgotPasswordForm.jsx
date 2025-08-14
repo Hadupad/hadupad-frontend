@@ -1,16 +1,22 @@
 'use client';
-'use client';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { ArrowLeft } from 'lucide-react';
+import { forgotPassword } from '@/redux/slices/forgotPasswordSlice';
 import LoadingIndicator from '../LoadingIndicator';
 
 export default function ForgotPasswordForm({ onBack, onContinue }) {
   const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { loading = false, error = null } = useSelector((state) => {
+    const forgotPasswordState = state.forgotPassword || {};
+    console.log('ForgotPassword State:', forgotPasswordState); // Debug state
+    return forgotPasswordState;
+  });
 
   const validateEmail = (email) => {
-    const emailRegex = /^[\s\S]+@[\s\S]+\.[\s\S]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim()) return 'Email is required';
     if (!emailRegex.test(email)) return 'Please enter a valid email address';
     return '';
@@ -19,7 +25,8 @@ export default function ForgotPasswordForm({ onBack, onContinue }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const emailError = validateEmail(email);
+    const normalizedEmail = email.trim().toLowerCase();
+    const emailError = validateEmail(normalizedEmail);
     if (emailError) {
       toast.error(emailError, {
         position: 'top-right',
@@ -35,11 +42,9 @@ export default function ForgotPasswordForm({ onBack, onContinue }) {
       return;
     }
 
-    setLoading(true);
-
     try {
-      // Simulate API call for now
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('Dispatching forgotPassword with:', { email: normalizedEmail }); // Debug dispatch
+      await dispatch(forgotPassword({ email: normalizedEmail })).unwrap();
       
       toast.success('Password reset link sent to your email!', {
         position: 'top-right',
@@ -53,8 +58,9 @@ export default function ForgotPasswordForm({ onBack, onContinue }) {
         style: { animationDuration: '0.3s' },
       });
 
-      onContinue(email);
+      onContinue(normalizedEmail);
     } catch (err) {
+      console.log('API Error:', err); // Debug API error
       toast.error(err.message || 'Failed to send reset link. Please try again.', {
         position: 'top-right',
         autoClose: 3000,
@@ -66,25 +72,15 @@ export default function ForgotPasswordForm({ onBack, onContinue }) {
         className: 'rounded-xl animate__animated animate__slideInDown animate__faster',
         style: { animationDuration: '0.5s' },
       });
-    } finally {
-      setLoading(false);
     }
   };
 
-
   return (
     <div className="p-6 flex-grow overflow-y-auto">
-      <div className="flex items-center mb-6">
-        <button
-          onClick={onBack}
-          className="text-gray-600 hover:text-black p-2 -ml-2"
-        >
-          <ArrowLeft size={20} />
-        </button>
-        <h2 className="text-lg font-semibold ml-2">Forgot Password</h2>
-      </div>
+
 
       <div className="mb-6">
+
         <p className="text-gray-600 text-sm">
           Enter your email address and we'll send you a link to reset your password.
         </p>
