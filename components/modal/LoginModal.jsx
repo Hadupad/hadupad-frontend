@@ -3,13 +3,14 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast, ToastContainer, Slide } from 'react-toastify';
 import { X, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook, FaApple } from 'react-icons/fa';
 import { login, resetLoginState } from '@/redux/slices/loginSlice';
 import { getUserProfile } from '@/redux/slices/profileSlice';
 import OtpVerificationModal from './OtpVerificationModal';
 import ForgotPasswordForm from '../auth/ForgotPasswordForm';
-import ResetPasswordForm from '../auth/ResetPasswordForm';
+
 import LoadingIndicator from '../LoadingIndicator';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -155,7 +156,7 @@ export default function LoginModal({ isOpen, onClose }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
-      onClick={handleOverlayClick}
+
     >
       <ToastContainer
         position="top-right"
@@ -173,15 +174,21 @@ export default function LoginModal({ isOpen, onClose }) {
         ref={modalRef}
         className="bg-white w-full h-full sm:h-auto sm:max-h-[90vh] sm:rounded-xl sm:shadow-lg sm:max-w-md sm:m-4 flex flex-col overflow-y-auto scrollbar-hide"
       >
-        <div className="flex items-center justify-between p-4 border-b sm:border-none">
-          <h2 className="text-lg font-semibold text-center flex-grow">
-            {currentView === 'forgot-password' ? 'Forgot Password' : 
-             currentView === 'reset-password' ? 'Reset Password' : 'Log in'}
+        <div className="flex justify-between items-center p-4 border-b relative">
+          {currentView !== 'login' && (
+            <button 
+              onClick={() => setCurrentView('login')}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-black"
+            >
+              <ArrowLeft size={20} />
+            </button>
+          )}
+          <h2 className="text-lg font-semibold text-center flex-1">
+            {currentView === 'login' && 'Log in'}
+            {currentView === 'forgot-password' && 'Forgot Password'}
+    
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-600 hover:text-black p-2 -mr-2"
-          >
+          <button onClick={onClose} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800">
             <X size={24} />
           </button>
         </div>
@@ -197,20 +204,11 @@ export default function LoginModal({ isOpen, onClose }) {
             onBack={() => setCurrentView('login')}
             onContinue={(email) => {
               setResetEmail(email);
-              setCurrentView('reset-password');
+              onClose();
             }}
-          />
-        ) : currentView === 'reset-password' ? (
-          <ResetPasswordForm
-            onBack={() => setCurrentView('forgot-password')}
-            onComplete={() => {
-              setCurrentView('login');
-              toast.success('Password reset successfully! You can now log in with your new password.');
-            }}
-            resetToken="dummy-token" // In real implementation, this would come from URL params
           />
         ) : (
-          <div className="p-6 flex-grow overflow-y-auto">
+          <div className="p-6 flex-grow overflow-y-auto scrollbar-hide">
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="email"

@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { CheckCircle2 } from 'lucide-react';
+import Image from 'next/image';
 import { resetPassword, resetResetPasswordState } from '@/redux/slices/resetPasswordSlice';
 
 const ResetPassword = () => {
@@ -95,8 +96,24 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="bg-white w-full max-w-md rounded-xl shadow-sm p-6">
+    <div className="relative min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      {/* Watermark Layer */}
+      <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+        <div className="flex items-center opacity-5">
+          <Image
+            src="/images/logo/icon.png"
+            alt="Hadupad Logo"
+            width={120}
+            height={120}
+          />
+          <span className="ml-8 font-bold text-9xl text-gray-300 select-none">
+            Hadupad
+          </span>
+        </div>
+      </div>
+
+      {/* Form Layer with Blur */}
+      <div className="relative z-10 w-full max-w-md p-8 space-y-6 bg-white/80 rounded-2xl shadow-xl backdrop-blur-sm">
         {resetStatus ? (
           <div className="text-center py-10">
             <CheckCircle2 className="mx-auto h-16 w-16 text-green-500 mb-4" />
