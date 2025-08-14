@@ -17,31 +17,37 @@ const ResetPassword = () => {
     return resetPasswordState;
   });
 
-  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState(''); // Changed from password to newPassword
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
-  // Extract resetToken from URL query
-  const resetToken = searchParams.get('token');
+  // Extract token from URL query
+  const token = searchParams.get('token'); // Changed from resetToken to token
 
   // Validate password
   useEffect(() => {
     const validate = () => {
-      if (password) {
-        if (password.length < 8) return 'Password must be at least 8 characters long';
-        if (!/(?=.*[a-z])/.test(password)) return 'Password must contain a lowercase letter';
-        if (!/(?=.*[A-Z])/.test(password)) return 'Password must contain an uppercase letter';
-        if (!/(?=.*\d)/.test(password)) return 'Password must contain a number';
+      if (newPassword) {
+        if (newPassword.length < 8) return 'Password must be at least 8 characters long';
+        if (!/(?=.*[a-z])/.test(newPassword)) return 'Password must contain a lowercase letter';
+        if (!/(?=.*[A-Z])/.test(newPassword)) return 'Password must contain an uppercase letter';
+        if (!/(?=.*\d)/.test(newPassword)) return 'Password must contain a number';
       }
       return '';
     };
     setPasswordError(validate());
-  }, [password]);
+  }, [newPassword]);
 
   // Handle API errors and success
   useEffect(() => {
     if (error) {
-      toast.error(error || 'Failed to reset password. Please try again.', {
+      const errorMessage =
+        error.includes('token required')
+          ? 'Reset token is missing or invalid. Please check your reset link.'
+          : error.includes('Token expired')
+          ? 'This password reset link has expired. Please request a new one.'
+          : error || 'Failed to reset password. Please try again.';
+      toast.error(errorMessage, {
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
@@ -73,10 +79,22 @@ const ResetPassword = () => {
     }
   }, [error, resetStatus, router, dispatch]);
 
+  // Check for missing token on mount
+  useEffect(() => {
+    if (!token) {
+      toast.error('No reset token provided. Please check your reset link.', {
+        position: 'top-right',
+        autoClose: 3000,
+        theme: 'colored',
+      });
+      setTimeout(() => router.push('/forgot-password'), 3000);
+    }
+  }, [token, router]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (passwordError || !password || !resetToken) {
+    if (passwordError || !newPassword || !token) {
       toast.error(passwordError || 'Please enter a valid password and ensure the reset token is provided', {
         position: 'top-right',
         autoClose: 3000,
@@ -91,8 +109,8 @@ const ResetPassword = () => {
       return;
     }
 
-    console.log('Submitting reset with:', { resetToken, password }); // Debug payload
-    await dispatch(resetPassword({ resetToken, password })).unwrap();
+    console.log('Submitting reset with:', { token, newPassword }); // Debug payload
+    await dispatch(resetPassword({ token, newPassword })).unwrap();
   };
 
   return (
@@ -133,25 +151,26 @@ const ResetPassword = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="relative">
                 <input
-                  id="password"
-                  name="password"
+                  id="newPassword" // Changed from password to newPassword
+                  name="newPassword"
                   type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-4 pt-5 pb-2 text-sm pr-12 focus:outline-none focus:ring-2 focus:ring-[#DC4731]"
                   placeholder=" "
                   required
                 />
                 <label
-                  htmlFor="password"
+                  htmlFor="newPassword"
                   className="absolute left-4 top-2 text-xs text-gray-600 pointer-events-none transition-all duration-200"
                 >
-                  Password
+                  New Password
                 </label>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-3.5 text-sm text-[#DC4731]"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? 'Hide' : 'Show'}
                 </button>
@@ -170,9 +189,9 @@ const ResetPassword = () => {
               </div>
               <button
                 type="submit"
-                disabled={loading || passwordError || !password}
+                disabled={loading || passwordError || !newPassword}
                 className={`w-full py-3 rounded-lg text-white font-medium ${
-                  loading || passwordError || !password
+                  loading || passwordError || !newPassword
                     ? 'bg-gray-300 cursor-not-allowed'
                     : 'bg-[#DC4731] hover:bg-[#c03d29]'
                 }`}
