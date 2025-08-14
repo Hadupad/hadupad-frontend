@@ -250,11 +250,11 @@ export default function NavBar() {
         )}
 
         {/* Auth Modal */}
-        <AuthModalContainer
+        {/* <AuthModalContainer
           isOpen={authModalOpen}
           onClose={() => setAuthModalOpen(false)}
           userType={userType}
-        />
+        /> */}
 
         {/* Logout Confirmation Modal */}
         <LogoutModal

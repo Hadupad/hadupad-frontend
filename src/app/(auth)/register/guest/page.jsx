@@ -9,7 +9,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { toast, ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function SignupCard({ onSuccess }) {
+function SignupCard() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.initiate);
@@ -84,7 +84,6 @@ function SignupCard({ onSuccess }) {
         className: 'bg-green-500 text-white rounded-lg shadow-lg p-4 font-semibold',
         bodyClassName: 'flex items-center',
       });
-      onSuccess?.(fullPhone);
       router.push(`/register/guest-otp?phone=${encodeURIComponent(fullPhone)}`);
     } catch (err) {
       console.error('Registration error:', err);
@@ -250,16 +249,4 @@ function SignupCard({ onSuccess }) {
   );
 }
 
-const GuestSignupPage = () => {
-  const router = useRouter();
-
-  const handleSuccess = (phone) => {
-    console.log(`Registration initiated for phone: ${phone}. Redirecting...`);
-    // The SignupCard component already handles the redirection,
-    // so this function can be used for any additional logic if needed.
-  };
-
-  return <SignupCard onSuccess={handleSuccess} />;
-};
-
-export default GuestSignupPage;
+export default SignupCard;

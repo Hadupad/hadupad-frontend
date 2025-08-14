@@ -277,20 +277,4 @@ const ProfilePhotoCard = () => {
   );
 };
 
-const GuestProfilePage = () => {
-  const router = useRouter();
-
-  const handleComplete = () => {
-    // The ProfilePhotoCard component already handles redirection
-    // so we can leave this empty or add logging.
-    console.log('Profile photo step completed.');
-  };
-
-  const handleBack = () => {
-    router.back();
-  };
-
-  return <ProfilePhotoCard onComplete={handleComplete} onBack={handleBack} />;
-};
-
-export default GuestProfilePage;
+export default ProfilePhotoCard;
