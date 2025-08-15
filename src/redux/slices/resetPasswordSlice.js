@@ -3,9 +3,9 @@ import { resetPasswordApi } from '../../services/apis/resetPasswordApi';
 
 export const resetPassword = createAsyncThunk(
   'auth/resetPassword',
-  async ({ resetToken, password }, thunkAPI) => {
+  async ({ token, newPassword}, thunkAPI) => {
     try {
-      return await resetPasswordApi({ resetToken, password });
+      return await resetPasswordApi({ token, newPassword });
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
