@@ -4,14 +4,63 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { X, Menu, LogOut } from 'lucide-react';
+import { X, Menu, LogOut, ChevronDown, Calendar, Heart, MessageCircle, User, HelpCircle } from 'lucide-react';
 import RegisterMenu from './auth/RegisterMenu.jsx';
-import AuthModalContainer from './modal/AuthModalContainer.jsx';
 import LogoutModal from './modal/LogoutModal';
 import LoadingIndicator from './LoadingIndicator';
 import { getUserProfile } from '@/redux/slices/profileSlice';
 import { resetLoginState } from '@/redux/slices/loginSlice';
 import { persistor } from '@/redux/store';
+
+// User Dropdown Component
+const UserDropdown = ({ user, isOpen, onToggle, onNavigate, onLogout }) => {
+  const guestMenuItems = [
+    { href: '/guest/bookings', label: 'My Bookings', icon: Calendar },
+    { href: '/guest/wishlist', label: 'Wishlist', icon: Heart },
+    { href: '/guest/messages', label: 'Messages', icon: MessageCircle },
+    { href: '/guest/account', label: 'Account', icon: User },
+    { href: '/help', label: 'Help centre', icon: HelpCircle },
+  ];
+
+  return (
+    <div className="relative">
+      <button
+        onClick={onToggle}
+        className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md hover:shadow-lg transition-shadow"
+      >
+        <span className="text-sm font-semibold text-[#DC4731]">
+          {user.firstName || 'User'} {user.lastName || ''}
+        </span>
+        <ChevronDown size={16} className="text-[#DC4731]" />
+      </button>
+      
+      {isOpen && (
+        <div className="absolute top-full right-0 z-50 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100">
+          <div className="py-2">
+            {guestMenuItems.map(({ href, label, icon: Icon }) => (
+              <button
+                key={href}
+                onClick={() => onNavigate(href)}
+                className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors w-full text-left"
+              >
+                <Icon size={16} />
+                <span>{label}</span>
+              </button>
+            ))}
+            <hr className="my-1 border-gray-100" />
+            <button
+              onClick={onLogout}
+              className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors w-full text-left"
+            >
+              <LogOut size={16} />
+              <span>Log out</span>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -19,46 +68,58 @@ export default function NavBar() {
   const dispatch = useDispatch();
   const { user, loading } = useSelector((state) => state.profile);
   const { user: loginUser } = useSelector((state) => state.login);
+  
+  // Simplified state management
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [registerMenuOpen, setRegisterMenuOpen] = useState(false);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [userType, setUserType] = useState('user');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const registerMenuRef = useRef(null);
+  
+  const menuRef = useRef(null);
 
-  // Check login status, fetch user profile, and handle redirect
+  const handleNavigate = (path) => {
+    setUserMenuOpen(false);
+    setMobileMenuOpen(false);
+    window.location.href = path;
+  };
+
+  // Check login status and fetch user profile
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    setIsLoggedIn(!!token);
     if (token) {
-      dispatch(getUserProfile()).then((response) => {
-        if (response.meta.requestStatus === 'fulfilled') {
-          const userType = response.payload.user?.userType;
-          if (userType === 'user' && pathname !== '/guest') {
-            router.push('/guest'); // Redirect to /guest for user
-          } else if (userType === 'host' && pathname !== '/host') {
-            router.push('/host'); // Redirect to /host for host
-          }
-        }
-      });
+      setIsLoggedIn(true);
+      dispatch(getUserProfile());
+    } else {
+      setIsLoggedIn(false);
+      // Redirect to landing page if no token found
+      if (pathname.startsWith('/guest') || pathname.startsWith('/host')) {
+        window.location.href = '/';
+      }
     }
-  }, [dispatch, loginUser, router, pathname]);
+  }, [dispatch, loginUser, pathname]);
 
-  // Close menus on pathname change
+  // Handle host redirection
+  useEffect(() => {
+    if (isLoggedIn && user && user.userType === 'host' && !pathname.startsWith('/host')) {
+      router.push('/host');
+    }
+  }, [isLoggedIn, user, router]);
+
+  // Close menus on route change
   useEffect(() => {
     setMobileMenuOpen(false);
+    setUserMenuOpen(false);
     setRegisterMenuOpen(false);
   }, [pathname]);
 
-  // Handle click outside for register menu
+  // Handle click outside
   useEffect(() => {
     function handleClickOutside(event) {
-      if (
-        registerMenuRef.current &&
-        !registerMenuRef.current.contains(event.target)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setUserMenuOpen(false);
         setRegisterMenuOpen(false);
       }
     }
@@ -66,28 +127,23 @@ export default function NavBar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleGuestClick = () => {
+  const handleAuthClick = (type) => {
     setRegisterMenuOpen(false);
-    setUserType('user');
-    setAuthModalOpen(true);
-  };
-
-  const handleBecomeHostClick = () => {
-    setRegisterMenuOpen(false);
-    setUserType('host');
-    setAuthModalOpen(true);
+    setUserType(type);
+    // Handle auth modal opening logic here
   };
 
   const handleLogout = () => {
     setIsLoggingOut(true);
+    setUserMenuOpen(false);
     setTimeout(() => {
       localStorage.clear();
       dispatch(resetLoginState());
-      persistor.purge(); // Clear persist:root from localStorage
+      persistor.purge();
       setIsLoggedIn(false);
       setLogoutModalOpen(false);
       setIsLoggingOut(false);
-    }, 800); // Match LoadingIndicator animation duration
+    }, 800);
   };
 
   const navLinks = [
@@ -126,103 +182,93 @@ export default function NavBar() {
           ))}
         </div>
 
-        {/* Register or User Profile */}
-        <div className="relative" ref={registerMenuRef}>
+        {/* User Actions */}
+        <div className="flex items-center gap-4" ref={menuRef}>
           {isLoggedIn && user && !loading ? (
-            // Logged-in user profile
-            <div className="hidden md:flex items-center gap-2 bg-white px-5 py-2 rounded-full shadow-lg hover:shadow-md transition-shadow">
-              <Link href={user.userType === 'host' ? '/host' : '/guest'} className="flex items-center gap-2">
-                <img
-                  src={user?.profilePicture || '/images/logo/li_user.png'}
-                  alt=""
-                  className="w-5 h-5 rounded-full object-cover"
+            // Signed in user
+            user.userType === 'user' ? (
+              <div className="hidden md:block">
+                <UserDropdown
+                  user={user}
+                  isOpen={userMenuOpen}
+                  onToggle={() => setUserMenuOpen(!userMenuOpen)}
+                  onNavigate={handleNavigate}
+                  onLogout={() => setLogoutModalOpen(true)}
                 />
-                <span className="text-sm font-semibold">
-                  {user.firstName || 'User'} {user.lastName || ''}
-                </span>
-              </Link>
-              <button
-                onClick={() => setLogoutModalOpen(true)}
-                className="ml-2 text-gray-700 hover:text-[#DC4731] transition-colors"
-                aria-label="Logout"
-              >
-                <LogOut size={20} />
-              </button>
-            </div>
-          ) : (
-            // Register button for non-logged-in users
-            <button
-              onClick={() => setRegisterMenuOpen(!registerMenuOpen)}
-              className="hidden md:flex items-center gap-2 bg-white text-[#DC4731] px-5 py-2 rounded-full shadow-lg hover:shadow-md transition-shadow"
-            >
-              <img
-                src="/images/logo/li_user.png"
-                alt="User"
-                className="w-5 h-5"
-              />
-              <span>Register</span>
-            </button>
-          )}
-
-          {/* Mobile Buttons */}
-          <div className="md:hidden flex items-center gap-4">
-            {isLoggedIn && user && !loading ? (
-              <div className="flex items-center gap-2 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-shadow">
-                <Link
-                  href={user.userType === 'host' ? '/host' : '/guest'}
-                  className="flex items-center justify-center"
-                  aria-label="User profile"
-                >
-                  <img
-                    src={user?.profilePicture || '/images/logo/li_user.png'}
-                    alt=""
-                    className="w-6 h-6 rounded-full object-cover"
-                  />
+              </div>
+            ) : (
+              // Host user
+              <div className="hidden md:flex items-center gap-2 bg-white px-5 py-2 rounded-full shadow-lg hover:shadow-md transition-shadow">
+                <Link href="/host" className="flex items-center gap-2">
+                  <span className="text-sm font-semibold">
+                    {user.firstName || 'User'} {user.lastName || ''}
+                  </span>
                 </Link>
                 <button
                   onClick={() => setLogoutModalOpen(true)}
-                  className="text-gray-700 hover:text-[#DC4731] transition-colors"
+                  className="ml-2 text-gray-700 hover:text-[#DC4731] transition-colors"
                   aria-label="Logout"
                 >
                   <LogOut size={20} />
                 </button>
               </div>
-            ) : (
-              <button
-                onClick={() => setRegisterMenuOpen(!registerMenuOpen)}
-                className="flex items-center justify-center bg-white text-[#DC4731] p-2 rounded-full shadow-md hover:shadow-lg transition-shadow"
-                aria-label="User menu"
-              >
-                <img
-                  src="/images/logo/li_user.png"
-                  alt="User"
-                  className="w-6 h-6"
-                />
-              </button>
-            )}
-
+            )
+          ) : (
+            // Not signed in user - Desktop
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
-              aria-label="Main menu"
+              onClick={() => setRegisterMenuOpen(!registerMenuOpen)}
+              className="hidden md:flex items-center gap-2 bg-white text-[#DC4731] px-5 py-2 rounded-full shadow-lg hover:shadow-md transition-shadow"
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              <img src="/images/logo/li_user.png" alt="User" className="w-5 h-5" />
+              <span>Register</span>
             </button>
+          )}
+
+          {/* Mobile Actions */}
+          <div className="md:hidden flex items-center gap-4">
+            {isLoggedIn && user && !loading ? (
+              // Signed in user - Mobile
+              <UserDropdown
+                user={user}
+                isOpen={userMenuOpen}
+                onToggle={() => setUserMenuOpen(!userMenuOpen)}
+                onNavigate={handleNavigate}
+                onLogout={() => setLogoutModalOpen(true)}
+              />
+            ) : (
+              // Not signed in user - Mobile
+              <>
+                <button
+                  onClick={() => setRegisterMenuOpen(!registerMenuOpen)}
+                  className="flex items-center justify-center bg-white text-[#DC4731] p-2 rounded-full shadow-md hover:shadow-lg transition-shadow"
+                  aria-label="User menu"
+                >
+                  <img src="/images/logo/li_user.png" alt="User" className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
+                  aria-label="Main menu"
+                >
+                  {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+              </>
+            )}
           </div>
 
           {/* Register Dropdown */}
           {registerMenuOpen && !isLoggedIn && (
             <div className="absolute top-full right-0 z-50 mt-2">
               <RegisterMenu
-                onGuestClick={handleGuestClick}
-                onBecomeHostClick={handleBecomeHostClick}
+                onGuestClick={() => handleAuthClick('user')}
+                onBecomeHostClick={() => handleAuthClick('host')}
               />
             </div>
           )}
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
+        {/* Mobile Menu - Only for non-logged-in users */}
+        {mobileMenuOpen && !isLoggedIn && (
           <div className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-center gap-8 px-6 pt-20 pb-10 md:hidden">
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -248,13 +294,6 @@ export default function NavBar() {
             ))}
           </div>
         )}
-
-        {/* Auth Modal */}
-        {/* <AuthModalContainer
-          isOpen={authModalOpen}
-          onClose={() => setAuthModalOpen(false)}
-          userType={userType}
-        /> */}
 
         {/* Logout Confirmation Modal */}
         <LogoutModal

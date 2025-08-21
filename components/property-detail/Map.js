@@ -28,12 +28,13 @@ export default function Map() {
   });
 
   return (
-    <div className="h-96 w-full rounded-md overflow-hidden shadow-md z-0">
+    <div className="h-48 w-full rounded-lg overflow-hidden relative" style={{ zIndex: 1 }}>
       <MapContainer
         center={[9.0579, 7.4951]}
         zoom={13}
         scrollWheelZoom={false}
         className="h-full w-full"
+        style={{ zIndex: 1 }}
       >
         <TileLayer
           attribution="&copy; OpenStreetMap contributors"

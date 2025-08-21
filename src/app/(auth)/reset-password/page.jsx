@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import { resetPassword, resetResetPasswordState } from '@/redux/slices/resetPasswordSlice';
 
@@ -13,18 +13,17 @@ const ResetPassword = () => {
   const dispatch = useDispatch();
   const { loading = false, error = null, resetStatus = null } = useSelector((state) => {
     const resetPasswordState = state.resetPassword || {};
-    console.log('ResetPassword State:', resetPasswordState); // Debug state
     return resetPasswordState;
   });
 
   const [newPassword, setNewPassword] = useState(''); // Changed from password to newPassword
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
   // Extract token from URL query
   const token = searchParams.get('token'); // Changed from resetToken to token
 
-  // Validate password
   useEffect(() => {
     const validate = () => {
       if (newPassword) {
@@ -38,7 +37,6 @@ const ResetPassword = () => {
     setPasswordError(validate());
   }, [newPassword]);
 
-  // Handle API errors and success
   useEffect(() => {
     if (error) {
       const errorMessage =
@@ -61,17 +59,7 @@ const ResetPassword = () => {
       dispatch(resetResetPasswordState());
     }
     if (resetStatus) {
-      toast.success('Password reset successfully!', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: 'colored',
-        className: 'rounded-xl animate__animated animate__slideInRight',
-        style: { animationDuration: '0.3s' },
-      });
+      toast.success('Password reset successfully!');
       setTimeout(() => {
         router.push('/');
         dispatch(resetResetPasswordState());
@@ -113,24 +101,17 @@ const ResetPassword = () => {
     await dispatch(resetPassword({ token, newPassword })).unwrap();
   };
 
+  const isSubmitDisabled = loading || !!passwordError || !password || !confirmPassword;
+
   return (
     <div className="relative min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      {/* Watermark Layer */}
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
-        <div className="flex items-center opacity-5">
-          <Image
-            src="/images/logo/icon.png"
-            alt="Hadupad Logo"
-            width={120}
-            height={120}
-          />
-          <span className="ml-8 font-bold text-9xl text-gray-300 select-none">
-            Hadupad
-          </span>
+        <div className="flex items-center">
+          <Image src="/images/logo/icon.png" alt="Hadupad Logo" width={120} height={120} />
+          <span className="ml-8 font-bold text-9xl text-gray-300 select-none">Hadupad</span>
         </div>
       </div>
 
-      {/* Form Layer with Blur */}
       <div className="relative z-10 w-full max-w-md p-8 space-y-6 bg-white/80 rounded-2xl shadow-xl backdrop-blur-sm">
         {resetStatus ? (
           <div className="text-center py-10">
@@ -140,12 +121,8 @@ const ResetPassword = () => {
           </div>
         ) : (
           <>
-            <h2 className="text-xl font-semibold text-center mb-2">
-              Reset Your Password
-            </h2>
-            <p className="text-sm text-center mb-6 text-gray-600">
-              Enter your new password
-            </p>
+            <h2 className="text-xl font-semibold text-center mb-2">Reset Your Password</h2>
+            <p className="text-sm text-center mb-6 text-gray-600">Enter your new password</p>
             <hr className="border-t border-gray-100 -mx-4 mt-4 mb-5" />
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -187,6 +164,7 @@ const ResetPassword = () => {
                   <li>One number</li>
                 </ul>
               </div>
+
               <button
                 type="submit"
                 disabled={loading || passwordError || !newPassword}
@@ -196,7 +174,7 @@ const ResetPassword = () => {
                     : 'bg-[#DC4731] hover:bg-[#c03d29]'
                 }`}
               >
-                {loading ? 'Processing...' : 'Continue'}
+                {loading ? 'Processing...' : 'Reset Password'}
               </button>
             </form>
           </>
