@@ -10,6 +10,7 @@ import { initiateRegistration } from '@/redux/slices/initiateUserSlice';
 
 export default function InitiateAuthForm({ onContinue, userType }) {
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [countryCode] = useState('+234');
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.initiate);
 
@@ -20,8 +21,8 @@ export default function InitiateAuthForm({ onContinue, userType }) {
   };
 
   const handlePhoneNumberChange = (e) => {
-    const newPhoneNumber = e.target.value.replace(/\D/g, ''); // Allow only digits
-    if (newPhoneNumber.length <= 11) { // Prevent exceeding 11 digits
+    const newPhoneNumber = e.target.value.replace(/\D/g, ''); 
+    if (newPhoneNumber.length <= 11) { 
       setPhoneNumber(newPhoneNumber);
     }
   };
@@ -43,9 +44,15 @@ export default function InitiateAuthForm({ onContinue, userType }) {
       return;
     }
 
+    // Remove leading 0 and add country code
+    const formattedPhoneNumber = countryCode + phoneNumber.replace(/^0/, '');
+    
+    // Log the payload
+    console.log('Registration Payload:', { phoneNumber: formattedPhoneNumber, userType });
+
     try {
       const result = await dispatch(
-        initiateRegistration({ phoneNumber, userType })
+        initiateRegistration({ phoneNumber: formattedPhoneNumber, userType })
       ).unwrap();
       
       toast.success('OTP sent successfully!', {
@@ -59,7 +66,7 @@ export default function InitiateAuthForm({ onContinue, userType }) {
         className: 'rounded-xl animate__animated animate__slideInRight',
         style: { animationDuration: '0.3s' },
       });
-      onContinue(phoneNumber, result.userId);
+      onContinue(formattedPhoneNumber, result.userId);
     } catch (err) {
       const errorMessage = err.message || 'Failed to initiate registration. Please try again.';
       toast.error(errorMessage, {

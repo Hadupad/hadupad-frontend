@@ -16,33 +16,46 @@ const ResetPassword = () => {
     return resetPasswordState;
   });
 
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState(''); // Changed from password to newPassword
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
-  const resetToken = searchParams.get('token');
+  // Extract token from URL query
+  const token = searchParams.get('token'); // Changed from resetToken to token
 
   useEffect(() => {
     const validate = () => {
-      if (password) {
-        if (password.length < 8) return 'Password must be at least 8 characters long.';
-        if (!/(?=.*[a-z])/.test(password)) return 'Password must contain a lowercase letter.';
-        if (!/(?=.*[A-Z])/.test(password)) return 'Password must contain an uppercase letter.';
-        if (!/(?=.*\d)/.test(password)) return 'Password must contain a number.';
-      }
-      if (confirmPassword && password !== confirmPassword) {
-        return 'Passwords do not match.';
+      if (newPassword) {
+        if (newPassword.length < 8) return 'Password must be at least 8 characters long';
+        if (!/(?=.*[a-z])/.test(newPassword)) return 'Password must contain a lowercase letter';
+        if (!/(?=.*[A-Z])/.test(newPassword)) return 'Password must contain an uppercase letter';
+        if (!/(?=.*\d)/.test(newPassword)) return 'Password must contain a number';
       }
       return '';
     };
     setPasswordError(validate());
-  }, [password, confirmPassword]);
+  }, [newPassword]);
 
   useEffect(() => {
     if (error) {
-      toast.error(error || 'Failed to reset password. Please try again.');
+      const errorMessage =
+        error.includes('token required')
+          ? 'Reset token is missing or invalid. Please check your reset link.'
+          : error.includes('Token expired')
+          ? 'This password reset link has expired. Please request a new one.'
+          : error || 'Failed to reset password. Please try again.';
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'colored',
+        className: 'rounded-xl animate__animated animate__slideInDown animate__faster',
+        style: { animationDuration: '0.5s' },
+      });
       dispatch(resetResetPasswordState());
     }
     if (resetStatus) {
@@ -54,13 +67,38 @@ const ResetPassword = () => {
     }
   }, [error, resetStatus, router, dispatch]);
 
+  // Check for missing token on mount
+  useEffect(() => {
+    if (!token) {
+      toast.error('No reset token provided. Please check your reset link.', {
+        position: 'top-right',
+        autoClose: 3000,
+        theme: 'colored',
+      });
+      setTimeout(() => router.push('/forgot-password'), 3000);
+    }
+  }, [token, router]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (passwordError || !password || !confirmPassword || !resetToken) {
-      toast.error(passwordError || 'Please fill out all fields correctly.');
+
+    if (passwordError || !newPassword || !token) {
+      toast.error(passwordError || 'Please enter a valid password and ensure the reset token is provided', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'colored',
+        className: 'rounded-xl animate__animated animate__slideInDown animate__faster',
+        style: { animationDuration: '0.5s' },
+      });
       return;
     }
-    await dispatch(resetPassword({ resetToken, password })).unwrap();
+
+    console.log('Submitting reset with:', { token, newPassword }); // Debug payload
+    await dispatch(resetPassword({ token, newPassword })).unwrap();
   };
 
   const isSubmitDisabled = loading || !!passwordError || !password || !confirmPassword;
@@ -90,36 +128,33 @@ const ResetPassword = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="relative">
                 <input
-                  id="password"
+                  id="newPassword" // Changed from password to newPassword
+                  name="newPassword"
                   type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC4731] pr-10"
-                  placeholder="New Password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-4 pt-5 pb-2 text-sm pr-12 focus:outline-none focus:ring-2 focus:ring-[#DC4731]"
+                  placeholder=" "
                   required
                 />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3 text-gray-600">
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                <label
+                  htmlFor="newPassword"
+                  className="absolute left-4 top-2 text-xs text-gray-600 pointer-events-none transition-all duration-200"
+                >
+                  New Password
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3.5 text-sm text-[#DC4731]"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
                 </button>
               </div>
-
-              <div className="relative">
-                <input
-                  id="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC4731] pr-10"
-                  placeholder="Confirm New Password"
-                  required
-                />
-                <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-3 text-gray-600">
-                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
-
-              {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
-              
+              {passwordError && (
+                <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+              )}
               <div className="text-xs text-gray-500 space-y-1">
                 <p>Password must contain:</p>
                 <ul className="list-disc list-inside pl-2">
@@ -132,9 +167,11 @@ const ResetPassword = () => {
 
               <button
                 type="submit"
-                disabled={isSubmitDisabled}
-                className={`w-full py-3 rounded-lg text-white font-medium transition-colors ${
-                  isSubmitDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#DC4731] hover:bg-[#c03d29]'
+                disabled={loading || passwordError || !newPassword}
+                className={`w-full py-3 rounded-lg text-white font-medium ${
+                  loading || passwordError || !newPassword
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-[#DC4731] hover:bg-[#c03d29]'
                 }`}
               >
                 {loading ? 'Processing...' : 'Reset Password'}
