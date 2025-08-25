@@ -1,11 +1,19 @@
- import { Search, Plus } from "lucide-react";
+ import { Search, Plus, Settings } from "lucide-react";
 
-export default function HostHeader({onCreateClick}) {
+export default function HostHeader({onCreateClick, onSettingsClick}) {
   return (
     <div className="flex items-center justify-between ">
       <h1 className="text-2xl font-semibold text-black">Your Bookings</h1>
 
       <div className="flex items-center space-x-2">
+        {/* Settings Button */}
+        <button 
+          onClick={onSettingsClick}
+          className="w-9 h-9 rounded-full bg-white shadow border flex items-center justify-center hover:bg-gray-50 transition-colors duration-200"
+        >
+          <Settings className="w-4 h-4 text-gray-700 hover:text-red-600 transition-colors duration-300" />
+        </button>
+
         {/* Search box with icon inside */}
         <div className="group relative flex items-center">
           {/* Search Button */}

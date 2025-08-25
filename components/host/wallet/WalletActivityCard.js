@@ -26,7 +26,7 @@ export default function WalletActivityCard() {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6 w-full max-w-3xl mt-10">
+    <div className="bg-white rounded-[28.81px] shadow-sm border p-6 w-full">
       <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-lg font-semibold">Wallet Activity</h2>

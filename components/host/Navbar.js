@@ -20,7 +20,7 @@ export default function Navbar() {
   if (error) return <div>Error {error}</div>
 
   return (
-    <nav className="w-full fixed flex justify-between items-center p-4 bg-white border-b z-100">
+    <nav className="w-full fixed flex justify-between items-center p-4 bg-white border-b z-50">
       {/* Left: Logo */}
       <Link href="/host" className="flex items-center">
         <Image

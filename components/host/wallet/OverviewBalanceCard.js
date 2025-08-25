@@ -22,7 +22,7 @@ export default function OverviewBalanceCard() {
   ];
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6 w-full max-w-3xl">
+    <div className="bg-white rounded-[28.81px] shadow-sm border p-6 w-full">
       <div className="flex justify-between items-start mb-4">
         <div>
           <h2 className="text-lg font-semibold">Overview Balance</h2>

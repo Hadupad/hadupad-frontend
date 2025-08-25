@@ -63,31 +63,29 @@
 
 "use client";
 
-import Sidebar from "../../../../components/host/Sidebar"; // Main layout sidebar
-import Navbar from "../../../../components/host/Navbar";
-import SubHeader from "../../../../components/host/caution-fee/SubHeader";
-
-import MessageSidebar from "../../../../components/host/messages/MessageSidebar"; // <-- Chat sidebar
+import { useState } from "react";
+import MessageSidebar from "../../../../components/host/messages/MessageSidebar";
 import ChatWindow from "../../../../components/host/messages/ChatWindow";
 import MessageInput from "../../../../components/host/messages/MessageInput";
 
-export default function CautionFee() {
+export default function Messages() {
+  const [selectedConversation, setSelectedConversation] = useState(null);
+
+  const handleSelectConversation = (conversation) => {
+    setSelectedConversation(conversation);
+  };
+
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <Sidebar />
-
-      <main className="ml-56 p-6 space-y-6">
-        <SubHeader />
-
-        <div className="flex h-[80vh] border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-          <MessageSidebar />
-          <div className="flex flex-col flex-1">
-            <ChatWindow />
-            <MessageInput />
-          </div>
+    <div className="h-[calc(100vh-120px)] mt-8 md:mt-20">
+      <div className="flex h-full border border-gray-200 rounded-lg overflow-hidden shadow-sm bg-white">
+        <MessageSidebar 
+          onSelectConversation={handleSelectConversation}
+        />
+        <div className="flex flex-col flex-1 min-h-0">
+          <ChatWindow selectedConversation={selectedConversation} />
+          <MessageInput selectedConversation={selectedConversation} />
         </div>
-      </main>
+      </div>
     </div>
   );
 }

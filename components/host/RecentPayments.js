@@ -6,31 +6,34 @@ export default function RecentPayments() {
   });
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow">
+    <div className="bg-white rounded-xl p-4">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold">Recent Payments</h3>
-        <button className="text-sm text-red-500">View all</button>
+        <h3 className="text-sm font-medium text-gray-900">Recent Payments</h3>
+        <button className="text-xs text-red-600 hover:text-red-700 font-medium transition-colors duration-200">
+          View all
+        </button>
       </div>
 
-      <table className="w-full text-sm">
-        <thead className="text-left text-gray-500 border-b">
-          <tr>
-            <th className="py-1.5 px-3">Guest</th>
-            <th className="py-1.5 px-3">Date</th>
-            <th className="py-1.5 px-3">Amount</th>
-          </tr>
-        </thead>
-
-        <tbody className="divide-y divide-gray-100">
-          {payments.map((p, i) => (
-            <tr key={i} className="hover:bg-gray-50">
-              <td className="py-1.5 px-3">{p.guest}</td>
-              <td className="py-1.5 px-3">{p.date}</td>
-              <td className="py-1.5 px-3">{p.amount}</td>
+      <div className="overflow-hidden">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="border-b border-gray-200">
+              <th className="text-left py-2 text-gray-600 font-medium">Guest</th>
+              <th className="text-left py-2 text-gray-600 font-medium">Date</th>
+              <th className="text-left py-2 text-gray-600 font-medium">Amount</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {payments.map((p, i) => (
+              <tr key={i} className="hover:bg-gray-50 transition-colors duration-150">
+                <td className="py-2 text-gray-900">{p.guest}</td>
+                <td className="py-2 text-gray-600">{p.date}</td>
+                <td className="py-2 font-medium text-gray-900">{p.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -1,22 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import Sidebar from "../../../../components/host/Sidebar";
-import Navbar from "../../../../components/host/Navbar";
 import SubHeader from "../../../../components/host/bookings/SubHeader";
 import Tabs from "../../../../components/host/bookings/Tabs";
+import BookingSettingsModal from "../../../../components/host/bookings/BookingSettingsModal";
 
 export default function Bookings() {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <Sidebar />
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
-      <main className="ml-56 p-6 pt-30 space-y-6">
-        <SubHeader />
-        <Tabs />
-      </main>
+  const handleSettingsClick = () => {
+    setIsSettingsModalOpen(true);
+  };
+
+  const handleCloseSettings = () => {
+    setIsSettingsModalOpen(false);
+  };
+
+  return (
+    <div className="space-y-6">
+      <SubHeader onSettingsClick={handleSettingsClick} />
+      <Tabs />
+      <BookingSettingsModal 
+        isOpen={isSettingsModalOpen} 
+        onClose={handleCloseSettings} 
+      />
     </div>
   );
 }

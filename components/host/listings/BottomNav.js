@@ -20,19 +20,19 @@ export default function BottomNav({ onBack, onNext, nextLabel = "Next" }) {
     //       </div>
     //     </div>
 
-     <div className="fixed bottom-0 left-56 w-[calc(100%-14rem)] border-t border-gray-300 px-6 py-4 flex justify-between items-center z-50 shadow">
+     <div className="fixed bottom-0 left-0 lg:left-56 w-full lg:w-[calc(100%-14rem)] border-t border-gray-300 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center z-50 bg-white shadow">
         <button
           onClick={onBack}
-          className="text-black underline text-sm font-semibold hover:text-gray-700 cursor-pointer"
+          className="text-black underline text-xs sm:text-sm font-semibold hover:text-gray-700 cursor-pointer"
         >
           Back
         </button>
 
         <button
           onClick={onNext}
-          className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded text-sm font-semibold cursor-pointer"
+          className="bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 py-2 rounded text-xs sm:text-sm font-semibold cursor-pointer min-w-[60px] sm:min-w-[80px]"
         >
-          Next
+          {nextLabel}
         </button>
       </div>
   );
