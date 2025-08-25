@@ -38,7 +38,7 @@ export default function Sidebar() {
   return (
     <aside className="fixed top-16 md:top-[72px] left-0 h-[calc(100vh-64px)] w-56 bg-white text-black p-4 flex flex-col justify-between shadow-md z-50">
       {/* Top Menu */}
-      <div className="space-y-8">
+      <div className="space-y-4">
         {topMenuItems.map((item, index) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -46,8 +46,8 @@ export default function Sidebar() {
           return (
             <Link href={item.href} key={index}>
               <div
-                className={`flex items-center gap-3 py-4 rounded-lg cursor-pointer transition ${
-                  isActive ? "bg-[#DC4731] text-white" : "hover:bg-gray-100"
+                className={`flex items-center gap-3 py-3 px-3 rounded-lg cursor-pointer transition ${
+                  isActive ? "bg-[#DC4731] text-white mx-0" : "hover:bg-gray-100 mx-0"
                 }`}
               >
                 <Icon
@@ -55,7 +55,7 @@ export default function Sidebar() {
                     isActive ? "text-white" : "text-red-600"
                   }`}
                 />
-                <span>{item.label}</span>
+                <span className="text-sm font-medium">{item.label}</span>
               </div>
             </Link>
           );
@@ -65,9 +65,9 @@ export default function Sidebar() {
       {/* Logout at Bottom */}
       <div className="pt-6 mt-6">
         <Link href={logoutItem.href}>
-          <div className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-100 transition">
+          <div className="flex items-center gap-3 py-3 px-3 rounded-lg cursor-pointer hover:bg-gray-100 transition">
             <LogoutIcon className="w-5 h-5 text-orange-500" />
-            <span>{logoutItem.label}</span>
+            <span className="text-sm font-medium">{logoutItem.label}</span>
           </div>
         </Link>
       </div>

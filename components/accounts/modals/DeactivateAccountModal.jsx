@@ -29,7 +29,7 @@ export default function DeactivateAccountModal({ isOpen, onClose, onSave }) {
     // Reset form
     setReason('');
     setFeedback('');
-    setConfirmText('');
+    setConfirmationText('');
   };
 
   if (!isOpen) return null;
@@ -94,8 +94,8 @@ export default function DeactivateAccountModal({ isOpen, onClose, onSave }) {
             </label>
             <input
               type="text"
-              value={confirmText}
-              onChange={(e) => setConfirmText(e.target.value)}
+              value={confirmationText}
+              onChange={(e) => setConfirmationText(e.target.value)}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
               placeholder="Type deactivate"
             />
@@ -110,8 +110,8 @@ export default function DeactivateAccountModal({ isOpen, onClose, onSave }) {
             Cancel
           </button>
           <button
-            onClick={handleDeactivate}
-            disabled={!reason || confirmText.toLowerCase() !== 'deactivate'}
+            onClick={handleSave}
+            disabled={!reason || confirmationText.toLowerCase() !== 'deactivate'}
             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             Deactivate Account

@@ -2,7 +2,7 @@
 
 export default function HostHeader({onCreateClick}) {
   return (
-    <div className="flex items-center justify-between py-4 ">
+    <div className="flex items-center justify-between py-4 mt-12">
       <h1 className="text-2xl font-semibold text-black">Your Listings</h1>
 
       <div className="flex items-center space-x-2">
