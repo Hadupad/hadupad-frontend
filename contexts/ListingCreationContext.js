@@ -18,23 +18,23 @@ const LISTING_ACTIONS = {
 // Initial state
 const initialState = {
   currentStep: 0,
-  totalSteps: 17,
+  totalSteps: 13,
   isLoading: false,
   error: null,
   formData: {
     // Step 1: Property basics
     propertyType: '',
     placePrivacy: '',
-    address: '',
+    // address: '',
     fullAddress: {},
-    coordinates: null,
+    // coordinates: null,
     roomCounts: {},
     
     // Step 2: Details
     amenities: [],
     photos: [],
     title: '',
-    description: '',
+    // description: '',
     
     // Step 3: Booking & Pricing
     bookingSettings: {},

@@ -6,7 +6,7 @@ import SaveExitButton from "../SaveExitButton";
 export default function HousePhotosView({ onNext, onBack, photos = [], handleSaveExit }) {
   return (
     <>
-      <SaveExitButton onClick={handleSaveExit} />
+      {/* <SaveExitButton onClick={handleSaveExit} /> */}
 
       <div className="flex flex-col items-center w-full min-h-[400px]">
         <h2 className="text-xl font-semibold mb-4">Your uploaded photos</h2>
