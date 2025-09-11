@@ -94,9 +94,8 @@ export default function Review({ handleSaveExit, onBack }) {
                 <div className="relative rounded-xl overflow-hidden">
                   <Image
                     src={
-                      propertyDetails.photos?.[0]
-                        ? `${photos}/${propertyDetails.photos[0]}`
-                        : "/images/properties/1.png"
+                     propertyDetails.photos[0]
+                       
                     }
                     alt={propertyDetails.title || "House"}
                     width={300}

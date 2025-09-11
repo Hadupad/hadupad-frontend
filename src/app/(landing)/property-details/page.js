@@ -1,3 +1,4 @@
+'use client'
 import Header from '../../../../components/property-detail/Header';
 import Gallery from '../../../../components/property-detail/Gallery';
 import Tabs from '../../../../components/property-detail/Tabs';
