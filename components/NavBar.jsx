@@ -103,10 +103,13 @@ export default function NavBar() {
 
   // Handle host redirection
   useEffect(() => {
-    if (isLoggedIn && user && user.userType === 'host' && !pathname.startsWith('/host')) {
+    if (isLoggedIn && user && user.userType === 'host' && 
+        !pathname.startsWith('/host') && 
+        !pathname.startsWith('/property') && 
+        !pathname.startsWith('/admin')) {
       router.push('/host');
     }
-  }, [isLoggedIn, user, router]);
+  }, [isLoggedIn, user, router, pathname]);
 
   // Close menus on route change
   useEffect(() => {

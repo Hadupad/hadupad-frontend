@@ -103,7 +103,7 @@ function PropertyCard({ property }) {
   };
 
   return (
-    <Link href="/property-details">
+    <Link href={`/property/${property.id}/${property.name?.toLowerCase().replace(/\s+/g, '-') || 'property'}`}>
   <div className="cursor-pointer bg-transparent p-0 rounded-xl shadow-none hover:opacity-90 transition-all duration-200">
   <div className="relative rounded-xl overflow-hidden">
     <Slider {...imageSettings}>

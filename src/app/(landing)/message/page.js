@@ -15,17 +15,17 @@ export default function App() {
 
 
   return (
-    <div className="flex flex-col h-screen pt-30">
+    <div className="flex flex-col h-screen">
       {/* 🔹 SubHeader always on top below Navbar */}
       <SubHeader selectedChannel={selectedChannel}/>
 
       {/* 🔹 Two-column layout */}
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar
+        {/* <Sidebar
           channels={channels}
           selectedChannel={selectedChannel}
           setSelectedChannel={setSelectedChannel}
-        />
+        /> */}
         <MainBar selectedChannel={selectedChannel} />
       </div>
 
