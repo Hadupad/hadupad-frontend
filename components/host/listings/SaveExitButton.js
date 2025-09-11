@@ -1,6 +1,6 @@
 "use client";
 
-import { Save } from "lucide-react"; // Or use a different icon if preferred
+import { Save } from "lucide-react"; 
 
 export default function SaveExitButton({ onClick, label = "Save & Exit" }) {
   return (<div className="flex justify-end mb-3 sm:mb-5 -mt-3 sm:-mt-5 px-4 sm:px-0">

@@ -42,19 +42,19 @@ export default function CreateListingFlow() {
         return <PropertyTypeSelector onNext={next} onBack={back} />;
       case 2:
         return <PlacePrivacySelector onNext={next} onBack={back} />;
+      // case 3:
+      //   return <AddressInput onNext={next} onBack={back} />;
       case 3:
-        return <AddressInput onNext={next} onBack={back} />;
-      case 4:
         return <FullAddressForm onNext={next} onBack={back} />;
-      case 5:
-        return <MapWithAddress onNext={next} onBack={back} />;
-      case 6:
+      // case 5:
+      //   return <MapWithAddress onNext={next} onBack={back} />;
+      case 4:
         return <RoomCounters onNext={next} onBack={back} />;
-      case 7:
+      case 5:
         return <CreateStep2 onNext={next} onBack={back} />;
-      case 8:
+      case 6:
         return <MoreAbout onNext={next} onBack={back} />;
-      case 9:
+      case 7:
         return (
           <HousePhotos
             onNext={next}
@@ -65,28 +65,28 @@ export default function CreateListingFlow() {
           />
         );
 
-      case 10:
-        return (
-          <HousePhotosView
-            onNext={next}
-            onBack={back}
-            photos={photos}
-          />
-        );
+      // case 7:
+      //   return (
+      //     <HousePhotosView
+      //       onNext={next}
+      //       onBack={back}
+      //       photos={photos}
+      //     />
+      //   );
 
-      case 11:
+      case 8:
         return <Title onNext={next} onBack={back} />;
-      case 12:
-        return <Description onNext={next} onBack={back} />;
-      case 13:
+      // case 9:
+      //   return <Description onNext={next} onBack={back} />;
+      case 9:
         return <CreateStep3 onNext={next} onBack={back} />;
-      case 14:
+      case 10:
         return <BookingSetting onNext={next} onBack={back} />;
-      case 15:
+      case 11:
         return <PriceSetting onNext={next} onBack={back} />;
-      case 16:
+      case 12:
         return <PriceSettingDiscounts onNext={next} onBack={back} />;
-      case 17:
+      case 13:
         return <Review onNext={() => router.push("/host/listings")} onBack={back} />;
       default:
         return null;

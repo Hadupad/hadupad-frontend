@@ -42,19 +42,19 @@ export default function CreateListingFlow() {
         return <PropertyTypeSelector onNext={next} onBack={back} />;
       case 2:
         return <PlacePrivacySelector onNext={next} onBack={back} />;
+      // case 3:
+      //   return <AddressInput onNext={next} onBack={back} />;
       case 3:
-        return <AddressInput onNext={next} onBack={back} />;
-      case 4:
         return <FullAddressForm onNext={next} onBack={back} />;
-      case 5:
-        return <MapWithAddress onNext={next} onBack={back} />;
-      case 6:
+      // case 5:
+      //   return <MapWithAddress onNext={next} onBack={back} />;
+      case 4:
         return <RoomCounters onNext={next} onBack={back} />;
-      case 7:
+      case 5:
         return <CreateStep2 onNext={next} onBack={back} />;
-      case 8:
+      case 6:
         return <MoreAbout onNext={next} onBack={back} />;
-      case 9:
+      case 7:
         return (
           <HousePhotos
             onNext={next}
