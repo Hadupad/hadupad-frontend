@@ -23,13 +23,13 @@ export const LISTING_STEPS = [
     section: 1,
     validation: (data) => !!data.placePrivacy
   },
-  {
-    id: 'address-input',
-    component: 'AddressInput',
-    title: 'Address',
-    section: 1,
-    validation: (data) => !!data.address
-  },
+  // {
+  //   id: 'address-input',
+  //   component: 'AddressInput',
+  //   title: 'Address',
+  //   section: 1,
+  //   validation: (data) => !!data.address
+  // },
   {
     id: 'full-address',
     component: 'FullAddressForm',
@@ -37,13 +37,13 @@ export const LISTING_STEPS = [
     section: 1,
     validation: (data) => !!data.fullAddress?.street
   },
-  {
-    id: 'map-location',
-    component: 'MapWithAddress',
-    title: 'Confirm Location',
-    section: 1,
-    validation: (data) => !!data.coordinates
-  },
+  // {
+  //   id: 'map-location',
+  //   component: 'MapWithAddress',
+  //   title: 'Confirm Location',
+  //   section: 1,
+  //   validation: (data) => !!data.coordinates
+  // },
   {
     id: 'room-counts',
     component: 'RoomCounters',
@@ -75,13 +75,13 @@ export const LISTING_STEPS = [
     section: 2,
     validation: (data) => data.photos?.length >= 5
   },
-  {
-    id: 'photos-review',
-    component: 'HousePhotosView',
-    title: 'Review Photos',
-    section: 2,
-    validation: (data) => data.photos?.length >= 5
-  },
+  // {
+  //   id: 'photos-review',
+  //   component: 'HousePhotosView',
+  //   title: 'Review Photos',
+  //   section: 2,
+  //   validation: (data) => data.photos?.length >= 5
+  // },
   {
     id: 'title',
     component: 'Title',
@@ -89,13 +89,13 @@ export const LISTING_STEPS = [
     section: 2,
     validation: (data) => data.title?.length >= 10
   },
-  {
-    id: 'description',
-    component: 'Description',
-    title: 'Description',
-    section: 2,
-    validation: (data) => data.description?.length >= 50
-  },
+  // {
+  //   id: 'description',
+  //   component: 'Description',
+  //   title: 'Description',
+  //   section: 2,
+  //   validation: (data) => data.description?.length >= 50
+  // },
 
   // Step 3: Booking & Pricing
   {

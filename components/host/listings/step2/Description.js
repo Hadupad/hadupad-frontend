@@ -14,7 +14,7 @@ export default function Description({ onNext, onBack, handleSaveExit }) {
 
   return (
     <>
-      <SaveExitButton onClick={handleSaveExit} />
+      {/* <SaveExitButton onClick={handleSaveExit} /> */}
     
     <div className="flex flex-col items-center w-full">
       <h2 className="text-2xl font-bold mt-1 mb-2">
