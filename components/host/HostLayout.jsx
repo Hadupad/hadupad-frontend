@@ -50,7 +50,7 @@ export default function HostLayout({ children }) {
       <div className="hidden lg:block">
         <Navbar />
         <Sidebar />
-        <main className="ml-56 p-6 pt-30">
+        <main className="ml-56 h-[calc(100vh-72px)] p-5">
           {children}
         </main>
       </div>
