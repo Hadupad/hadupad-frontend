@@ -35,6 +35,11 @@ export default function Sidebar() {
   const pathname = usePathname();
   const LogoutIcon = logoutItem.icon;
 
+  // Don't render sidebar on admin routes
+  if (pathname.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <aside className="fixed top-16 md:top-[72px] left-0 h-[calc(100vh-64px)] w-56 bg-white text-black p-4 flex flex-col justify-between shadow-md z-50">
       {/* Top Menu */}

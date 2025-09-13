@@ -36,7 +36,7 @@ export default function AdminSidebar() {
   };
 
   return (
-    <div className="fixed left-0 top-[72px] h-[calc(100vh-72px)] w-56 bg-white border-r border-gray-200 z-40">
+    <div className="w-56 bg-white border-r border-gray-200 flex-shrink-0 h-[calc(100vh-72px)] overflow-y-auto">
       <div className="flex flex-col h-full">
         {/* Navigation Menu */}
         <nav className="flex-1 px-4 py-6 space-y-2">
