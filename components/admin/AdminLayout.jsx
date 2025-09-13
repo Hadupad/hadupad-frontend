@@ -46,11 +46,11 @@ export default function AdminLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <AdminNavbar />
       {/* Desktop Layout */}
-      <div className="hidden lg:block">
-        <AdminNavbar />
+      <div className="hidden lg:flex pt-[72px] h-[calc(100vh-72px)]">
         <AdminSidebar />
-        <main className="ml-56 pt-20 overflow-auto">
+        <main className="flex-1 overflow-y-auto">
           {children}
         </main>
       </div>

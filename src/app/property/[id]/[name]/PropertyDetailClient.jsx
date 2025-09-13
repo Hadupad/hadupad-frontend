@@ -7,6 +7,7 @@ import PropertyHeader from '../../../../../components/property-detail/PropertyHe
 import PropertyGallery from '../../../../../components/property-detail/PropertyGallery';
 import PropertySectionNav from '../../../../../components/property-detail/PropertySectionNav';
 import PropertyDetails from '../../../../../components/property-detail/PropertyDetails';
+import ReviewSystem from '../../../../../components/property-detail/ReviewSystem';
 import AmenitiesInfo from '../../../../../components/property-detail/AmenitiesInfo';
 import LocationInfo from '../../../../../components/property-detail/LocationInfo';
 import InstructionsInfo from '../../../../../components/property-detail/InstructionsInfo';
@@ -27,6 +28,7 @@ export default function PropertyDetailClient({ property }) {
 
   const sections = [
     { id: 'details', title: 'Details', component: <PropertyDetails property={property} /> },
+    { id: 'reviews', title: 'Reviews', component: <ReviewSystem property={property} /> },
     { 
       id: 'description', 
       title: 'Description', 
@@ -175,6 +177,8 @@ export default function PropertyDetailClient({ property }) {
     switch (activeSection) {
       case 'details':
         return <PropertyDetails property={property} />;
+      case 'reviews':
+        return <ReviewSystem property={property} />;
       case 'description':
         return (
           <div className="space-y-6">

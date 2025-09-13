@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 const sections = [
   { id: 'details', label: 'Details' },
+  { id: 'reviews', label: 'Reviews' },
   { id: 'description', label: 'Description' },
   { id: 'location', label: 'Location' },
   { id: 'amenities', label: 'Amenities' },

@@ -2,23 +2,46 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Star, Users, Bed, Bath, MapPin } from 'lucide-react';
+import { ArrowLeft, Star, Users, Bed, Bath, MapPin, ChevronRight, ChevronDown } from 'lucide-react';
 import AdminLayout from '../../../../../../components/admin/AdminLayout';
+import PropertySectionNav from '../../../../../../components/property-detail/PropertySectionNav';
+import PropertyDetails from '../../../../../../components/property-detail/PropertyDetails';
+import LocationInfo from '../../../../../../components/property-detail/LocationInfo';
+import AmenitiesInfo from '../../../../../../components/property-detail/AmenitiesInfo';
+import InstructionsInfo from '../../../../../../components/property-detail/InstructionsInfo';
+import BookingCard from '../../../../../../components/property-detail/BookingCard';
 
 export default function AdminPropertyDetailClient({ property }) {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('details');
+  const [activeSection, setActiveSection] = useState('details');
+  const [expandedSections, setExpandedSections] = useState({});
+
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   const handleBackClick = () => {
     router.push('/admin/listings');
   };
 
-  const tabs = [
-    { id: 'details', title: 'Details' },
-    { id: 'description', title: 'Description' },
-    { id: 'location', title: 'Location' },
-    { id: 'amenities', title: 'Amenities' },
-    { id: 'instructions', title: 'Instructions' }
+  const sections = [
+    { id: 'details', title: 'Details', component: <PropertyDetails property={property} /> },
+    { 
+      id: 'description', 
+      title: 'Description', 
+      component: (
+        <div className="bg-white rounded-lg p-4">
+          <h3 className="text-lg font-semibold mb-3">Description</h3>
+          <p className="text-gray-700">{property.description}</p>
+        </div>
+      )
+    },
+    { id: 'location', title: 'Location', component: <LocationInfo property={property} /> },
+    { id: 'amenities', title: 'Amenities', component: <AmenitiesInfo property={property} /> },
+    { id: 'instructions', title: 'Instructions', component: <InstructionsInfo property={property} /> }
   ];
 
   const renderSectionContent = () => {
@@ -39,8 +62,7 @@ export default function AdminPropertyDetailClient({ property }) {
   };
 
   return (
-    <AdminLayout>
-      <div className="px-4 py-3">
+      <div className="max-w-full overflow-hidden px-4 py-3">
         {/* Back Button and Header */}
         <div className="flex items-center mb-3">
           <button
@@ -57,7 +79,7 @@ export default function AdminPropertyDetailClient({ property }) {
 
         {/* Property Gallery - Admin Compact Version */}
         <div className="mb-3">
-          <div className="grid grid-cols-4 grid-rows-2 gap-2 h-80 rounded-lg overflow-hidden">
+          <div className="grid grid-cols-4 grid-rows-2 gap-2 h-80 rounded-lg overflow-hidden max-w-full">
             {/* Main large image */}
             <div className="col-span-2 row-span-2">
               <img
@@ -146,6 +168,5 @@ export default function AdminPropertyDetailClient({ property }) {
           </div>
         </div>
       </div>
-    </AdminLayout>
   );
 }
