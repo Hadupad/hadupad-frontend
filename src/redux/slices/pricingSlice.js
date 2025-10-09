@@ -5,7 +5,16 @@ export const updatePricingAsync = createAsyncThunk(
   'pricing/update',
   async ({ propertyId, data }, thunkAPI) => {
     try {
-      return await updatePricing(propertyId, data);
+      // Ensure all fields are numbers
+      const payload = {
+        pricePerNight: Number(data.pricePerNight),
+        discountPercent: Number(data.discountPercent),
+        serviceFee: Number(data.serviceFee),
+        cleaningFee: Number(data.cleaningFee),
+        cautionFee: Number(data.cautionFee),
+      };
+      console.log('Payload sent to updatePricing:', payload); // Debug log
+      return await updatePricing(propertyId, payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -17,6 +26,9 @@ const pricingSlice = createSlice({
   initialState: {
     pricePerNight: null,
     discountPercent: null,
+    serviceFee: null,
+    cleaningFee: null,
+    cautionFee: null,
     loading: false,
     error: null,
   },
@@ -24,6 +36,9 @@ const pricingSlice = createSlice({
     resetPricingState: (state) => {
       state.pricePerNight = null;
       state.discountPercent = null;
+      state.serviceFee = null;
+      state.cleaningFee = null;
+      state.cautionFee = null;
       state.loading = false;
       state.error = null;
     },
@@ -36,8 +51,11 @@ const pricingSlice = createSlice({
       })
       .addCase(updatePricingAsync.fulfilled, (state, action) => {
         state.loading = false;
-        state.pricePerNight = action.payload.property?.pricePerNight || null;
-        state.discountPercent = action.payload.property?.discountPercent || null;
+        state.pricePerNight = Number(action.payload.property?.pricePerNight) || null;
+        state.discountPercent = Number(action.payload.property?.discountPercent) || null;
+        state.serviceFee = Number(action.payload.property?.serviceFee) || null;
+        state.cleaningFee = Number(action.payload.property?.cleaningFee) || null;
+        state.cautionFee = Number(action.payload.property?.cautionFee) || null;
       })
       .addCase(updatePricingAsync.rejected, (state, action) => {
         state.loading = false;

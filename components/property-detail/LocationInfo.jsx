@@ -1,4 +1,5 @@
 import Map from './Map';
+import PropTypes from 'prop-types';
 
 export default function LocationInfo({ property }) {
   return (
@@ -13,7 +14,7 @@ export default function LocationInfo({ property }) {
         
         {/* Location description */}
         <p className="text-gray-700 text-sm mb-4">
-          Jabi is a quiet residential area around its namesake lake, lined with walking paths and dotted with boats, plus a handful of chic cocktail lounges and rooftop bars overlooking the water. Nearby is Jabi Park, popular for horseback riding and recreational soccer games.
+          {property.description || 'This is an amazing self con apartment available at the university of abuja'}
         </p>
       </div>
 
@@ -21,21 +22,34 @@ export default function LocationInfo({ property }) {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <h3 className="font-medium text-red-500 mb-1 text-sm">Address</h3>
-          <p className="text-gray-900 text-sm">Jabi, Abuja</p>
+          <p className="text-gray-900 text-sm">
+            {`${property.streetAddress || 'Area 3 garki abuja nigeria'}, ${property.aptSuiteNumber || 'Area 10, garki abuja'}`}
+          </p>
         </div>
         <div>
           <h3 className="font-medium text-red-500 mb-1 text-sm">City</h3>
-          <p className="text-gray-900 text-sm">Abuja</p>
+          <p className="text-gray-900 text-sm">{property.city || 'Abuja'}</p>
         </div>
         <div>
           <h3 className="font-medium text-red-500 mb-1 text-sm">State</h3>
-          <p className="text-gray-900 text-sm">FCT</p>
+          <p className="text-gray-900 text-sm">{property.state || 'Abuja'}</p>
         </div>
         <div>
           <h3 className="font-medium text-red-500 mb-1 text-sm">Country</h3>
-          <p className="text-gray-900 text-sm">Nigeria</p>
+          <p className="text-gray-900 text-sm">{property.country || 'Nigeria'}</p>
         </div>
       </div>
     </div>
   );
 }
+
+LocationInfo.propTypes = {
+  property: PropTypes.shape({
+    description: PropTypes.string,
+    streetAddress: PropTypes.string,
+    aptSuiteNumber: PropTypes.string,
+    city: PropTypes.string,
+    state: PropTypes.string,
+    country: PropTypes.string,
+  }).isRequired,
+};

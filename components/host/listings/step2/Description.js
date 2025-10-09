@@ -38,7 +38,12 @@ What makes your home special? Share it!
           </span>
         </div>
       </div>
-      <BottomNav onBack={onBack} onNext={onNext} nextLabel="Continue" />
+      <BottomNav
+  onBack={onBack}
+  onNext={handleNext}
+  nextLabel="Continue"
+  loading={loading} // Pass the loading state
+/>
     </div>
     </>
   );

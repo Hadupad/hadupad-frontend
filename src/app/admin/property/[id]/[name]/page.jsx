@@ -3,8 +3,8 @@ import AdminPropertyDetailClient from './AdminPropertyDetailClient';
 
 export async function generateStaticParams() {
   return properties.map((property) => ({
-    id: property.id.toString(),
-    name: property.name.toLowerCase().replace(/\s+/g, '-')
+    id: property.id, // No need to call toString() as IDs are already strings (UUIDs)
+    name: property.name.toLowerCase().replace(/\s+/g, '-'),
   }));
 }
 

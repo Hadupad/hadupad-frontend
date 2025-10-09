@@ -114,7 +114,12 @@ export default function RoomCounters({ onNext, onBack, handleSaveExit }) {
           field="bathroomCount"
         />
 
-        <BottomNav onBack={onBack} onNext={handleNext} nextLabel="Continue" />
+      <BottomNav
+  onBack={onBack}
+  onNext={handleNext}
+  nextLabel="Continue"
+  loading={loading} // Pass the loading state
+/>
       </div>
     </>
   );

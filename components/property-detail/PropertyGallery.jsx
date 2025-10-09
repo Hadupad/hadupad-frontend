@@ -6,17 +6,28 @@ import { Grid3X3, ChevronLeft, ChevronRight } from 'lucide-react';
 export default function PropertyGallery({ property }) {
   const [showAllPhotos, setShowAllPhotos] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
-  const mainImage = property.images[0];
-  const sideImages = property.images.slice(1, 5);
-  const allImages = property.images;
+
+  // Ensure images is an array, fallback to empty array if undefined
+  const images = Array.isArray(property?.images) ? property.images : [];
+  // console.log('Property images:', images);
+
+  // Main image (first image or fallback)
+  const mainImage = images[0] || '/images/hero/hero1.png';
+  // Side images (next 4 images or empty array)
+  const sideImages = images.slice(1, 5);
+  // All images for mobile slider
+  const allImages = images;
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
+    if (allImages.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
+    }
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length);
+    if (allImages.length > 0) {
+      setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length);
+    }
   };
 
   return (
@@ -28,7 +39,7 @@ export default function PropertyGallery({ property }) {
           <div className="col-span-2 row-span-2">
             <img
               src={mainImage}
-              alt={`${property.name} - Main view`}
+              alt={`${property?.name || 'Property'} - Main view`}
               className="w-full h-full object-cover hover:brightness-90 transition-all cursor-pointer"
               onError={(e) => {
                 e.target.src = '/images/hero/hero1.png';
@@ -36,13 +47,13 @@ export default function PropertyGallery({ property }) {
               onClick={() => setShowAllPhotos(true)}
             />
           </div>
-          
+
           {/* Side images */}
           {sideImages.map((image, index) => (
             <div key={index} className="relative">
               <img
                 src={image}
-                alt={`${property.name} - View ${index + 2}`}
+                alt={`${property?.name || 'Property'} - View ${index + 2}`}
                 className="w-full h-full object-cover hover:brightness-90 transition-all cursor-pointer"
                 onError={(e) => {
                   e.target.src = '/images/hero/hero1.png';
@@ -50,7 +61,7 @@ export default function PropertyGallery({ property }) {
                 onClick={() => setShowAllPhotos(true)}
               />
               {/* Show all photos button on last image */}
-              {index === sideImages.length - 1 && (
+              {/* {index === sideImages.length - 1 && (
                 <button
                   onClick={() => setShowAllPhotos(true)}
                   className="absolute bottom-4 right-4 bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
@@ -58,7 +69,7 @@ export default function PropertyGallery({ property }) {
                   <Grid3X3 className="w-4 h-4" />
                   Show all photos
                 </button>
-              )}
+              )} */}
             </div>
           ))}
         </div>
@@ -68,56 +79,66 @@ export default function PropertyGallery({ property }) {
       <div className="md:hidden relative">
         <div className="relative h-64 rounded-xl overflow-hidden">
           <img
-            src={allImages[currentImageIndex]}
-            alt={`${property.name} - View ${currentImageIndex + 1}`}
+            src={allImages[currentImageIndex] || '/images/hero/hero1.png'}
+            alt={`${property?.name || 'Property'} - View ${currentImageIndex + 1}`}
             className="w-full h-full object-cover"
             onError={(e) => {
               e.target.src = '/images/hero/hero1.png';
             }}
           />
-          
+
           {/* Navigation Arrows */}
-          <button
-            onClick={prevImage}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-md hover:bg-opacity-100 transition-all"
-          >
-            <ChevronLeft className="w-5 h-5 text-gray-800" />
-          </button>
-          
-          <button
-            onClick={nextImage}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-md hover:bg-opacity-100 transition-all"
-          >
-            <ChevronRight className="w-5 h-5 text-gray-800" />
-          </button>
+          {allImages.length > 1 && (
+            <>
+              <button
+                onClick={prevImage}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-md hover:bg-opacity-100 transition-all"
+              >
+                <ChevronLeft className="w-5 h-5 text-gray-800" />
+              </button>
+
+              <button
+                onClick={nextImage}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow-md hover:bg-opacity-100 transition-all"
+              >
+                <ChevronRight className="w-5 h-5 text-gray-800" />
+              </button>
+            </>
+          )}
 
           {/* Image Counter */}
-          <div className="absolute bottom-4 right-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
-            {currentImageIndex + 1} / {allImages.length}
-          </div>
+          {allImages.length > 0 && (
+            <div className="absolute bottom-4 right-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
+              {currentImageIndex + 1} / {allImages.length}
+            </div>
+          )}
 
           {/* Show all photos button */}
-          <button
-            onClick={() => setShowAllPhotos(true)}
-            className="absolute bottom-4 left-4 bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
-          >
-            <Grid3X3 className="w-4 h-4" />
-            Show all
-          </button>
+          {allImages.length > 0 && (
+            <button
+              onClick={() => setShowAllPhotos(true)}
+              className="absolute bottom-4 left-4 bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
+            >
+              <Grid3X3 className="w-4 h-4" />
+              Show all
+            </button>
+          )}
         </div>
 
         {/* Dot Indicators */}
-        <div className="flex justify-center mt-4 space-x-2">
-          {allImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentImageIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentImageIndex ? 'bg-gray-800' : 'bg-gray-300'
-              }`}
-            />
-          ))}
-        </div>
+        {allImages.length > 0 && (
+          <div className="flex justify-center mt-4 space-x-2">
+            {allImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  index === currentImageIndex ? 'bg-gray-800' : 'bg-gray-300'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -23,6 +23,11 @@ import pricingReducer from './slices/pricingSlice';
 import propertyDetailsReducer from './slices/propertyDetailsSlice';
 import publishReducer from './slices/publishSlice';
 import hostPropertyReducer from './slices/hostPropertySlice';
+import publicPropertyReducer from './slices/publicPropertySlice';
+import wishlistReducer from './slices/wishlistSlice';
+import searchReducer from './slices/searchSlice';
+import bookingReducer from './slices/bookingSlice';
+import userBookingsReducer from './slices/userBookingsSlice';
 
 const rootReducer = combineReducers({
   login: loginReducer,
@@ -46,7 +51,12 @@ const rootReducer = combineReducers({
   pricing: pricingReducer,
   propertyDetails: propertyDetailsReducer,
   publish: publishReducer,
-    properties: hostPropertyReducer,
+  properties: hostPropertyReducer,
+  publicProperty: publicPropertyReducer,
+  wishlist: wishlistReducer,
+  search: searchReducer,
+  booking: bookingReducer,
+  userBookings: userBookingsReducer,
 });
 
 const persistConfig = {
@@ -70,6 +80,10 @@ const persistConfig = {
     'pricing',
     'propertyDetails',
     'publish',
+    'wishlist',
+    'search',
+    'booking',
+    'userBookings',
   ],
 };
 

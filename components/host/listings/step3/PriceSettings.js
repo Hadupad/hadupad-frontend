@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { MdEdit } from 'react-icons/md';
@@ -12,151 +11,275 @@ import { updatePricingAsync } from '@/redux/slices/pricingSlice';
 export default function PriceSettings({ onBack, onNext, handleSaveExit }) {
   const { property } = useSelector((state) => state.property);
   const pricing = useSelector((state) => state.pricing) || {
-    pricePerNight: 50000, // Default to ₦50,000
+    pricePerNight: null,
     discountPercent: 0,
+    serviceFee: 0,
+    cleaningFee: 0,
+    cautionFee: 0,
     loading: false,
     error: null,
   };
-  const { pricePerNight: savedPricePerNight, discountPercent: savedDiscountPercent, loading, error } = pricing;
-  const [pricePerNight, setPricePerNight] = useState(savedPricePerNight || 50000);
-  const [discountPercent, setDiscountPercent] = useState(savedDiscountPercent || 0);
+  const { pricePerNight: savedPricePerNight, discountPercent: savedDiscountPercent, serviceFee: savedServiceFee, cleaningFee: savedCleaningFee, cautionFee: savedCautionFee, loading } = pricing;
+  const [pricePerNight, setPricePerNight] = useState(savedPricePerNight?.toString() || '');
+  const [serviceFee, setServiceFee] = useState(savedServiceFee?.toString() || '');
+  const [cleaningFee, setCleaningFee] = useState(savedCleaningFee?.toString() || '');
+  const [cautionFee, setCautionFee] = useState(savedCautionFee?.toString() || '');
+  const [priceError, setPriceError] = useState('');
+  const [serviceFeeError, setServiceFeeError] = useState('');
+  const [cleaningFeeError, setCleaningFeeError] = useState('');
+  const [cautionFeeError, setCautionFeeError] = useState('');
+  const priceInputRef = useRef(null);
   const dispatch = useDispatch();
 
   const handlePriceChange = (e) => {
     const value = e.target.value;
-    if (value === '' || /^[0-9]*$/.test(value)) {
-      setPricePerNight(value === '' ? '' : Number(value));
+    if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
+      setPricePerNight(value);
+      setPriceError('');
+    } else {
+      setPriceError('Invalid number');
     }
   };
 
-  const handleDiscountChange = (e) => {
+  const handleServiceFeeChange = (e) => {
     const value = e.target.value;
-    if (value === '' || /^[0-9]*$/.test(value)) {
-      setDiscountPercent(value === '' ? '' : Number(value));
+    if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
+      setServiceFee(value);
+      setServiceFeeError('');
+    } else {
+      setServiceFeeError('Invalid number');
     }
+  };
+
+  const handleCleaningFeeChange = (e) => {
+    const value = e.target.value;
+    if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
+      setCleaningFee(value);
+      setCleaningFeeError('');
+    } else {
+      setCleaningFeeError('Invalid number');
+    }
+  };
+
+  const handleCautionFeeChange = (e) => {
+    const value = e.target.value;
+    if (value === '' || /^[0-9]*\.?[0-9]*$/.test(value)) {
+      setCautionFee(value);
+      setCautionFeeError('');
+    } else {
+      setCautionFeeError('Invalid number');
+    }
+  };
+
+  const handlePriceBlur = () => {
+    if (pricePerNight !== '' && !isNaN(Number(pricePerNight))) {
+      setPricePerNight(Number(pricePerNight).toFixed(2));
+    }
+  };
+
+  const handleServiceFeeBlur = () => {
+    if (serviceFee !== '' && !isNaN(Number(serviceFee))) {
+      setServiceFee(Number(serviceFee).toFixed(2));
+    }
+  };
+
+  const handleCleaningFeeBlur = () => {
+    if (cleaningFee !== '' && !isNaN(Number(cleaningFee))) {
+      setCleaningFee(Number(cleaningFee).toFixed(2));
+    }
+  };
+
+  const handleCautionFeeBlur = () => {
+    if (cautionFee !== '' && !isNaN(Number(cautionFee))) {
+      setCautionFee(Number(cautionFee).toFixed(2));
+    }
+  };
+
+  const handleEditClick = () => {
+    priceInputRef.current?.focus();
   };
 
   const handleNext = () => {
     if (!property?.id) {
-      toast.error('Property ID not found. Please start over.');
+      toast.error('Property ID not found.');
       return;
     }
 
-    if (pricePerNight === '' || pricePerNight <= 0) {
-      toast.error('Please enter a valid price per night (greater than 0).');
+    const price = Number(pricePerNight);
+    const service = Number(serviceFee);
+    const cleaning = Number(cleaningFee);
+    const caution = Number(cautionFee);
+    const discount = Number(savedDiscountPercent);
+
+    if (isNaN(price) || price <= 0) {
+      toast.error('Enter a valid price per night.');
       return;
     }
 
-    if (discountPercent === '' || discountPercent < 0 || discountPercent > 100) {
-      toast.error('Please enter a valid discount percentage (0-100).');
+    if (isNaN(service) || service < 0) {
+      toast.error('Enter a valid service fee.');
+      return;
+    }
+
+    if (isNaN(cleaning) || cleaning < 0) {
+      toast.error('Enter a valid cleaning fee.');
+      return;
+    }
+
+    if (isNaN(caution) || caution < 0) {
+      toast.error('Enter a valid caution fee.');
       return;
     }
 
     dispatch(
       updatePricingAsync({
         propertyId: property.id,
-        data: { pricePerNight: Number(pricePerNight), discountPercent: Number(discountPercent) },
+        data: {
+          pricePerNight: price,
+          discountPercent: discount,
+          serviceFee: service,
+          cleaningFee: cleaning,
+          cautionFee: caution,
+        },
       })
     )
       .unwrap()
       .then(() => {
-        toast.success('Pricing updated successfully');
+        toast.success('Pricing updated');
         onNext();
       })
       .catch((err) => {
-        const errorMessage = typeof err === 'string' ? err : err.error || err.message || 'Failed to update pricing';
-        toast.error(errorMessage);
+        toast.error(err.message || 'Failed to update pricing');
       });
   };
 
-  // Calculate guest price (base price after discount)
-  const guestPrice = pricePerNight * (1 - discountPercent / 100);
-  const cautionFee = 10000; // Hardcoded as per original component
-  const youEarn = guestPrice; // Assuming "You earn" is the guest price before taxes
+  const basePrice = pricePerNight !== '' && !isNaN(Number(pricePerNight))
+    ? Number(pricePerNight) * (1 - Number(savedDiscountPercent) / 100)
+    : 0;
+  const caution = cautionFee !== '' && !isNaN(Number(cautionFee)) ? Number(cautionFee) : 0;
+  const service = serviceFee !== '' && !isNaN(Number(serviceFee)) ? Number(serviceFee) : 0;
+  const cleaning = cleaningFee !== '' && !isNaN(Number(cleaningFee)) ? Number(cleaningFee) : 0;
+  const guestPrice = basePrice + service + cleaning + caution;
+  const youEarn = basePrice;
 
   return (
-    <>
-      {/* <SaveExitButton onClick={handleSaveExit} /> */}
+    <div className="flex flex-col items-center min-h-screen p-4">
+      <div className="w-full max-w-md">
+        <h2 className="text-xl font-semibold text-center">Set Pricing Details</h2>
+        <p className="text-gray-400 text-xs text-center mb-4">Adjust anytime</p>
 
-      <div className="flex flex-col items-center justify-between -mt-15">
-        {/* Top Section */}
-        <div className="flex flex-col items-center mt-6">
-          <h2 className="text-2xl font-semibold leading-snug text-center">
-            Now, set your price per night
-          </h2>
-          <p className="text-gray-400 text-sm mt-1">You can change it anytime</p>
-
-          {/* Price Input */}
-          <div className="flex items-baseline mt-10">
-            <span className="text-[86.85px] font-semibold leading-none">₦</span>
-            <input
-              type="text"
-              value={pricePerNight}
-              onChange={handlePriceChange}
-              className="text-[86.85px] font-semibold leading-none pl-4 bg-transparent border-none focus:outline-none w-[200px]"
-              placeholder="50000"
-            />
-            <div className="relative w-6 h-6 ml-2 mt-2">
-              <div className="absolute w-full h-full border border-gray-300 rounded-full flex items-center justify-center">
-                <MdEdit className="text-gray-700 text-xs" />
-              </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm font-medium">Price/Night (₦)</label>
+            <div className="flex items-center mt-1">
+              <span className="text-lg font-semibold">₦</span>
+              <input
+                type="text"
+                value={pricePerNight}
+                onChange={handlePriceChange}
+                onBlur={handlePriceBlur}
+                className="text-lg font-semibold pl-2 bg-transparent border-b border-gray-300 focus:outline-none w-24"
+                placeholder="0.00"
+                ref={priceInputRef}
+              />
+              <MdEdit className="ml-2 text-gray-700 cursor-pointer" onClick={handleEditClick} />
             </div>
+            {priceError && <p className="text-red-500 text-xs mt-1">{priceError}</p>}
           </div>
 
-          {/* Discount Input */}
-          <div className="flex items-baseline mt-4">
-            <span className="text-xl font-semibold">Discount (%):</span>
+          <div>
+            <label className="text-sm font-medium">Service Fee (₦)</label>
             <input
               type="text"
-              value={discountPercent}
-              onChange={handleDiscountChange}
-              className="text-xl font-semibold pl-4 bg-transparent border-none focus:outline-none w-[100px]"
-              placeholder="0"
+              value={serviceFee}
+              onChange={handleServiceFeeChange}
+              onBlur={handleServiceFeeBlur}
+              className="text-lg font-semibold mt-1 bg-transparent border-b border-gray-300 focus:outline-none w-24"
+              placeholder="0.00"
             />
+            {serviceFeeError && <p className="text-red-500 text-xs mt-1">{serviceFeeError}</p>}
           </div>
 
-          {/* Price Breakdown Boxes */}
-          <div className="flex flex-col items-center gap-4 mt-6">
-            <div className="border border-black/50 rounded-md divide-y divide-black/10 w-[230px]">
-              <div className="p-4 space-y-3">
-                <div className="flex justify-between items-center">
-                  <p className="text-sm text-black">Base Price</p>
-                  <p className="text-sm text-black">₦{pricePerNight.toLocaleString()}</p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-sm text-black">Caution Fee</p>
-                  <p className="text-sm text-black">₦{cautionFee.toLocaleString()}</p>
-                </div>
-                {discountPercent > 0 && (
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm text-black">Discount ({discountPercent}%)</p>
-                    <p className="text-sm text-black">
-                      -₦{(pricePerNight * (discountPercent / 100)).toLocaleString()}
-                    </p>
-                  </div>
-                )}
-              </div>
-              <div className="p-4">
-                <div className="flex justify-between items-center">
-                  <p className="text-sm text-black">Guest prices before taxes</p>
-                  <p className="text-sm text-black">₦{guestPrice.toLocaleString()}</p>
-                </div>
-              </div>
-            </div>
-            <div className="border border-black/10 rounded-md w-[230px] p-4">
-              <div className="flex justify-between items-center">
-                <p className="text-sm text-black">You earn</p>
-                <p className="text-sm text-black">₦{youEarn.toLocaleString()}</p>
-              </div>
-            </div>
+          <div>
+            <label className="text-sm font-medium">Cleaning Fee (₦)</label>
+            <input
+              type="text"
+              value={cleaningFee}
+              onChange={handleCleaningFeeChange}
+              onBlur={handleCleaningFeeBlur}
+              className="text-lg font-semibold mt-1 bg-transparent border-b border-gray-300 focus:outline-none w-24"
+              placeholder="0.00"
+            />
+            {cleaningFeeError && <p className="text-red-500 text-xs mt-1">{cleaningFeeError}</p>}
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">Caution Fee (₦)</label>
+            <input
+              type="text"
+              value={cautionFee}
+              onChange={handleCautionFeeChange}
+              onBlur={handleCautionFeeBlur}
+              className="text-lg font-semibold mt-1 bg-transparent border-b border-gray-300 focus:outline-none w-24"
+              placeholder="0.00"
+            />
+            {cautionFeeError && <p className="text-red-500 text-xs mt-1">{cautionFeeError}</p>}
+          </div>
+
+          <div className="col-span-2">
+            <label className="text-sm font-medium">Discount (%)</label>
+            <p className="text-lg font-semibold mt-1">{savedDiscountPercent}%</p>
           </div>
         </div>
 
-        {/* Bottom Navigation */}
-        <div className="mb-2">
-          <BottomNav onBack={onBack} onNext={handleNext} nextLabel="Continue" nextDisabled={loading} />
-        </div>
+        {pricePerNight !== '' && !isNaN(Number(pricePerNight)) ? (
+          <div className="mt-4 border border-gray-300 rounded-md p-3">
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Base Price</span>
+                <span>₦{Number(pricePerNight).toLocaleString()}</span>
+              </div>
+              {Number(savedDiscountPercent) > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span>Discount ({savedDiscountPercent}%)</span>
+                  <span>-₦{(Number(pricePerNight) * (Number(savedDiscountPercent) / 100)).toLocaleString()}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-sm">
+                <span>Service Fee</span>
+                <span>₦{service.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Cleaning Fee</span>
+                <span>₦{cleaning.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Caution Fee</span>
+                <span>₦{caution.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm font-semibold border-t pt-2">
+                <span>Guest Total</span>
+                <span>₦{guestPrice.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm font-semibold">
+                <span>You Earn</span>
+                <span>₦{youEarn.toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="text-red-500 text-xs mt-4 text-center">Enter a price per night.</p>
+        )}
       </div>
-    </>
+
+      <div className="mt-6 w-full max-w-md">
+       <BottomNav
+  onBack={onBack}
+  onNext={handleNext}
+  nextLabel="Continue"
+  loading={loading}
+/>
+      </div>
+    </div>
   );
 }
