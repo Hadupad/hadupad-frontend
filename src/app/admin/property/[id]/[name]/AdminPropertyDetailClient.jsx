@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Star, Users, Bed, Bath, MapPin, ChevronRight, ChevronDown } from 'lucide-react';
+import { ArrowLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import AdminLayout from '../../../../../../components/admin/AdminLayout';
 import PropertySectionNav from '../../../../../../components/property-detail/PropertySectionNav';
 import PropertyDetails from '../../../../../../components/property-detail/PropertyDetails';

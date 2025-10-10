@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaSortUp, FaSortDown, FaEye, FaPrint, FaTrash, FaChevronDown, FaChevronUp, FaCheck, FaTimes } from "react-icons/fa";
-import useReservations from "../../../hooks/useReservations";
+import { FaSortUp, FaSortDown, FaEye, FaPrint, FaTrash, FaChevronDown, FaChevronUp, FaCheck, FaTimes } from "react-icons/fa"
+import useReservations from "../../../hooks/useReservations"
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { cancelBookingAsync, acceptBookingAsync, rejectBookingAsync } from "@/redux/slices/userBookingsSlice";
+import { cancelBookingAsync, acceptBookingAsync, rejectBookingAsync } from "@/redux/slices/userBookingsSlice"
 
 const tabs = [
   { label: "All Bookings", value: "all" },
@@ -26,6 +26,7 @@ export default function BookingsPage() {
   const [modalType, setModalType] = useState(null); 
   const [selectedBookingId, setSelectedBookingId] = useState(null);
   const [reason, setReason] = useState("");
+
 
   const filteredReservations =
     activeTab === "all"
