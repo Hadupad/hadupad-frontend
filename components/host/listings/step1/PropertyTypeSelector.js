@@ -62,7 +62,12 @@ export default function PropertyTypeSelector({ onNext, onBack, handleSaveExit })
           ))}
         </div>
 
-        <BottomNav onBack={onBack} onNext={handleNext} nextLabel="Continue" />
+       <BottomNav
+  onBack={onBack}
+  onNext={handleNext}
+  nextLabel="Continue"
+  loading={loading} // Pass the loading state
+/>
       </div>
     </>
   );

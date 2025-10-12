@@ -8,7 +8,7 @@ const sections = [
   { id: 'description', label: 'Description' },
   { id: 'location', label: 'Location' },
   { id: 'amenities', label: 'Amenities' },
-  { id: 'instructions', label: 'Instructions' }
+  // { id: 'instructions', label: 'Instructions' }
 ];
 
 export default function PropertySectionNav({ activeSection, onSectionChange }) {

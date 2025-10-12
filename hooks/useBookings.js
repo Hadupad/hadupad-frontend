@@ -1,53 +1,46 @@
-// hooks/useBookings.js
-import { useState } from 'react';
-
-const initialBookings = [
-  {
-    id: 1,
-    image: '/images/properties/1.png',
-    title: 'Home away from Home',
-    location: 'Jabi, Abuja',
-    price: '50,000',
-    date: '04 Apr 2025',
-    code: '12FWKL4',
-    status: 'Cancelled',
-  },
-  {
-    id: 2,
-    image: '/images/properties/1.png',
-    title: 'Oceanview Apartment',
-    location: 'Lekki, Lagos',
-    price: '75,000',
-    date: '10 May 2025',
-    code: '98UJYT6',
-    status: 'Paid',
-  },
-  {
-    id: 3,
-    image: '/images/properties/1.png',
-    title: 'Cozy Studio',
-    location: 'Wuse 2, Abuja',
-    price: '30,000',
-    date: '14 Mar 2025',
-    code: '76NPKL2',
-    status: 'Pending',
-  },
-];
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserBookingsAsync } from '@/redux/slices/userBookingsSlice';
 
 export const useBookings = () => {
-  const [bookings, setBookings] = useState(initialBookings);
+  const dispatch = useDispatch();
+  const { bookings, loading, error } = useSelector((state) => state.userBookings);
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
 
-  const filteredBookings = bookings.filter((b) => {
-    const matchesFilter = filter === 'All' || b.status === filter;
+  useEffect(() => {
+    // Fetch bookings when the hook is used
+    dispatch(fetchUserBookingsAsync());
+  }, [dispatch]);
 
+  // Map API bookings to match the expected structure for the UI
+  const formattedBookings = bookings.map((booking) => ({
+    id: booking.id,
+    image: booking.property.photos[0] || '/images/properties/default.png', // Use first photo or fallback
+    title: booking.property.title,
+    location: `${booking.property.city}, ${booking.property.state}`,
+    price: new Intl.NumberFormat('en-NG', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(parseFloat(booking.totalAmount)), // Format price with commas
+    date: new Date(booking.checkInDate).toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }), // Format date
+    code: booking.bookingCode,
+    status: booking.status.charAt(0).toUpperCase() + booking.status.slice(1), // Capitalize status
+    propertyId: booking.property.id, // Add propertyId for redirect
+  }));
+
+  // Filter bookings based on status and search query
+  const filteredBookings = formattedBookings.filter((b) => {
+    const matchesFilter = filter === 'All' || b.status === filter;
     const searchLower = search.toLowerCase();
     const matchesSearch =
       b.title.toLowerCase().includes(searchLower) ||
       b.location.toLowerCase().includes(searchLower) ||
       b.code.toLowerCase().includes(searchLower);
-
     return matchesFilter && matchesSearch;
   });
 
@@ -57,5 +50,7 @@ export const useBookings = () => {
     setFilter,
     search,
     setSearch,
+    loading,
+    error,
   };
 };

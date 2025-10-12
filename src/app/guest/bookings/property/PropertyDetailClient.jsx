@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPublicPropertyById, resetPublicPropertyState } from '@/redux/slices/publicPropertySlice';
 import Navbar from '../../../../../components/NavBar';
 import PropertyHeader from '../../../../../components/property-detail/PropertyHeader';
+// import PropertyGallery from '../../../components/property-detail/PropertyGallery';
 import PropertyGallery from '../../../../../components/property-detail/PropertyGallery';
 import PropertySectionNav from '../../../../../components/property-detail/PropertySectionNav';
 import PropertyDetails from '../../../../../components/property-detail/PropertyDetails';
@@ -15,80 +18,126 @@ import BookingCard from '../../../../../components/property-detail/BookingCard.j
 import TopDestinations from '../../../../../components/property-detail/TopDestinations';
 import Footer from '../../../../../components/Footer';
 
-export default function PropertyDetailClient({ property }) {
+export default function PropertyDetailClient({ propertyId }) {
+  const dispatch = useDispatch();
+  const { currentProperty, loading, error } = useSelector((state) => state.publicProperty || {});
   const [activeSection, setActiveSection] = useState('details');
   const [expandedSections, setExpandedSections] = useState({});
 
-  const toggleSection = (section) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
+  useEffect(() => {
+    if (propertyId) {
+      dispatch(fetchPublicPropertyById(propertyId));
+    }
+  }, [dispatch, propertyId]);
+
+  if (loading) return <p className="text-center py-8">Loading property...</p>;
+  if (error) return <p className="text-center py-8 text-red-600">Error fetching property: {error}. Please try again later.</p>;
+  if (!currentProperty || Object.keys(currentProperty).length === 0) {
+    return <p className="text-center py-8">Property data is empty. Please try again later.</p>;
+  }
+
+  const property = {
+    id: currentProperty?.id || '',
+    name: currentProperty?.name || 'Untitled Property',
+    images: currentProperty?.images || [],
+    location: currentProperty?.location && currentProperty.location !== 'undefined, undefined, undefined'
+      ? currentProperty.location
+      : 'Location not available',
+    rating: currentProperty?.rating || 0,
+    averageRating: currentProperty?.averageRating || 0,
+    reviews: currentProperty?.reviews || [],
+    beds: currentProperty?.beds || 0,
+    baths: currentProperty?.baths || 0,
+    bedrooms: currentProperty?.bedrooms || 1,
+    price: currentProperty?.price || 0,
+    description: currentProperty?.description || 'No description available.',
+    amenities: currentProperty?.amenities || [],
+    placeType: currentProperty?.placeType || '',
+    guestAccommodationType: currentProperty?.guestAccommodationType || '',
+    streetAddress: currentProperty?.streetAddress || '',
+    aptSuiteNumber: currentProperty?.aptSuiteNumber || '',
+    city: currentProperty?.city || 'Unknown city',
+    state: currentProperty?.state || '',
+    country: currentProperty?.country || '',
+    zipCode: currentProperty?.zipCode || '',
+    maxGuestCount: currentProperty?.maxGuestCount || 2,
+    serviceFee: currentProperty?.serviceFee || 0,
+    cleaningFee: currentProperty?.cleaningFee || 0,
+    cautionFee: currentProperty?.cautionFee || 0,
+    discountPercent: currentProperty?.discountPercent || 0,
+    isPublished: currentProperty?.isPublished || false,
+    isCalendarSetup: currentProperty?.isCalendarSetup || false,
+    currentStep: currentProperty?.currentStep || 0,
+    completionPercentage: currentProperty?.completionPercentage || 0,
+    createdAt: currentProperty?.createdAt || null,
+    updatedAt: currentProperty?.updatedAt || null,
+    host: {
+      name: currentProperty?.host?.name || 'Unknown Host',
+      profilePicture: currentProperty?.host?.profilePicture || undefined,
+      id: currentProperty?.host?.id || undefined,
+      phoneNumber: currentProperty?.host?.phoneNumber || undefined,
+      isVerified: currentProperty?.host?.isVerified || false,
+      userType: currentProperty?.host?.userType || 'host',
+    },
+    instantBookingEnabled: currentProperty?.instantBookingEnabled || false,
+    approveBookingEnabled: currentProperty?.approveBookingEnabled || false,
+    bookingType: currentProperty?.bookingType || '',
+    unavailableDates: currentProperty?.unavailableDates || [],
+    availability: currentProperty?.availability || { isAvailableNow: false, nextAvailableDate: 'N/A' },
   };
 
   const sections = [
     { id: 'details', title: 'Details', component: <PropertyDetails property={property} /> },
     { id: 'reviews', title: 'Reviews', component: <ReviewSystem property={property} /> },
-    { 
-      id: 'description', 
-      title: 'Description', 
+    {
+      id: 'description',
+      title: 'Description',
       component: (
         <div className="space-y-6">
-          {/* Description Text */}
           <div className="max-w-2xl">
             <p className="text-gray-700 text-sm leading-relaxed mb-4">
-              Experience the perfect blend of comfort and convenience in this beautifully appointed apartment. 
-              Located in the heart of the city, this space offers modern amenities and stunning views that will 
-              make your stay unforgettable. Whether you're here for business or leisure, you'll find everything 
-              you need for a comfortable and enjoyable visit.
+              {property.description}
             </p>
-            <button className="text-[#DC4731] text-sm font-medium hover:underline">
-              Show more
-            </button>
           </div>
-
-          {/* Where you'll sleep */}
           <div className="max-w-2xl">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Where you'll sleep</h3>
             <div className="bg-white border border-gray-200 rounded-lg p-4">
-              {/* Mobile Layout - Larger Image */}
               <div className="md:hidden">
                 <div className="w-full h-48 bg-gray-100 rounded-lg mb-4">
-                  <img 
-                    src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop" 
-                    alt="Bedroom" 
+                  <img
+                    src={property.images[0] || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop'}
+                    alt="Bedroom"
                     className="w-full h-full object-cover rounded-lg"
                   />
                 </div>
                 <div className="text-center">
                   <h4 className="font-medium text-gray-900">Bedroom</h4>
-                  <p className="text-sm text-gray-600">1 queen bed</p>
+                  <p className="text-sm text-gray-600">{property.beds} bed{property.beds !== 1 ? 's' : ''}</p>
                 </div>
               </div>
-              
-              {/* Desktop Layout - Smaller Image with Text Side by Side */}
               <div className="hidden md:flex items-center gap-4">
                 <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <img 
-                    src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=100&h=100&fit=crop" 
-                    alt="Bedroom" 
+                  <img
+                    src={property.images[0] || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=100&h=100&fit=crop'}
+                    alt="Bedroom"
                     className="w-full h-full object-cover rounded-lg"
                   />
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900">Bedroom</h4>
-                  <p className="text-sm text-gray-600">1 queen bed</p>
+                  <p className="text-sm text-gray-600">{property.beds} bed{property.beds !== 1 ? 's' : ''}</p>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Calendar */}
           <div className="max-w-2xl">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">7 nights in Abuja</h3>
-            <p className="text-sm text-gray-600 mb-4">Apr 04, 2025 - Apr 10, 2025</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">7 nights in {property.city}</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              {property.availability.isAvailableNow
+                ? 'Available now'
+                : `Next available: ${property.availability.nextAvailableDate}`}
+            </p>
             <div className="bg-white border border-gray-200 rounded-lg p-4">
-              {/* Mobile Layout - Vertical Stack */}
               <div className="md:hidden space-y-6">
                 <div>
                   <h4 className="font-medium text-gray-900 mb-2 text-center">March 2025</h4>
@@ -101,7 +150,14 @@ export default function PropertyDetailClient({ property }) {
                     <div className="text-gray-500 text-center py-1">Fr</div>
                     <div className="text-gray-500 text-center py-1">Sa</div>
                     {Array.from({ length: 31 }, (_, i) => (
-                      <div key={i} className="text-center py-2 hover:bg-gray-100 rounded cursor-pointer">
+                      <div
+                        key={i}
+                        className={`text-center py-2 hover:bg-gray-100 rounded cursor-pointer ${
+                          property.unavailableDates.includes(`2025-03-${String(i + 1).padStart(2, '0')}`)
+                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            : ''
+                        }`}
+                      >
                         {i + 1}
                       </div>
                     ))}
@@ -114,19 +170,23 @@ export default function PropertyDetailClient({ property }) {
                     <div className="text-gray-500 text-center py-1">Mo</div>
                     <div className="text-gray-500 text-center py-1">Tu</div>
                     <div className="text-gray-500 text-center py-1">We</div>
-                    <div className="text-gray-500 text-center py-1">Th</div>
                     <div className="text-gray-500 text-center py-1">Fr</div>
                     <div className="text-gray-500 text-center py-1">Sa</div>
                     {Array.from({ length: 30 }, (_, i) => (
-                      <div key={i} className="text-center py-2 hover:bg-gray-100 rounded cursor-pointer">
+                      <div
+                        key={i}
+                        className={`text-center py-2 hover:bg-gray-100 rounded cursor-pointer ${
+                          property.unavailableDates.includes(`2025-04-${String(i + 1).padStart(2, '0')}`)
+                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            : ''
+                        }`}
+                      >
                         {i + 1}
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
-
-              {/* Desktop Layout - Side by Side */}
               <div className="hidden md:grid grid-cols-2 gap-4">
                 <div>
                   <h4 className="font-medium text-gray-900 mb-2">March 2025</h4>
@@ -139,7 +199,14 @@ export default function PropertyDetailClient({ property }) {
                     <div className="text-gray-500 text-center py-1">Fr</div>
                     <div className="text-gray-500 text-center py-1">Sa</div>
                     {Array.from({ length: 31 }, (_, i) => (
-                      <div key={i} className="text-center py-1 hover:bg-gray-100 rounded cursor-pointer">
+                      <div
+                        key={i}
+                        className={`text-center py-1 hover:bg-gray-100 rounded cursor-pointer ${
+                          property.unavailableDates.includes(`2025-03-${String(i + 1).padStart(2, '0')}`)
+                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            : ''
+                        }`}
+                      >
                         {i + 1}
                       </div>
                     ))}
@@ -152,11 +219,17 @@ export default function PropertyDetailClient({ property }) {
                     <div className="text-gray-500 text-center py-1">Mo</div>
                     <div className="text-gray-500 text-center py-1">Tu</div>
                     <div className="text-gray-500 text-center py-1">We</div>
-                    <div className="text-gray-500 text-center py-1">Th</div>
                     <div className="text-gray-500 text-center py-1">Fr</div>
                     <div className="text-gray-500 text-center py-1">Sa</div>
                     {Array.from({ length: 30 }, (_, i) => (
-                      <div key={i} className="text-center py-1 hover:bg-gray-100 rounded cursor-pointer">
+                      <div
+                        key={i}
+                        className={`text-center py-1 hover:bg-gray-100 rounded cursor-pointer ${
+                          property.unavailableDates.includes(`2025-04-${String(i + 1).padStart(2, '0')}`)
+                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            : ''
+                        }`}
+                      >
                         {i + 1}
                       </div>
                     ))}
@@ -166,12 +239,19 @@ export default function PropertyDetailClient({ property }) {
             </div>
           </div>
         </div>
-      )
+      ),
     },
     { id: 'location', title: 'Location', component: <LocationInfo property={property} /> },
     { id: 'amenities', title: 'Amenities', component: <AmenitiesInfo property={property} /> },
-    { id: 'instructions', title: 'Instructions', component: <InstructionsInfo property={property} /> }
+    // { id: 'instructions', title: 'Instructions', component: <InstructionsInfo property={property} /> },
   ];
+
+  const toggleSection = (sectionId) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [sectionId]: !prev[sectionId],
+    }));
+  };
 
   const renderSectionContent = () => {
     switch (activeSection) {
@@ -182,40 +262,33 @@ export default function PropertyDetailClient({ property }) {
       case 'description':
         return (
           <div className="space-y-6">
-            {/* Description Text */}
             <div className="max-w-2xl">
               <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                Come and stay in this superb bungalow, in the heart of the historic center of Abuja. 
-                Spacious and bright, exposed with stone, you will enjoy all the charms of the city thanks to 
-                its ideal location. Close to the famous Jabi Lake Mall, many local stores, bars and 
-                restaurants, you can access the apartment by tram A and C and bus routes 27 and 44.
+                {property.description}
               </p>
-              <button className="text-gray-900 underline text-sm">Show more ↓</button>
             </div>
-
-            {/* Where you'll sleep */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Where you'll sleep</h3>
               <div className="bg-white border border-gray-200 rounded-lg p-3 max-w-xs">
                 <img
-                  src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop"
+                  src={property.images[0] || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop'}
                   alt="Bedroom"
                   className="w-full h-24 object-cover rounded-lg mb-2"
                 />
                 <div>
                   <h4 className="font-medium text-gray-900 text-sm">Bedroom</h4>
-                  <p className="text-xs text-gray-600">1 queen bed</p>
+                  <p className="text-xs text-gray-600">{property.beds} bed{property.beds !== 1 ? 's' : ''}</p>
                 </div>
               </div>
             </div>
-
-            {/* Calendar Section */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">7 nights in Abuja</h3>
-              <p className="text-xs text-gray-600 mb-4">Apr 04, 2025 - Apr 10, 2025</p>
-              
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">7 nights in {property.city}</h3>
+              <p className="text-xs text-gray-600 mb-4">
+                {property.availability.isAvailableNow
+                  ? 'Available now'
+                  : `Next available: ${property.availability.nextAvailableDate}`}
+              </p>
               <div className="grid grid-cols-2 gap-4 max-w-lg">
-                {/* March 2025 */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <button className="p-1 text-sm">←</button>
@@ -230,54 +303,20 @@ export default function PropertyDetailClient({ property }) {
                     <div className="p-1 font-medium text-gray-500">Th</div>
                     <div className="p-1 font-medium text-gray-500">Fr</div>
                     <div className="p-1 font-medium text-gray-500">Sa</div>
-                    
-                    {/* Empty cells for March start */}
-                    <div className="p-1"></div>
-                    <div className="p-1"></div>
-                    <div className="p-1"></div>
-                    <div className="p-1"></div>
-                    <div className="p-1"></div>
-                    <div className="p-1"></div>
-                    <div className="p-1">1</div>
-                    
-                    <div className="p-1">2</div>
-                    <div className="p-1">3</div>
-                    <div className="p-1">4</div>
-                    <div className="p-1 bg-red-500 text-white rounded-full">5</div>
-                    <div className="p-1">6</div>
-                    <div className="p-1">7</div>
-                    <div className="p-1">8</div>
-                    
-                    <div className="p-1">9</div>
-                    <div className="p-1 bg-red-500 text-white rounded-full">10</div>
-                    <div className="p-1">11</div>
-                    <div className="p-1">12</div>
-                    <div className="p-1">13</div>
-                    <div className="p-1">14</div>
-                    <div className="p-1">15</div>
-                    
-                    <div className="p-1">16</div>
-                    <div className="p-1">17</div>
-                    <div className="p-1">18</div>
-                    <div className="p-1">19</div>
-                    <div className="p-1">20</div>
-                    <div className="p-1">21</div>
-                    <div className="p-1">22</div>
-                    
-                    <div className="p-1">23</div>
-                    <div className="p-1">24</div>
-                    <div className="p-1">25</div>
-                    <div className="p-1">26</div>
-                    <div className="p-1">27</div>
-                    <div className="p-1">28</div>
-                    <div className="p-1">29</div>
-                    
-                    <div className="p-1">30</div>
-                    <div className="p-1">31</div>
+                    {Array.from({ length: 31 }, (_, i) => (
+                      <div
+                        key={i}
+                        className={`p-1 text-center hover:bg-gray-100 rounded cursor-pointer ${
+                          property.unavailableDates.includes(`2025-03-${String(i + 1).padStart(2, '0')}`)
+                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            : ''
+                        }`}
+                      >
+                        {i + 1}
+                      </div>
+                    ))}
                   </div>
                 </div>
-
-                {/* April 2025 */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <div></div>
@@ -289,51 +328,23 @@ export default function PropertyDetailClient({ property }) {
                     <div className="p-1 font-medium text-gray-500">Mo</div>
                     <div className="p-1 font-medium text-gray-500">Tu</div>
                     <div className="p-1 font-medium text-gray-500">We</div>
-                    <div className="p-1 font-medium text-gray-500">Th</div>
                     <div className="p-1 font-medium text-gray-500">Fr</div>
                     <div className="p-1 font-medium text-gray-500">Sa</div>
-                    
-                    {/* Empty cells for April start */}
-                    <div className="p-1"></div>
-                    <div className="p-1"></div>
-                    <div className="p-1">1</div>
-                    <div className="p-1">2</div>
-                    <div className="p-1">3</div>
-                    <div className="p-1">4</div>
-                    <div className="p-1">5</div>
-                    
-                    <div className="p-1">6</div>
-                    <div className="p-1">7</div>
-                    <div className="p-1">8</div>
-                    <div className="p-1">9</div>
-                    <div className="p-1">10</div>
-                    <div className="p-1">11</div>
-                    <div className="p-1">12</div>
-                    
-                    <div className="p-1">13</div>
-                    <div className="p-1">14</div>
-                    <div className="p-1">15</div>
-                    <div className="p-1">16</div>
-                    <div className="p-1">17</div>
-                    <div className="p-1">18</div>
-                    <div className="p-1">19</div>
-                    
-                    <div className="p-1">20</div>
-                    <div className="p-1">21</div>
-                    <div className="p-1">22</div>
-                    <div className="p-1">23</div>
-                    <div className="p-1">24</div>
-                    <div className="p-1">25</div>
-                    <div className="p-1">26</div>
-                    
-                    <div className="p-1">27</div>
-                    <div className="p-1">28</div>
-                    <div className="p-1">29</div>
-                    <div className="p-1">30</div>
+                    {Array.from({ length: 30 }, (_, i) => (
+                      <div
+                        key={i}
+                        className={`p-1 text-center hover:bg-gray-100 rounded cursor-pointer ${
+                          property.unavailableDates.includes(`2025-04-${String(i + 1).padStart(2, '0')}`)
+                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            : ''
+                        }`}
+                      >
+                        {i + 1}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
-              
               <button className="mt-4 text-xs text-gray-700 underline">Clear dates</button>
             </div>
           </div>
@@ -342,8 +353,6 @@ export default function PropertyDetailClient({ property }) {
         return <LocationInfo property={property} />;
       case 'amenities':
         return <AmenitiesInfo property={property} />;
-      case 'instructions':
-        return <InstructionsInfo property={property} />;
       default:
         return <PropertyDetails property={property} />;
     }
@@ -354,35 +363,22 @@ export default function PropertyDetailClient({ property }) {
       <Navbar />
       <main className="pt-[100px] px-4 sm:px-6 lg:px-8 pb-8 relative z-10">
         <div className="max-w-6xl mx-auto">
-          {/* Property Header */}
           <PropertyHeader property={property} />
-
-          {/* Property Gallery */}
           <PropertyGallery property={property} />
-
-          {/* Desktop Layout */}
           <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content */}
             <div className="lg:col-span-2 max-w-4xl">
-              {/* Section Navigation */}
-              <PropertySectionNav 
-                activeSection={activeSection} 
-                onSectionChange={setActiveSection} 
+              <PropertySectionNav
+                activeSection={activeSection}
+                onSectionChange={setActiveSection}
               />
-
-              {/* Dynamic Section Content */}
               <div className="space-y-6 max-w-3xl relative z-0">
                 {renderSectionContent()}
               </div>
             </div>
-
-            {/* Booking Card */}
             <div className="lg:col-span-1">
               <BookingCard property={property} />
             </div>
           </div>
-
-          {/* Mobile Layout - Collapsible Sections */}
           <div className="lg:hidden space-y-4 mt-6">
             {sections.map((section) => (
               <div key={section.id} className="border border-gray-200 rounded-lg overflow-hidden">
@@ -404,19 +400,13 @@ export default function PropertyDetailClient({ property }) {
                 )}
               </div>
             ))}
-
-            {/* Mobile Booking Card */}
             <div className="mt-6">
               <BookingCard property={property} />
             </div>
           </div>
-
-          {/* Top Destinations */}
           <TopDestinations />
         </div>
       </main>
-      
-      {/* Footer */}
       <Footer />
     </div>
   );

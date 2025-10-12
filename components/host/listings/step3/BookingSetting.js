@@ -87,12 +87,12 @@ export default function BookingSetting({ onNext, onBack, handleSaveExit }) {
           ))}
         </div>
 
-        <BottomNav
-          onBack={onBack}
-          onNext={handleNext}
-          nextLabel="Continue"
-          nextDisabled={loading}
-        />
+<BottomNav
+  onBack={onBack}
+  onNext={handleNext}
+  nextLabel="Continue"
+  loading={loading} // Pass the loading state
+/>
       </div>
     </>
   );

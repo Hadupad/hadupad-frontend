@@ -39,7 +39,12 @@ export default function AddressInput({ onNext, onBack, handleSaveExit }) {
           </div>
         </div>
       </div>
-      <BottomNav onBack={onBack} onNext={onNext} nextLabel="Continue" />
+    <BottomNav
+  onBack={onBack}
+  onNext={handleNext}
+  nextLabel="Continue"
+  loading={loading} // Pass the loading state
+/>
     </div>
     </>
   );

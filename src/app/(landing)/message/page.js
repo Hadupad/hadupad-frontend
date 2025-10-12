@@ -1,9 +1,8 @@
 'use client';
 
 import React from "react";
-import Sidebar from "../../../../components/messages/Sidebar";
-import MainBar from "../../../../components/messages/Mainbar";
-import SubHeader from "../../../../components/messages/SubHeader";
+// import MainBar from "../../../../components/messages/Mainbar";
+// import SubHeader from "../../../../components/messages/SubHeader";
 import { useChat } from "../../../../hooks/useChat";
 
 export default function App() {
@@ -17,7 +16,7 @@ export default function App() {
   return (
     <div className="flex flex-col h-screen">
       {/* 🔹 SubHeader always on top below Navbar */}
-      <SubHeader selectedChannel={selectedChannel}/>
+      {/* <SubHeader selectedChannel={selectedChannel}/> */}
 
       {/* 🔹 Two-column layout */}
       <div className="flex flex-1 overflow-hidden">
@@ -26,7 +25,7 @@ export default function App() {
           selectedChannel={selectedChannel}
           setSelectedChannel={setSelectedChannel}
         /> */}
-        <MainBar selectedChannel={selectedChannel} />
+        {/* <MainBar selectedChannel={selectedChannel} /> */}
       </div>
 
      

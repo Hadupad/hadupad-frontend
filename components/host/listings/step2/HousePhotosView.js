@@ -16,6 +16,7 @@ export default function HousePhotosView({ onNext, onBack, photos = [], handleSav
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6">
             {photos.map((src, index) => (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={index}
                 src={src}
@@ -26,7 +27,12 @@ export default function HousePhotosView({ onNext, onBack, photos = [], handleSav
           </div>
         )}
 
-        <BottomNav onBack={onBack} onNext={onNext} nextLabel="Continue" />
+     <BottomNav
+  onBack={onBack}
+  onNext={handleNext}
+  nextLabel="Continue"
+  loading={loading} // Pass the loading state
+/>
       </div>
     </>
   );
