@@ -1,45 +1,79 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { FaRegCalendarCheck } from "react-icons/fa";
-import { BiSolidZap } from "react-icons/bi";
-import BottomNav from "../BottomNav";
-
-import SaveExitButton from "../SaveExitButton";
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { FaRegCalendarCheck } from 'react-icons/fa';
+import { BiSolidZap } from 'react-icons/bi';
+import BottomNav from '../BottomNav';
+import SaveExitButton from '../SaveExitButton';
+import { updateBookingSettingsAsync } from '@/redux/slices/bookingSettingsSlice';
 
 export default function BookingSetting({ onNext, onBack, handleSaveExit }) {
-  const [selected, setSelected] = useState("An entire place");
+  const { property } = useSelector((state) => state.property);
+  const { bookingType: savedBookingType, loading, error } = useSelector((state) => state.bookingSettings);
+  const [selected, setSelected] = useState(savedBookingType === 'approve' ? 'Approve Bookings' : savedBookingType === 'instant' ? 'Instant Booking' : 'Approve Bookings');
 
   const options = [
     {
-      label: "Approve Bookings",
-      description:
-        "Here, you can review reservation request and either accept or decline.",
+      label: 'Approve Bookings',
+      value: 'approve',
+      description: 'Review reservation requests and either accept or decline.',
       icon: <FaRegCalendarCheck size={32} />,
     },
     {
-      label: "Instant Booking",
-      description: "Let guests book automatically",
+      label: 'Instant Booking',
+      value: 'instant',
+      description: 'Let guests book automatically.',
       icon: <BiSolidZap size={32} />,
     },
   ];
 
+  const handleNext = () => {
+    if (!property?.id) {
+      toast.error('Property ID not found. Please start over.');
+      return;
+    }
+
+    const selectedOption = options.find((option) => option.label === selected);
+    if (!selectedOption) {
+      toast.error('Please select a booking setting.');
+      return;
+    }
+
+    dispatch(updateBookingSettingsAsync({
+      propertyId: property.id,
+      data: { bookingType: selectedOption.value },
+    }))
+      .unwrap()
+      .then(() => {
+        toast.success('Booking settings updated successfully');
+        onNext();
+      })
+      .catch((err) => {
+        const errorMessage = typeof err === 'string' ? err : err.message || 'Failed to update booking settings';
+        toast.error(errorMessage);
+      });
+  };
+
+  const dispatch = useDispatch();
+
   return (
     <>
-      <SaveExitButton onClick={handleSaveExit} />
+      {/* <SaveExitButton onClick={handleSaveExit} /> */}
 
       <div className="w-full flex flex-col gap-6 items-center">
         <h2 className="text-2xl font-bold mt-1 mb-2">
           Pick your booking setting
         </h2>
-
+        {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
         <div className="flex flex-col gap-4 mb-12">
           {options.map((option) => (
             <button
               key={option.label}
               onClick={() => setSelected(option.label)}
               className={`w-[644px] border rounded-xl px-6 py-4 text-left flex justify-between items-center ${
-                selected === option.label ? "border-black" : "border-gray-300"
+                selected === option.label ? 'border-black' : 'border-gray-300'
               }`}
             >
               <div className="flex flex-col justify-center">
@@ -53,7 +87,12 @@ export default function BookingSetting({ onNext, onBack, handleSaveExit }) {
           ))}
         </div>
 
-        <BottomNav onBack={onBack} onNext={onNext} nextLabel="Continue" />
+<BottomNav
+  onBack={onBack}
+  onNext={handleNext}
+  nextLabel="Continue"
+  loading={loading} // Pass the loading state
+/>
       </div>
     </>
   );

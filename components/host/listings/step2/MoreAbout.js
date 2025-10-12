@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { FaWifi, FaTv, FaCar } from "react-icons/fa";
@@ -8,11 +8,18 @@ import { GiWashingMachine, GiOfficeChair } from "react-icons/gi";
 import { TbSwimming } from "react-icons/tb";
 import BottomNav from "../BottomNav";
 import SaveExitButton from "../SaveExitButton";
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { updateAmenitiesAsync } from '@/redux/slices/amenitiesSlice';
 
 export default function MoreAbout({ onNext, onBack, handleSaveExit }) {
-  const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const { property } = useSelector((state) => state.property);
+  const { amenities, loading, error } = useSelector((state) => state.amenities);
+  const [selectedAmenities, setSelectedAmenities] = useState(amenities || []);
 
-  const amenities = [
+  const dispatch = useDispatch();
+
+  const amenitiesList = [
     { name: "Wifi", icon: <FaWifi size={24} /> },
     { name: "TV", icon: <FaTv size={24} /> },
     { name: "Kitchen", icon: <MdKitchen size={24} /> },
@@ -32,9 +39,29 @@ export default function MoreAbout({ onNext, onBack, handleSaveExit }) {
     );
   };
 
+  const handleNext = () => {
+    if (!property?.id) {
+      toast.error('Property ID not found. Please start over.');
+      return;
+    }
+
+    dispatch(updateAmenitiesAsync({
+      propertyId: property.id,
+      data: { amenities: selectedAmenities, moveToNextStep: true },
+    }))
+      .unwrap()
+      .then(() => {
+        toast.success('Amenities updated successfully');
+        onNext();
+      })
+      .catch((err) => {
+        toast.error(err || 'Failed to update amenities');
+      });
+  };
+
   return (
     <>
-      <SaveExitButton onClick={handleSaveExit} />
+      {/* <SaveExitButton onClick={handleSaveExit} /> */}
       
       <div className="w-full flex flex-col items-center">
         <h2 className="text-2xl font-bold mt-1 mb-2">
@@ -42,7 +69,7 @@ export default function MoreAbout({ onNext, onBack, handleSaveExit }) {
         </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12 w-full max-w-2xl">
-          {amenities.map((amenity) => (
+          {amenitiesList.map((amenity) => (
             <button
               key={amenity.name}
               onClick={() => toggleAmenity(amenity.name)}
@@ -58,7 +85,12 @@ export default function MoreAbout({ onNext, onBack, handleSaveExit }) {
           ))}
         </div>
 
-        <BottomNav onBack={onBack} onNext={onNext} nextLabel="Continue" />
+      <BottomNav
+  onBack={onBack}
+  onNext={handleNext}
+  nextLabel="Continue"
+  loading={loading} // Pass the loading state
+/>
       </div>
     </>
   );

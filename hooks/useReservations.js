@@ -1,46 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from "react";
+import { fetchUserBookings } from "../src/services/apis/adminBookingApi";
 
 export default function useReservations() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    setTimeout(() => {
-      const data = [
-        {
-          id: 1,
-          listingName: 'Home away from home',
-          guestName: 'John Doe',
-          price: 350000,
-          nights: 3,
-          date: '2025-08-10',
-          status: 'upcoming',
-        },
-        {
-          id: 2,
-          listingName: 'Lakeside Retreat',
-          guestName: 'Jane Smith',
-          price: 280000,
-          nights: 2,
-          date: '2025-07-15',
-          status: 'completed',
-        },
-        {
-          id: 3,
-          listingName: 'City Apartment',
-          guestName: 'Bob Brown',
-          price: 500000,
-          nights: 5,
-          date: '2025-07-01',
-          status: 'cancelled',
-        },
-      ];
-
-    //   const data = [];
-      setReservations(data);
+  const fetchReservations = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await fetchUserBookings();
+      setReservations(response.bookings || []);
+      setError(null);
+    } catch (error) {
+      console.error("Failed to fetch reservations:", error.message);
+      setError(error.message);
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   }, []);
 
-  return { reservations, loading };
+  useEffect(() => {
+    fetchReservations();
+  }, [fetchReservations]);
+
+  return { reservations, loading, error, refetch: fetchReservations };
 }

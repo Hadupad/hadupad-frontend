@@ -14,7 +14,7 @@ export default function Description({ onNext, onBack, handleSaveExit }) {
 
   return (
     <>
-      <SaveExitButton onClick={handleSaveExit} />
+      {/* <SaveExitButton onClick={handleSaveExit} /> */}
     
     <div className="flex flex-col items-center w-full">
       <h2 className="text-2xl font-bold mt-1 mb-2">
@@ -38,7 +38,12 @@ What makes your home special? Share it!
           </span>
         </div>
       </div>
-      <BottomNav onBack={onBack} onNext={onNext} nextLabel="Continue" />
+      <BottomNav
+  onBack={onBack}
+  onNext={handleNext}
+  nextLabel="Continue"
+  loading={loading} // Pass the loading state
+/>
     </div>
     </>
   );

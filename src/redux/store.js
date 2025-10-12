@@ -11,6 +11,23 @@ import hostVerificationReducer from './slices/hostVerificationSlice';
 import profileReducer from './slices/profileSlice';
 import forgotPasswordReducer from './slices/forgotPasswordSlice';
 import resetPasswordReducer from './slices/resetPasswordSlice';
+import propertyReducer from './slices/propertySlice';
+import placePrivacyReducer from './slices/placePrivacySlice';
+import addressReducer from './slices/addressSlice';
+import basicDetailsReducer from './slices/basicDetailsSlice';
+import amenitiesReducer from './slices/amenitiesSlice';
+import photosReducer from './slices/photosSlice';
+import titleReducer from './slices/titleSlice';
+import bookingSettingsReducer from './slices/bookingSettingsSlice';
+import pricingReducer from './slices/pricingSlice';
+import propertyDetailsReducer from './slices/propertyDetailsSlice';
+import publishReducer from './slices/publishSlice';
+import hostPropertyReducer from './slices/hostPropertySlice';
+import publicPropertyReducer from './slices/publicPropertySlice';
+import wishlistReducer from './slices/wishlistSlice';
+import searchReducer from './slices/searchSlice';
+import bookingReducer from './slices/bookingSlice';
+import userBookingsReducer from './slices/userBookingsSlice';
 
 const rootReducer = combineReducers({
   login: loginReducer,
@@ -22,13 +39,52 @@ const rootReducer = combineReducers({
   hostVerification: hostVerificationReducer,
   profile: profileReducer,
   forgotPassword: forgotPasswordReducer,
-  resetPassword: resetPasswordReducer 
+  resetPassword: resetPasswordReducer,
+  property: propertyReducer,
+  placePrivacy: placePrivacyReducer,
+  address: addressReducer,
+  basicDetails: basicDetailsReducer,
+  amenities: amenitiesReducer,
+  photos: photosReducer,
+  title: titleReducer,
+  bookingSettings: bookingSettingsReducer,
+  pricing: pricingReducer,
+  propertyDetails: propertyDetailsReducer,
+  publish: publishReducer,
+  properties: hostPropertyReducer,
+  publicProperty: publicPropertyReducer,
+  wishlist: wishlistReducer,
+  search: searchReducer,
+  booking: bookingReducer,
+  userBookings: userBookingsReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['login', 'initiate', 'guestSignup', 'profilePhoto', 'hostVerification', 'profile'],
+  whitelist: [
+    'login',
+    'initiate',
+    'guestSignup',
+    'profilePhoto',
+    'hostVerification',
+    'profile',
+    'property',
+    'placePrivacy',
+    'address',
+    'basicDetails',
+    'amenities',
+    'photos',
+    'title',
+    'bookingSettings',
+    'pricing',
+    'propertyDetails',
+    'publish',
+    'wishlist',
+    'search',
+    'booking',
+    'userBookings',
+  ],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -11,7 +11,7 @@ import SaveExitButton from "../SaveExitButton";
 export default function MapWithAddress({ onNext, onBack, handleSaveExit }) {
   return (
     <>
-          <SaveExitButton onClick={handleSaveExit} />
+          {/* <SaveExitButton onClick={handleSaveExit} /> */}
 
     <div className="w-full max-w-xl mx-auto space-y-4 text-center">
 

@@ -15,7 +15,7 @@ export default function AccountCard() {
   };
 
   return (
-<div className="relative text-white p-4 rounded-[28.81px] w-[356px] h-[200px] overflow-hidden flex flex-col justify-between bg-black">
+<div className="relative text-white p-4 rounded-[28.81px] w-full h-[200px] overflow-hidden flex flex-col justify-between bg-black">
       {/* Background Image */}
       <Image
         src="/images/host/wallet/card-background.png"
