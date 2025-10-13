@@ -4,7 +4,7 @@ import PropertyDetailClient from '../PropertyDetailClient';
 export async function generateStaticParams() {
   try {
     const properties = await fetchPublicPropertiesApi();
-    console.log('Properties:', properties); 
+    console.log('Properties:', properties); // Debug
     return properties
       .filter((property) => property.id !== undefined && property.id !== null)
       .map((property) => ({
