@@ -224,7 +224,7 @@ export default function InitiateAuthForm({ onContinue, userType }) {
 
       // Display OTP in toast
       toast.success(`OTP sent successfully! Your OTP is: ${result.otp || '2507'}`, {
-        position: 'top-right',
+        position: 'top-left',
         autoClose: 60000, // 60 seconds as per previous request
         hideProgressBar: false,
         closeOnClick: true,
@@ -238,7 +238,7 @@ export default function InitiateAuthForm({ onContinue, userType }) {
     } catch (err) {
       const errorMessage = err.message || 'Failed to initiate registration. Please try again.';
       toast.error(errorMessage, {
-        position: 'top-right',
+        position: 'top-left',
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
