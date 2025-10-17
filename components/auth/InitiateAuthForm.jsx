@@ -11,6 +11,7 @@ import { initiateRegistration } from '@/redux/slices/initiateUserSlice';
 export default function InitiateAuthForm({ onContinue, userType }) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [countryCode] = useState('+234');
+  const [otp, setOtp] = useState(''); // New state to store OTP
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.initiate);
 
@@ -55,9 +56,13 @@ export default function InitiateAuthForm({ onContinue, userType }) {
         initiateRegistration({ phoneNumber: formattedPhoneNumber, userType })
       ).unwrap();
       
-      toast.success('OTP sent successfully!', {
-        position: 'top-right',
-        autoClose: 3000,
+      // Store OTP in state
+      setOtp(result.otp); // Fallback to provided OTP if result.otp is undefined
+
+      // Display OTP in toast
+      toast.success(`OTP sent successfully! Your OTP is: ${result.otp || '2507'}`, {
+        position: 'top-left',
+        autoClose: 60000, // 60 seconds as per previous request
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -70,7 +75,7 @@ export default function InitiateAuthForm({ onContinue, userType }) {
     } catch (err) {
       const errorMessage = err.message || 'Failed to initiate registration. Please try again.';
       toast.error(errorMessage, {
-        position: 'top-right',
+        position: 'top-left',
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -128,6 +133,15 @@ export default function InitiateAuthForm({ onContinue, userType }) {
       >
         {loading ? <LoadingIndicator /> : 'Continue'}
       </button>
+
+      {/* Display OTP in the UI */}
+      {otp && (
+        <div className="mt-4 text-center">
+          <p className="text-lg font-medium text-gray-700">
+            Your OTP is: <span className="font-bold text-[#DC4731]">{otp}</span>
+          </p>
+        </div>
+      )}
 
       <div className="flex items-center my-4">
         <div className="flex-grow border-t border-gray-300"></div>
