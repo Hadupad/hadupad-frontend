@@ -5,7 +5,7 @@ import { Check, CheckCheck } from "lucide-react";
 export default function MessageBubble({ message, showAvatar, showTimestamp }) {
   const getStatusIcon = () => {
     if (!message.isOwn) return null;
-    
+
     switch (message.status) {
       case "sent":
         return <Check className="w-4 h-4 text-gray-400" />;
@@ -43,27 +43,20 @@ export default function MessageBubble({ message, showAvatar, showTimestamp }) {
     <div className={`flex mb-4 ${message.isOwn ? "justify-end" : "justify-start"}`}>
       <div className={`flex max-w-xs lg:max-w-md ${message.isOwn ? "flex-row-reverse" : "flex-row"}`}>
         <div>
-           {/* Message Bubble */}
-        <div
-          className={`px-4 py-2 rounded-2xl ${
-            message.isOwn
-              ? "bg-[#FFEED8] text-gray-900 rounded-br-md"
-              : "bg-[#F4F4F4] text-gray-900 border border-gray-200 rounded-bl-md"
-          }`}
-        >
-         
-          
-          {/* Message Content */}
-          {renderMessageContent()}
-          
-          {/* Timestamp and Status */}
-        </div>
+          <div
+            className={`px-4 py-2 rounded-2xl ${
+              message.isOwn
+                ? "bg-[#FFEED8] text-gray-900 rounded-br-md"
+                : "bg-[#F4F4F4] text-gray-900 border border-gray-200 rounded-bl-md"
+            }`}
+          >
+            {renderMessageContent()}
+          </div>
           <div className="flex items-center justify-end mt-1 space-x-1 text-gray-500">
             {getStatusIcon()}
             <span className="text-xs">{message.timestamp}</span>
           </div>
         </div>
-        {/* Spacer for own messages */}
         {showAvatar && message.isOwn && (
           <div className="flex-shrink-0 w-10"></div>
         )}

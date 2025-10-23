@@ -30,10 +30,10 @@ export default function FeaturedProperties() {
     }
   }, [dispatch, results]);
 
-  // Limit search results to 3 properties
+  // Limit to 3 properties
   const properties = results.properties && results.properties.length > 0 
-    ? results.properties.slice(0, 1) 
-    : publicProperties;
+    ? results.properties.slice(0, 3) 
+    : publicProperties.slice(0, 3);
 
   const loading = searchLoading || publicLoading;
   const error = searchError || publicError;
@@ -71,7 +71,7 @@ export default function FeaturedProperties() {
       {loading ? (
         isMobile ? (
           <Slider {...mobileSettings} className="mx-2">
-            {Array(1).fill().map((_, index) => (
+            {Array(3).fill().map((_, index) => (
               <SkeletonPropertyCard key={index} />
             ))}
           </Slider>

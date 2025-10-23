@@ -1,4 +1,3 @@
-// components/BookingFilter.jsx
 const BookingFilter = ({ filter, setFilter, search, setSearch }) => {
     const filters = ['All', 'Pending', 'Paid', 'Cancelled', 'Refunds'];
   

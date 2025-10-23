@@ -9,28 +9,34 @@ export const useBookings = () => {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    // Fetch bookings when the hook is used
     dispatch(fetchUserBookingsAsync());
   }, [dispatch]);
 
-  // Map API bookings to match the expected structure for the UI
   const formattedBookings = bookings.map((booking) => ({
     id: booking.id,
-    image: booking.property.photos[0] || '/images/properties/default.png', // Use first photo or fallback
+    image: booking.property.photos[0] || '/images/properties/default.png',
     title: booking.property.title,
     location: `${booking.property.city}, ${booking.property.state}`,
     price: new Intl.NumberFormat('en-NG', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(parseFloat(booking.totalAmount)), // Format price with commas
+    }).format(parseFloat(booking.totalAmount)),
     date: new Date(booking.checkInDate).toLocaleDateString('en-US', {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
-    }), // Format date
+    }),
     code: booking.bookingCode,
-    status: booking.status.charAt(0).toUpperCase() + booking.status.slice(1), // Capitalize status
-    propertyId: booking.property.id, // Add propertyId for redirect
+    status: booking.paymentStatus === 'paid' ? 'Paid' :
+            booking.paymentStatus === 'pending_gateway' ? 'Pending' :
+            booking.status.charAt(0).toUpperCase() + booking.status.slice(1),
+    propertyId: booking.property.id,
+    host: {
+      id: booking.host.id,
+      name: `${booking.host.firstName} ${booking.host.lastName}`,
+      profilePicture: booking.host.profilePicture || '/images/default-avatar.png',
+      email: booking.host.email,
+    },
   }));
 
   // Filter bookings based on status and search query
@@ -52,5 +58,6 @@ export const useBookings = () => {
     setSearch,
     loading,
     error,
+    refetch: () => dispatch(fetchUserBookingsAsync()), // Add refetch for use in BookingCard
   };
 };

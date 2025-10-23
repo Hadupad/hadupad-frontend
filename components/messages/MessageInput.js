@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Smile, Paperclip, Mic, Send, X, Image, File, Camera } from "lucide-react";
 
 export default function MessageInput({ onSendMessage }) {
@@ -10,12 +10,18 @@ export default function MessageInput({ onSendMessage }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef(null);
   const imageInputRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  // Auto-focus the textarea when the component mounts
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
 
   const handleSend = () => {
     if (message.trim()) {
       onSendMessage({
         text: message.trim(),
-        type: "text"
+        type: "text",
       });
       setMessage("");
     }
@@ -31,8 +37,7 @@ export default function MessageInput({ onSendMessage }) {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Handle file upload logic here
-      console.log("File selected:", file);
+      //console.log("File selected:", file);
       setShowAttachMenu(false);
     }
   };
@@ -46,7 +51,7 @@ export default function MessageInput({ onSendMessage }) {
           text: "",
           type: "image",
           imageUrl: e.target.result,
-          caption: ""
+          caption: "",
         });
       };
       reader.readAsDataURL(file);
@@ -56,13 +61,12 @@ export default function MessageInput({ onSendMessage }) {
 
   const toggleRecording = () => {
     setIsRecording(!isRecording);
-    // Handle voice recording logic here
   };
 
   const emojis = ["😀", "😂", "😍", "🥰", "😊", "😎", "🤔", "😢", "😡", "👍", "👎", "❤️", "🔥", "💯", "🎉", "👏"];
 
   const addEmoji = (emoji) => {
-    setMessage(prev => prev + emoji);
+    setMessage((prev) => prev + emoji);
     setShowEmojiPicker(false);
   };
 
@@ -128,6 +132,7 @@ export default function MessageInput({ onSendMessage }) {
         {/* Message Input */}
         <div className="flex-1 relative">
           <textarea
+            ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
@@ -136,14 +141,14 @@ export default function MessageInput({ onSendMessage }) {
             className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-full resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent max-h-32 overflow-y-auto"
             style={{
               minHeight: "40px",
-              height: "auto"
+              height: "auto",
             }}
             onInput={(e) => {
               e.target.style.height = "auto";
               e.target.style.height = Math.min(e.target.scrollHeight, 128) + "px";
             }}
           />
-          
+
           {/* Emoji Button */}
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}

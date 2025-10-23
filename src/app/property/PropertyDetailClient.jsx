@@ -19,7 +19,7 @@ import Footer from '../../../components/Footer';
 
 export default function PropertyDetailClient({ propertyId }) {
   const dispatch = useDispatch();
-  const { currentProperty, loading, error } = useSelector((state) => state.publicProperty || {});
+  const { currentProperty, loading } = useSelector((state) => state.publicProperty || {});
   const [activeSection, setActiveSection] = useState('details');
   const [expandedSections, setExpandedSections] = useState({});
 
@@ -27,14 +27,14 @@ export default function PropertyDetailClient({ propertyId }) {
     if (propertyId) {
       dispatch(fetchPublicPropertyById(propertyId));
     }
+    // Reset state on component unmount
+    return () => {
+      dispatch(resetPublicPropertyState());
+    };
   }, [dispatch, propertyId]);
 
-  if (error) return <p className="text-center py-8 text-red-600">Error fetching property: {error}. Please try again later.</p>;
-  if (!currentProperty || Object.keys(currentProperty).length === 0 && !loading) {
-    return <p className="text-center py-8">Property data is empty. Please try again later.</p>;
-  }
-
-  if (loading) {
+  // Show skeleton loader while fetching data or if data is not yet available
+  if (loading || !currentProperty || Object.keys(currentProperty).length === 0) {
     return (
       <div className="min-h-screen bg-white">
         <Navbar />
@@ -123,6 +123,7 @@ export default function PropertyDetailClient({ propertyId }) {
     );
   }
 
+  // Property object construction
   const property = {
     id: currentProperty?.id || '',
     name: currentProperty?.name || 'Untitled Property',
@@ -190,7 +191,7 @@ export default function PropertyDetailClient({ propertyId }) {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Where you'll sleep</h3>
             <div className="bg-white border border-gray-200 rounded-lg p-4">
               <div className="md:hidden">
-                <div className="w-full h-48 bg-gray-100 rounded-lg mb-4">
+                <div className="w-full h-48 bg-gray-200 rounded-lg mb-4">
                   <img
                     src={property.images[0] || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop'}
                     alt="Bedroom"
@@ -203,7 +204,7 @@ export default function PropertyDetailClient({ propertyId }) {
                 </div>
               </div>
               <div className="hidden md:flex items-center gap-4">
-                <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
                   <img
                     src={property.images[0] || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=100&h=100&fit=crop'}
                     alt="Bedroom"
@@ -330,7 +331,6 @@ export default function PropertyDetailClient({ propertyId }) {
     },
     { id: 'location', title: 'Location', component: <LocationInfo property={property} /> },
     { id: 'amenities', title: 'Amenities', component: <AmenitiesInfo property={property} /> },
-    // { id: 'instructions', title: 'Instructions', component: <InstructionsInfo property={property} /> },
   ];
 
   const toggleSection = (sectionId) => {

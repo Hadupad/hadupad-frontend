@@ -49,9 +49,9 @@ const AccountPage = () => {
           {/* Account Header */}
           <div className="mt-20 mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Account</h1>
-            <p className="text-gray-600">
+            {/* <p className="text-gray-600">
               <span className="font-medium">Faith Oyeniyi</span>, faithoyeniyi21@gmail.com
-            </p>
+            </p> */}
           </div>
 
           {/* Tab Navigation */}
@@ -175,3 +175,5 @@ const AccountPage = () => {
 };
 
 export default AccountPage;
+
+

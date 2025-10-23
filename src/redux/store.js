@@ -1,3 +1,4 @@
+// store/index.js
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
@@ -28,6 +29,10 @@ import wishlistReducer from './slices/wishlistSlice';
 import searchReducer from './slices/searchSlice';
 import bookingReducer from './slices/bookingSlice';
 import userBookingsReducer from './slices/userBookingsSlice';
+import conversationReducer from './slices/conversationSlice'; 
+import sendMessageReducer from './slices/sendMessageSlice';
+import fetchConversationReducer from './slices/fetchConversationSlice';
+import paymentReducer from './slices/paymentSlice';
 
 const rootReducer = combineReducers({
   login: loginReducer,
@@ -57,6 +62,10 @@ const rootReducer = combineReducers({
   search: searchReducer,
   booking: bookingReducer,
   userBookings: userBookingsReducer,
+  fetchConversation: fetchConversationReducer,
+  sendMessage: sendMessageReducer,
+  conversations: conversationReducer,
+  payments: paymentReducer,
 });
 
 const persistConfig = {
@@ -84,6 +93,10 @@ const persistConfig = {
     'search',
     'booking',
     'userBookings',
+    'fetchConversation',
+    'sendMessage',
+    'conversations', 
+    'payments',
   ],
 };
 

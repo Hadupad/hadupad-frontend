@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchPublicPropertyById, resetPublicPropertyState } from '@/redux/slices/publicPropertySlice';
 import Navbar from '../../../../../components/NavBar';
 import PropertyHeader from '../../../../../components/property-detail/PropertyHeader';
-// import PropertyGallery from '../../../components/property-detail/PropertyGallery';
 import PropertyGallery from '../../../../../components/property-detail/PropertyGallery';
 import PropertySectionNav from '../../../../../components/property-detail/PropertySectionNav';
 import PropertyDetails from '../../../../../components/property-detail/PropertyDetails';
@@ -28,14 +27,32 @@ export default function PropertyDetailClient({ propertyId }) {
     if (propertyId) {
       dispatch(fetchPublicPropertyById(propertyId));
     }
+    // Reset state on component unmount
+    return () => {
+      dispatch(resetPublicPropertyState());
+    };
   }, [dispatch, propertyId]);
 
-  if (loading) return <p className="text-center py-8">Loading property...</p>;
-  if (error) return <p className="text-center py-8 text-red-600">Error fetching property: {error}. Please try again later.</p>;
-  if (!currentProperty || Object.keys(currentProperty).length === 0) {
-    return <p className="text-center py-8">Property data is empty. Please try again later.</p>;
+  // Show centered loading indicator while fetching data
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600"></div>
+      </div>
+    );
   }
 
+  // Show error if fetch fails
+  if (error) {
+    return <p className="text-center py-8 text-red-600">Error fetching property: {error}. Please try again later.</p>;
+  }
+
+  // Only check for empty data after loading is complete
+  if (!currentProperty || Object.keys(currentProperty).length === 0) {
+    return <p className="text-center py-8">No property data available. Please try again later.</p>;
+  }
+
+  // Property object construction
   const property = {
     id: currentProperty?.id || '',
     name: currentProperty?.name || 'Untitled Property',
@@ -243,7 +260,6 @@ export default function PropertyDetailClient({ propertyId }) {
     },
     { id: 'location', title: 'Location', component: <LocationInfo property={property} /> },
     { id: 'amenities', title: 'Amenities', component: <AmenitiesInfo property={property} /> },
-    // { id: 'instructions', title: 'Instructions', component: <InstructionsInfo property={property} /> },
   ];
 
   const toggleSection = (sectionId) => {

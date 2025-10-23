@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserProfile } from "@/redux/slices/profileSlice";
 import EditLegalNameModal from './modals/EditLegalNameModal';
 import EditEmailModal from './modals/EditEmailModal';
 import AddPhoneModal from './modals/AddPhoneModal';
@@ -9,9 +11,13 @@ import EditAddressModal from './modals/EditAddressModal';
 import AddEmergencyContactModal from './modals/AddEmergencyContactModal';
 
 export default function PersonalInfoSection() {
-  const [legalName, setLegalName] = useState('Faith Oyeniyi');
-  const [email, setEmail] = useState('faithoyeniyi21@gmail.com');
-  const [phoneNumbers, setPhoneNumbers] = useState([]);
+  const dispatch = useDispatch();
+  const { user, loading, error } = useSelector((state) => state.profile);
+
+  // Initialize state with user data or fallback values
+  const [legalName, setLegalName] = useState(user ? `${user.firstName} ${user.lastName}` : 'Faith Oyeniyi');
+  const [email, setEmail] = useState(user ? user.email : 'faithoyeniyi21@gmail.com');
+  const [phoneNumbers, setPhoneNumbers] = useState(user && user.phoneNumber ? [user.phoneNumber] : []);
   const [governmentId, setGovernmentId] = useState(null);
   const [address, setAddress] = useState(null);
   const [emergencyContacts, setEmergencyContacts] = useState([]);
@@ -23,6 +29,22 @@ export default function PersonalInfoSection() {
   const [showGovernmentIdModal, setShowGovernmentIdModal] = useState(false);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showEmergencyContactModal, setShowEmergencyContactModal] = useState(false);
+
+  // Fetch user profile when component mounts
+  useEffect(() => {
+    dispatch(getUserProfile());
+  }, [dispatch]);
+
+  // Update state when user data changes
+  useEffect(() => {
+    if (user) {
+      setLegalName(`${user.firstName} ${user.lastName}`);
+      setEmail(user.email);
+      if (user.phoneNumber) {
+        setPhoneNumbers([user.phoneNumber]);
+      }
+    }
+  }, [user]);
 
   const handleSaveLegalName = (name) => {
     setLegalName(name);
@@ -45,7 +67,7 @@ export default function PersonalInfoSection() {
   };
 
   const handleSaveEmergencyContact = (contact) => {
-    setEmergencyContact(contact);
+    setEmergencyContacts([...emergencyContacts, contact]);
   };
 
   const formatAddress = (addr) => {
@@ -63,14 +85,50 @@ export default function PersonalInfoSection() {
     return `${contact.name} (${contact.relationship}) - ${contact.phoneNumber}`;
   };
 
+  // Skeleton Loader Component
+  const SkeletonLoader = () => (
+    <div className="space-y-8">
+      {/* Mobile Profile Header Skeleton */}
+      <div className="md:hidden text-center mb-8">
+        <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gray-200 animate-pulse"></div>
+        <div className="h-6 w-40 mx-auto bg-gray-200 rounded animate-pulse mb-1"></div>
+        <div className="flex items-center justify-center">
+          <div className="w-4 h-4 bg-gray-200 rounded-full animate-pulse mr-1"></div>
+          <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+        </div>
+      </div>
+
+      {/* Info Section Skeleton */}
+      <div className="space-y-6">
+        {[...Array(6)].map((_, index) => (
+          <div key={index} className="flex justify-between items-start py-4 border-b border-gray-200">
+            <div className="space-y-2">
+              <div className="h-5 w-32 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-4 w-48 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+            <div className="h-4 w-12 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return <SkeletonLoader />;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className="space-y-8">
       {/* Mobile Profile Header */}
       <div className="md:hidden text-center mb-8">
         <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden">
           <img 
-            src="/images/hero/profile-placeholder.jpg" 
-            alt="Faith Oyeniyi"
+            src={user?.profilePicture || "/images/hero/profile-placeholder.jpg"} 
+            alt={legalName}
             className="w-full h-full object-cover"
             onError={(e) => {
               e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='40' fill='%23f3f4f6'/%3E%3Cpath d='M40 36c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zm0 4c6.6 0 12 5.4 12 12v8H28v-8c0-6.6 5.4-12 12-12z' fill='%236b7280'/%3E%3C/svg%3E";
@@ -171,7 +229,12 @@ export default function PersonalInfoSection() {
               {emergencyContacts.length > 0 ? formatEmergencyContact(emergencyContacts[0]) : 'Not provided'}
             </p>
           </div>
-          <button onClick={() => setShowEmergencyContactModal(true)} className="text-sm text-red-600 hover:underline">Add</button>
+          <button 
+            onClick={() => setShowEmergencyContactModal(true)} 
+            className="text-sm text-red-600 hover:underline"
+          >
+            Add
+          </button>
         </div>
       </div>
 
