@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -16,13 +15,30 @@ export default function ChatWindow({ conversation, onBack, showBackButton, userT
   const [isLoading, setIsLoading] = useState(true);
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-    if (conversation) {
-      //console.log('Conversation Prop:', conversation); // Debug log
-      const formattedMessages = (conversation.messages || [])
-        .map((msg) => ({
+useEffect(() => {
+  if (conversation) {
+    // console.log('ChatWindow - Full conversation:', conversation);
+    // console.log('ChatWindow - Messages array:', conversation.messages);
+    
+    // Safely get messages array
+    const messagesArray = Array.isArray(conversation.messages) ? conversation.messages : [];
+    
+    // console.log('ChatWindow - Messages count:', messagesArray.length);
+    
+    const formattedMessages = messagesArray
+      .map((msg) => {
+        const messageText = msg.decryptedContent || msg.content || msg.message || msg.text || '';
+        
+        // console.log('Processing message:', {
+        //   id: msg.id,
+        //   content: messageText,
+        //   senderId: msg.senderId,
+        //   userId: user?.id
+        // });
+
+        return {
           id: msg.id,
-          text: msg.decryptedContent,
+          text: messageText,
           timestamp: new Date(msg.createdAt).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -31,18 +47,21 @@ export default function ChatWindow({ conversation, onBack, showBackButton, userT
           senderName: msg.sender?.firstName || (msg.senderId === user?.id ? "You" : "Unknown"),
           isOwn: msg.senderId === user?.id,
           status: msg.readAt ? "read" : "sent",
-          type: "text",
+          type: msg.type || "text",
           createdAt: msg.createdAt,
-        }))
-        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      //console.log('Formatted Messages:', formattedMessages); // Debug log
-      setMessages(formattedMessages);
-      setIsLoading(false);
-    } else {
-      //console.log('No conversation provided'); // Debug log
-      setIsLoading(false);
-    }
-  }, [conversation, user]);
+        };
+      })
+      .filter(msg => msg.text)
+      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    
+    // console.log('ChatWindow - Formatted messages:', formattedMessages);
+    setMessages(formattedMessages);
+    setIsLoading(false);
+  } else {
+    console.log('ChatWindow - No conversation');
+    setIsLoading(false);
+  }
+}, [conversation, user]);
 
   useEffect(() => {
     scrollToBottom();
@@ -68,7 +87,6 @@ export default function ChatWindow({ conversation, onBack, showBackButton, userT
       createdAt: new Date().toISOString(),
     };
 
-    //console.log('Adding optimistic message:', optimisticMessage); // Debug log
     setMessages((prev) => [...prev, optimisticMessage]);
 
     try {
@@ -85,7 +103,6 @@ export default function ChatWindow({ conversation, onBack, showBackButton, userT
         })
       ).unwrap();
 
-      //console.log('Send message result:', result); 
       const serverMessage = {
         ...optimisticMessage,
         id: result.id || tempId,
@@ -98,7 +115,6 @@ export default function ChatWindow({ conversation, onBack, showBackButton, userT
       );
 
       if (conversation.id) {
-        //console.log('Fetching updated conversation:', conversation.id); 
         await dispatch(fetchPreviousConversationAsync({ conversationId: conversation.id }));
       }
     } catch (error) {
@@ -164,6 +180,7 @@ export default function ChatWindow({ conversation, onBack, showBackButton, userT
 
   return (
     <div className="flex flex-col h-full bg-white">
+      {/* Header */}
       <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           {showBackButton && (
@@ -176,24 +193,33 @@ export default function ChatWindow({ conversation, onBack, showBackButton, userT
           )}
           <div className="relative">
             <img
-              src={conversation.otherParticipants?.[0]?.profilePicture || "/default-avatar.png"}
+              src={conversation.otherParticipants?.[0]?.profilePicture || "https://i.pravatar.cc/40"}
               alt={conversation.otherParticipants?.[0]?.firstName || "User"}
               className="w-10 h-10 rounded-full object-cover"
             />
           </div>
           <div>
             <h2 className="font-semibold text-gray-900">
-              {conversation.otherParticipants?.[0]?.firstName || "Unknown"}
+              {conversation.otherParticipants?.[0]
+                ? `${conversation.otherParticipants[0].firstName} ${conversation.otherParticipants[0].lastName}`
+                : "Unknown User"}
             </h2>
-            <p className="text-sm text-gray-500">Last seen recently</p>
+            <p className="text-sm text-gray-500">
+              {conversation.Property?.title || "No property"}
+            </p>
           </div>
         </div>
       </div>
+
+      {/* Messages */}
       <div className="flex-1 overflow-y-auto bg-gray-50 bg-opacity-30">
         <div className="px-4 py-2">
           {messages.length === 0 ? (
-            <div className="flex items-center justify-center h-32 text-gray-500">
-              No messages yet. Start the conversation!
+            <div className="flex items-center justify-center h-full text-gray-500">
+              <div className="text-center">
+                <p className="text-lg font-medium mb-2">No messages yet</p>
+                <p className="text-sm">Start the conversation!</p>
+              </div>
             </div>
           ) : (
             messages.map((message, index) => (
@@ -216,6 +242,8 @@ export default function ChatWindow({ conversation, onBack, showBackButton, userT
           <div ref={messagesEndRef} />
         </div>
       </div>
+
+      {/* Input */}
       <MessageInput onSendMessage={handleSendMessage} />
     </div>
   );

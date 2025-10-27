@@ -1,4 +1,5 @@
 
+// conversationApi.js
 const CONVERSATION_URL = process.env.NEXT_PUBLIC_CONVERSATION_API_URL;
 
 export const fetchConversations = async () => {
@@ -15,9 +16,22 @@ export const fetchConversations = async () => {
   });
 
   const responseData = await res.json();
+  // console.log("Fetched Conversations Data:", responseData);
 
   if (!res.ok) {
     throw new Error(responseData.error || responseData.message || 'Failed to fetch conversations');
+  }
+
+  // Normalize the response - check if it's already an array or wrapped in data
+  if (Array.isArray(responseData)) {
+    return {
+      data: {
+        conversations: responseData,
+        totalCount: responseData.length,
+        totalPages: 1,
+        currentPage: 1,
+      }
+    };
   }
 
   return responseData;

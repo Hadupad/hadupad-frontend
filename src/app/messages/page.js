@@ -1,8 +1,6 @@
-
-
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchPreviousConversationAsync, clearFetchConversationState } from "@/redux/slices/fetchConversationSlice";
 import ConversationSidebar from "../../../components/messages/ConversationSidebar";
@@ -14,11 +12,13 @@ export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
+  const [hasAutoSelected, setHasAutoSelected] = useState(false);
+  
   const { user } = useSelector((state) => state.profile);
   const { conversations } = useSelector((state) => state.conversations);
   const { previousConversation, loading, error } = useSelector((state) => state.fetchConversation);
 
-  // Detect mobile screen size and adjust sidebar visibility
+  // Detect mobile screen size
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth < 768;
@@ -33,63 +33,85 @@ export default function Messages() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Log conversations and user for debugging
-  useEffect(() => {
-    //console.log('Conversations from state:', conversations);
-    //console.log('User:', user);
-  }, [conversations, user]);
-
   // Update selectedConversation when previousConversation is fetched
   useEffect(() => {
-    //console.log('Previous Conversation State:', previousConversation);
-    if (previousConversation && previousConversation.conversation) {
-      const conversationWithMessages = {
-        ...previousConversation.conversation,
-        messages: [...(previousConversation.messages || [])].sort(
-          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-        ),
-      };
-      setSelectedConversation(conversationWithMessages);
-      //console.log('Set Selected Conversation:', conversationWithMessages);
-      if (isMobile) {
-        setShowSidebar(false);
+    // console.log('previousConversation updated:', previousConversation);
+    
+    if (previousConversation) {
+      // Check different possible response structures
+      let conversationData = null;
+      let messagesData = [];
+
+      // Structure 1: { conversation: {...}, messages: [...] }
+      if (previousConversation.conversation && previousConversation.messages) {
+        conversationData = previousConversation.conversation;
+        messagesData = previousConversation.messages;
+      }
+      // Structure 2: { data: { conversation: {...}, messages: [...] } }
+      else if (previousConversation.data?.conversation && previousConversation.data?.messages) {
+        conversationData = previousConversation.data.conversation;
+        messagesData = previousConversation.data.messages;
+      }
+      // Structure 3: Direct conversation object with messages array
+      else if (previousConversation.id && previousConversation.messages) {
+        conversationData = previousConversation;
+        messagesData = previousConversation.messages;
+      }
+
+      // console.log('Extracted conversationData:', conversationData);
+      // console.log('Extracted messagesData:', messagesData);
+
+      if (conversationData) {
+        const conversationWithMessages = {
+          ...conversationData,
+          messages: Array.isArray(messagesData) 
+            ? [...messagesData].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+            : [],
+        };
+        
+        // console.log('Setting conversation with messages:', conversationWithMessages);
+        setSelectedConversation(conversationWithMessages);
+        
+        if (isMobile) {
+          setShowSidebar(false);
+        }
       }
     }
   }, [previousConversation, isMobile]);
 
-  // Handle conversation selection from sidebar
-  const handleSelectConversation = (conversation) => {
-    //console.log('Conversation Selected from Sidebar:', conversation);
+  // Handle conversation selection
+  const handleSelectConversation = useCallback((conversation) => {
+    // console.log('Conversation selected:', conversation);
     if (conversation && conversation.id) {
-      setSelectedConversation(conversation);
-      //console.log('Fetching conversation details for ID:', conversation.id);
+      // Don't set selectedConversation here - wait for previousConversation
+      // console.log('Fetching conversation details for ID:', conversation.id);
       dispatch(fetchPreviousConversationAsync({ conversationId: conversation.id }));
     } else {
-      console.warn('No valid conversation ID found in selected conversation');
+      console.warn('No valid conversation ID');
     }
     if (isMobile) {
       setShowSidebar(false);
     }
-  };
+  }, [dispatch, isMobile]);
 
-  const handleBackToSidebar = () => {
+  const handleBackToSidebar = useCallback(() => {
     setShowSidebar(true);
     if (isMobile) {
       setSelectedConversation(null);
     }
-  };
+  }, [isMobile]);
 
-  // Select first conversation if none is selected and conversations exist
+  // Auto-select first conversation
   useEffect(() => {
-    if (!selectedConversation && conversations.length > 0) {
+    if (!hasAutoSelected && !selectedConversation && conversations.length > 0) {
       const firstConversation = conversations[0];
-      //console.log('Selecting first available conversation:', firstConversation);
+      // console.log('Auto-selecting first conversation:', firstConversation.id);
       dispatch(fetchPreviousConversationAsync({ conversationId: firstConversation.id }));
+      setHasAutoSelected(true);
     } else if (!selectedConversation && conversations.length === 0) {
-      //console.log('No conversations available, showing WelcomeScreen');
       dispatch(clearFetchConversationState());
     }
-  }, [dispatch, selectedConversation, conversations]);
+  }, [conversations.length, hasAutoSelected, selectedConversation, dispatch]);
 
   // Clear error state
   useEffect(() => {
@@ -99,20 +121,35 @@ export default function Messages() {
     }
   }, [error, dispatch]);
 
-  // Handle loading and error states
-  //console.log('Loading State:', loading, 'Error State:', error);
-  if (loading) {
-    return <div className="h-full flex items-center justify-center bg-gray-100">Loading conversation...</div>;
-  }
-
-  if (error) {
+  // Handle loading state
+  if (loading && !selectedConversation) {
     return (
       <div className="h-full flex items-center justify-center bg-gray-100">
-        {error === 'You are not a participant in this conversation' ? (
-          <p>You don't have access to this conversation.</p>
-        ) : (
-          <p>Error: {error}</p>
-        )}
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading conversation...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle error state
+  if (error && !selectedConversation) {
+    return (
+      <div className="h-full flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">
+            {error === 'You are not a participant in this conversation' 
+              ? "You don't have access to this conversation." 
+              : `Error: ${error}`}
+          </p>
+          <button
+            onClick={() => dispatch(clearFetchConversationState())}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Back to Messages
+          </button>
+        </div>
       </div>
     );
   }

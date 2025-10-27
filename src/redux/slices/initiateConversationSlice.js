@@ -4,9 +4,10 @@ import { initiateConversation } from '../../services/apis/initiateConversationAp
 
 export const initiateConversationAsync = createAsyncThunk(
   'initiateConversation/initiate',
-  async ({ recipientId, propertyId }, { rejectWithValue }) => {
+  async ({ recipientId, propertyId, message }, { rejectWithValue }) => {
     try {
-      const response = await initiateConversation({ recipientId, propertyId });
+      const response = await initiateConversation({ recipientId, propertyId, message });
+      console.log('Thunk response:', response); // DEBUG
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -36,7 +37,7 @@ const initiateConversationSlice = createSlice({
       })
       .addCase(initiateConversationAsync.fulfilled, (state, action) => {
         state.loading = false;
-        state.conversation = action.payload.conversation;
+        state.conversation = action.payload;
       })
       .addCase(initiateConversationAsync.rejected, (state, action) => {
         state.loading = false;

@@ -42,14 +42,27 @@ const conversationSlice = createSlice({
       })
       .addCase(fetchConversationsAsync.fulfilled, (state, action) => {
         state.loading = false;
-        state.conversations = action.payload.conversations;
-        state.count = action.payload.count;
-        state.totalPages = action.payload.totalPages;
-        state.currentPage = action.payload.currentPage;
+        
+        // Handle both response formats: array or wrapped object
+        if (Array.isArray(action.payload)) {
+          state.conversations = action.payload;
+          state.count = action.payload.length;
+          state.totalPages = 1;
+          state.currentPage = 1;
+        } else if (action.payload.data) {
+          state.conversations = action.payload.data.conversations || [];
+          state.count = action.payload.data.totalCount || 0;
+          state.totalPages = action.payload.data.totalPages || 1;
+          state.currentPage = action.payload.data.currentPage || 1;
+        } else {
+          state.conversations = [];
+          state.count = 0;
+        }
       })
       .addCase(fetchConversationsAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.conversations = [];
       });
   },
 });

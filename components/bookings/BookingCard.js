@@ -63,51 +63,131 @@ const BookingCard = ({ booking }) => {
   };
 
   // Handle chat button click
-  const handleChatClick = async (e) => {
-    e.stopPropagation();
+  // const handleChatClick = async (e) => {
+  //   e.stopPropagation();
     
-    if (!hostId) {
-      toast.error('Host information not available.', {
-        position: 'top-right',
-        autoClose: 3000,
-      });
-      return;
-    }
+  //   if (!hostId) {
+  //     toast.error('Host information not available.', {
+  //       position: 'top-right',
+  //       autoClose: 3000,
+  //     });
+  //     return;
+  //   }
 
-    setIsChatLoading(true);
-    try {
-      const initialMessage = `Hello, I'm reaching out regarding my booking for "${title}" located at ${location}. Details: Price: ₦${parseFloat(price || 0).toLocaleString()} / night, Date: ${date}, Booking Code: ${code}, Status: ${status}. Can we discuss this booking?`;
+  //   setIsChatLoading(true);
+  //   try {
+  //     const initialMessage = `Hello, I'm reaching out regarding my booking for "${title}" located at ${location}. Details: Price: ₦${parseFloat(price || 0).toLocaleString()} / night, Date: ${date}, Booking Code: ${code}, Status: ${status}. Can we discuss this booking?`;
       
-      const response = await dispatch(
-        initiateConversationAsync({ 
-          recipientId: hostId, 
-          propertyId,
-          message: initialMessage
-        })
-      ).unwrap();
+  //     const response = await dispatch(
+  //       initiateConversationAsync({ 
+  //         recipientId: hostId, 
+  //         propertyId,
+  //         message: initialMessage
+  //       })
+  //     ).unwrap();
       
-      const conversationId = response.conversationId || response.id;
+  //     const conversationId = response.conversationId || response.id;
       
-      if (conversationId) {
-        await dispatch(fetchConversationsAsync());
-        router.push(`/messages?conversationId=${conversationId}`);
-        toast.success('Conversation started successfully!', {
-          position: 'top-right',
-          autoClose: 2000,
-        });
-      } else {
-        throw new Error('Conversation ID not found');
+  //     if (conversationId) {
+  //       await dispatch(fetchConversationsAsync());
+  //       router.push(`/messages?conversationId=${conversationId}`);
+  //       toast.success('Conversation started successfully!', {
+  //         position: 'top-right',
+  //         autoClose: 2000,
+  //       });
+  //     } else {
+  //       throw new Error('Conversation ID not found');
+  //     }
+  //   } catch (error) {
+  //     console.error('Chat initiation error:', error);
+  //     toast.error(`Failed to start conversation: ${error.message || error}`, {
+  //       position: 'top-right',
+  //       autoClose: 3000,
+  //     });
+  //   } finally {
+  //     setIsChatLoading(false);
+  //   }
+  // };
+
+  const handleChatClick = async (e) => {
+  e.stopPropagation();
+  
+  if (!hostId) {
+    toast.error('Host information not available.', {
+      position: 'top-right',
+      autoClose: 3000,
+    });
+    return;
+  }
+
+  setIsChatLoading(true);
+  try {
+    const initialMessage = `Hello, I'm reaching out regarding my booking for "${title}" located at ${location}. Details: Price: ₦${parseFloat(price || 0).toLocaleString()} / night, Date: ${date}, Booking Code: ${code}, Status: ${status}. Can we discuss this booking?`;
+    
+    const response = await dispatch(
+      initiateConversationAsync({ 
+        recipientId: hostId, 
+        propertyId,
+        message: initialMessage
+      })
+    ).unwrap();
+    
+    // DEBUG: Check response structure
+    console.log('Full API response:', response);
+    console.log('Response type:', typeof response);
+    console.log('Response keys:', response ? Object.keys(response) : 'null');
+    
+    // Try to extract conversationId from various possible structures
+    let conversationId = null;
+    
+    if (response) {
+      // Try direct properties
+      conversationId = response.conversationId 
+        || response.id 
+        || response.conversation?.id
+        || response.conversation?.conversationId;
+      
+      // If wrapped in data
+      if (!conversationId && response.data) {
+        conversationId = response.data.conversationId 
+          || response.data.id
+          || response.data.conversation?.id;
       }
-    } catch (error) {
-      console.error('Chat initiation error:', error);
-      toast.error(`Failed to start conversation: ${error.message || error}`, {
-        position: 'top-right',
-        autoClose: 3000,
-      });
-    } finally {
-      setIsChatLoading(false);
+      
+      // If it's a success response with data
+      if (!conversationId && response.success && response.data) {
+        conversationId = response.data.conversationId 
+          || response.data.id;
+      }
     }
-  };
+    
+    // console.log('Extracted conversationId:', conversationId);
+    
+    if (conversationId) {
+      // Refresh conversations list
+      await dispatch(fetchConversationsAsync());
+      
+      // Navigate to messages with the conversation ID
+      router.push(`/messages?conversationId=${conversationId}`);
+      
+      toast.success('Conversation started successfully!', {
+        position: 'top-right',
+        autoClose: 2000,
+      });
+    } else {
+      console.error('Response structure:', JSON.stringify(response, null, 2));
+      throw new Error('Conversation ID not found in response. Please check console for response structure.');
+    }
+  } catch (error) {
+    console.error('Chat initiation error:', error);
+    toast.error(`Failed to start conversation: ${error.message || error}`, {
+      position: 'top-right',
+      autoClose: 3000,
+    });
+  } finally {
+    setIsChatLoading(false);
+  }
+};
 
   // Handle cancel button click to open cancel modal
   const handleCancelClick = (e) => {
