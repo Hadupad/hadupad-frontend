@@ -28,7 +28,7 @@ const BookingCard = ({ booking }) => {
   //console.log('BookingCard hostId:', hostId)
   
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const { paymentDetails, loading: paymentLoading, error: paymentError } = useSelector((state) => state.payments);
   
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
