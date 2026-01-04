@@ -17,7 +17,7 @@ const BookingCard = ({ booking }) => {
     location, 
     price, 
     date, 
-    code, 
+    code,  
     status, 
     propertyId, 
     refetch,
@@ -25,7 +25,7 @@ const BookingCard = ({ booking }) => {
   } = booking;
 
   const hostId = host?.id;
-  //console.log('BookingCard hostId:', hostId); 
+  //console.log('BookingCard hostId:', hostId)
   
   const router = useRouter();
   const dispatch = useDispatch();
